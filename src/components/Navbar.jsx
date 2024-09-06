@@ -1,24 +1,26 @@
 'use client'
-import logo from "../assets/logo.png"
+import logo from "../assets/logo3.png"
 import { NAV_ITEMS } from "../index.js";
 import {
-    Spacer,
-    Image,
-    Box,
-    Flex,
-    Text,
-    IconButton,
-    Button,
-    Stack,
-    Collapse,
-    Icon,
-    Popover,
-    PopoverTrigger,
-    PopoverContent,
-    useColorModeValue,
-    useBreakpointValue,
-    useDisclosure,
-    Center,
+  Heading,
+  Spacer,
+  HStack,
+  Image,
+  Box,
+  Flex,
+  Text,
+  IconButton,
+  Button,
+  Stack,
+  Collapse,
+  Icon,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  useColorModeValue,
+  useBreakpointValue,
+  useDisclosure,
+  Center,
 } from '@chakra-ui/react'
 import {
   HamburgerIcon,
@@ -26,21 +28,22 @@ import {
   ChevronDownIcon,
   ChevronRightIcon,
 } from '@chakra-ui/icons'
+import Wave from "react-wavify";
 
 export default function WithSubnavigation() {
   const { isOpen, onToggle } = useDisclosure()
 
   return (
-    <Box>
+
+
+    <Box alignItems={'center'}>
       <Flex
-        bg="ocean.100"
+
+        bg="white"
         color={useColorModeValue('gray.600', 'white')}
         minH={'60px'}
-        py={{ base: 2 }}
+        py={{ base: 1 }}
         px={{ base: 4 }}
-        borderBottom={1}
-        borderStyle={'solid'}
-        borderColor={useColorModeValue('gray.200', 'gray.900')}
         align={'center'}>
         <Flex
           flex={{ base: 1, md: 'auto' }}
@@ -53,36 +56,17 @@ export default function WithSubnavigation() {
             aria-label={'Toggle Navigation'}
           />
         </Flex>
-        <Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'start' }} gap={5} pl={10}>
-          <Image boxSize="100px" src={logo}/>
-        
+        <Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'center' }} gap={5} pl={10} pr={14}>
+
+          <Image marginRight={20} src={logo} />
+
+
+
           <Flex display={{ base: 'none', md: 'flex' }} ml={10}>
             <DesktopNav />
           </Flex>
-        </Flex>
 
-        <Stack
-          flex={{ base: 1, md: 0 }}
-          justify={'flex-end'}
-          direction={'row'}
-          spacing={6}>
-          <Button as={'a'} fontSize={'sm'} fontWeight={400} variant={'link'} href={'#'}>
-            Sign In
-          </Button>
-          <Button
-            as={'a'}
-            display={{ base: 'none', md: 'inline-flex' }}
-            fontSize={'sm'}
-            fontWeight={600}
-            color={'white'}
-            bg={'pink.400'}
-            href={'#'}
-            _hover={{
-              bg: 'pink.300',
-            }}>
-            Sign Up
-          </Button>
-        </Stack>
+        </Flex>
       </Flex>
 
       <Collapse in={isOpen} animateOpacity>
@@ -93,50 +77,50 @@ export default function WithSubnavigation() {
 }
 
 const DesktopNav = () => {
-  const linkColor = useColorModeValue('gray.600', 'gray.200')
+  const linkColor = useColorModeValue('black.600', 'gray.200')
   const linkHoverColor = useColorModeValue('gray.800', 'white')
   const popoverContentBgColor = useColorModeValue('white', 'gray.800')
 
   return (
-    <Stack as="nav" direction={'row'} spacing={4}>
+    <Stack as="nav" direction={'row'} spacing={8}>
       {NAV_ITEMS.map((navItem) => (
         <Center key={navItem.label}>
-        <Box>
-          <Popover trigger={'hover'} placement={'bottom-start'}>
-            <PopoverTrigger>
-              <Box
-                as="a"
-                p={2}
-                href={navItem.href ?? '#'}
-                fontSize={'lg'}
-                fontWeight={500}
-                color={linkColor}
-                
-                _hover={{
-                  textDecoration: 'none',
-                  color: linkHoverColor,
-                }}>
-                {navItem.label}
-              </Box>
-            </PopoverTrigger>
+          <Box>
+            <Popover trigger={'hover'} placement={'bottom-start'}>
+              <PopoverTrigger>
+                <Box
+                  as="a"
+                  p={2}
+                  href={navItem.href ?? '#'}
+                  fontSize={'xl'}
+                  fontWeight={500}
+                  color={"brand.400"}
 
-            {navItem.children && (
-              <PopoverContent
-                border={0}
-                boxShadow={'xl'}
-                bg={popoverContentBgColor}
-                p={4}
-                rounded={'xl'}
-                minW={'sm'}>
-                <Stack>
-                  {navItem.children.map((child) => (
-                    <DesktopSubNav key={child.label} {...child} />
-                  ))}
-                </Stack>
-              </PopoverContent>
-            )}
-          </Popover>
-        </Box>
+                  _hover={{
+                    textDecoration: 'none',
+                    color: linkHoverColor,
+                  }}>
+                  {navItem.label}
+                </Box>
+              </PopoverTrigger>
+
+              {navItem.children && (
+                <PopoverContent
+                  border={0}
+                  boxShadow={'xl'}
+                  bg={popoverContentBgColor}
+                  p={4}
+                  rounded={'xl'}
+                  minW={'sm'}>
+                  <Stack>
+                    {navItem.children.map((child) => (
+                      <DesktopSubNav key={child.label} {...child} />
+                    ))}
+                  </Stack>
+                </PopoverContent>
+              )}
+            </Popover>
+          </Box>
         </Center>
       ))}
     </Stack>
