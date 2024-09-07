@@ -1,8 +1,8 @@
-import ceLogo from "./assets/services/ceSymbol.png"
-import eeLogo from "./assets/services/eeSymbol.png"
-import pmLogo from "./assets/services/pmSymbol.png"
-import fiLogo from "./assets/services/fiSymbol.png"
-import sLogo from "./assets/services/surSymbol.png"
+import ceLogo from "./assets/services/ceSymbol2.png"
+import eeLogo from "./assets/services/eeSymbol2.png"
+import pmLogo from "./assets/services/pmSymbol2.png"
+import fiLogo from "./assets/services/fiSymbol2.png"
+import sLogo from "./assets/services/surSymbol2.png"
 import sheraton from "./assets/clients/sheraton.png"
 import arc from "./assets/clients/arc.png"
 import dhiraagu from "./assets/clients/dhiraagu.png"
@@ -70,10 +70,6 @@ export const NAV_ITEMS = [
         href : "",
 
      },
-    {
-        label : "Contact Us",
-        href : ""
-        },
 ]
 
 export const SERVICES = [

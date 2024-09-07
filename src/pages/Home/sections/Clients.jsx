@@ -21,7 +21,7 @@ const autoScroll = keyframes`
 export default function Clients (){
     const scrollAnimation= `${autoScroll} infinite 50s linear`;
     return (
-        <Container maxW={{base:'container.sm',md:'container.xl'}} p={0}marginBlockEnd={20} height={'40vh'}> 
+        <Container w={'100%'} maxW={{base:'container.sm',md:'container.xl'}} p={0}marginBlockEnd={18} paddingTop={12}> 
             <Heading color={'brand.400'} textAlign={'center'} padding={15} marginBlockEnd={10}>Some Clients We Have Worked With</Heading>
             <Box overflow={'hidden'} position={'relative'} display={'flex'} flexDirection={'row'} flexWrap={'nowrap'} justifyContent={'flex-start'} alignItems={'center'} marginBlock={10}> 
                 <Box h={'100%'} w={'max-content'} animation={scrollAnimation}flexShrink={'0'} display={'inline-block'} flexDirection={'row'} flexWrap={'nowrap'} justifyContent={'space-between'} alignItems={'center'}>

@@ -14,6 +14,7 @@ const theme = extendTheme({
       200:"#dcf3ff",
       300: "#f0faff",
       400: "#435BA1",
+      500: "#8aa1e3"
     },
     transparent:{
       100:"00FFFFFF"
