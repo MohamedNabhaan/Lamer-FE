@@ -14,10 +14,12 @@ const theme = extendTheme({
       200:"#dcf3ff",
       300: "#f0faff",
       400: "#435BA1",
-      500: "#8aa1e3"
+      500: "#8aa1e3",
+      600:'#19A357'
     },
-    transparent:{
-      100:"00FFFFFF"
+    design:{
+      100:"#E6E8E8",
+      200: "#F2F4F4"
     },
 
     nav : {

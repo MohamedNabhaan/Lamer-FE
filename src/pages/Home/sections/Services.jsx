@@ -14,8 +14,8 @@ export default function Services (){
     return (
 
         
-            <Container maxW={{base:'container.sm',md:'100%'}} overflow={'hidden'} paddingTop={12} paddingBottom={4}  m={0} w={'100%'}>
-                <Center paddingBlock={16}>
+            <Container maxW={{base:'container.sm',md:'100%'}} overflow={'hidden'} paddingTop={12} paddingBottom={12}  m={0} w={'100%'} bgColor={'design.200'}>
+                <Center paddingBlockEnd={8}>
                 <Heading textColor={'brand.400'} size={'2xl'}>Our Services</Heading>
                 </Center>
                 
@@ -23,7 +23,7 @@ export default function Services (){
                     {SERVICES.map((service)=>(
                         <Flex flexDirection={'column'} justifyContent={'center'} alignItems={'center'} w='100%' paddingBlockStart={4}>
 
-                            <Image border={"solid"} borderColor={'blackAlpha.700'} borderRadius={'50%'} boxSize={'auto'} h={"100%"} src={service.img}/>
+                            <Image border={"solid"} borderColor={'design.100'} borderRadius={'50%'} boxSize={'auto'} h={"100%"} src={service.img}/>
                             
                             <Box fontSize={'lg'}
                             h={"100%"}
