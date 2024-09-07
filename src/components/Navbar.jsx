@@ -2,9 +2,6 @@
 import logo from "../assets/logo3.png"
 import { NAV_ITEMS } from "../index.js";
 import {
-  Heading,
-  Spacer,
-  HStack,
   Image,
   Box,
   Flex,
@@ -18,7 +15,6 @@ import {
   PopoverTrigger,
   PopoverContent,
   useColorModeValue,
-  useBreakpointValue,
   useDisclosure,
   Center,
 } from '@chakra-ui/react'
@@ -34,11 +30,9 @@ export default function WithSubnavigation() {
   const { isOpen, onToggle } = useDisclosure()
 
   return (
-
-
-    <Box alignItems={'center'}>
+    <Box sx={{ position: '-webkit-sticky', position: 'sticky', top: '0', zIndex:'99999' }}>
       <Flex
-
+        height={'12vh'}
         bg="white"
         color={useColorModeValue('gray.600', 'white')}
         minH={'60px'}
@@ -47,8 +41,10 @@ export default function WithSubnavigation() {
         align={'center'}>
         <Flex
           flex={{ base: 1, md: 'auto' }}
-          ml={{ base: -2 }}
-          display={{ base: 'flex', md: 'none' }}>
+          ml={{ base: 2 }}
+          maxW={8}
+          display={{base:'flex', md: 'none' }}>
+          
           <IconButton
             onClick={onToggle}
             icon={isOpen ? <CloseIcon w={3} h={3} /> : <HamburgerIcon w={5} h={5} />}
@@ -56,13 +52,13 @@ export default function WithSubnavigation() {
             aria-label={'Toggle Navigation'}
           />
         </Flex>
-        <Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'center' }} gap={5} pl={10} pr={14}>
+        <Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'center' }} gap={{base:0,lg:20}} pl={{base:0,md:10}} pr={{base:0,md:10}}>
 
-          <Image marginRight={20} src={logo} />
+          <Image marginRight={{base:0,lg:20}} src={logo} />
 
 
 
-          <Flex display={{ base: 'none', md: 'flex' }} ml={10}>
+          <Flex display={{ base: 'none', md: 'flex' }} ml={{base:0,md:10}}>
             <DesktopNav />
           </Flex>
 
@@ -82,7 +78,7 @@ const DesktopNav = () => {
   const popoverContentBgColor = useColorModeValue('white', 'gray.800')
 
   return (
-    <Stack as="nav" direction={'row'} spacing={8}>
+    <Stack as="nav" direction={'row'} spacing={{base:4,lg:8}} alignItems={'center'}>
       {NAV_ITEMS.map((navItem) => (
         <Center key={navItem.label}>
           <Box>
@@ -90,11 +86,14 @@ const DesktopNav = () => {
               <PopoverTrigger>
                 <Box
                   as="a"
-                  p={2}
+                  p={{base:0,lg:2}}
                   href={navItem.href ?? '#'}
-                  fontSize={'xl'}
+                  fontSize={{base:'sm', lg:'lg'}}
                   fontWeight={500}
                   color={"brand.400"}
+                  borderRadius={'xl'}
+                
+                 
 
                   _hover={{
                     textDecoration: 'none',
@@ -123,6 +122,20 @@ const DesktopNav = () => {
           </Box>
         </Center>
       ))}
+      
+      <Button 
+      bg={'brand.400'}
+      textColor={'white'}
+      fontWeight={600}
+      border='solid'
+      transition={'0.5s'}
+      _hover={{
+        textDecoration: 'none',
+        textColor:'brand.400',
+        bgColor: 'white',
+        border:'solid'
+      }}>
+       Contact Us</Button>
     </Stack>
   )
 }
@@ -164,7 +177,7 @@ const DesktopSubNav = ({ label, href }) => {
 
 const MobileNav = () => {
   return (
-    <Stack bg={useColorModeValue('white', 'gray.800')} p={4} display={{ md: 'none' }}>
+    <Stack bg={useColorModeValue('white', 'gray.800')} p={4} display={{ lg:'none' }}>
       {NAV_ITEMS.map((navItem) => (
         <MobileNavItem key={navItem.label} {...navItem} />
       ))}
