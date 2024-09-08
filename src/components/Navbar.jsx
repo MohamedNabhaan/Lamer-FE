@@ -24,15 +24,34 @@ import {
   ChevronDownIcon,
   ChevronRightIcon,
 } from '@chakra-ui/icons'
-import Wave from "react-wavify";
+import { useEffect,useState } from "react";
 
 export default function WithSubnavigation() {
-  const { isOpen, onToggle } = useDisclosure()
+  const { isOpen, onToggle } = useDisclosure();
+  const [shrink, setShrink] = useState(false);
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.addEventListener("scroll", handleScroll);
+      return ()=> window.removeEventListener('scroll',handleScroll);
+    }
+  }, []);
+
+  const handleScroll = () => {
+    if (window.scrollY >= 80) {
+      setShrink(true);
+    } else {
+      setShrink(false);
+    }
+  }
 
   return (
-    <Box sx={{ position: '-webkit-sticky', position: 'sticky', top: '0', zIndex:'99999' }}>
+    <Box sx={{ position: '-webkit-sticky', position: 'sticky', top: '0', zIndex:'99999'}}  >
       <Flex
-        height={'12vh'}
+        borderBottom={`${shrink ? 'solid':''}`} 
+        borderColor={`${shrink ? 'design.200':''}`}
+        height={`${shrink ? '8vh':'12vh'}`}
+        transition={'ease'}
+        transitionDuration={'600ms'}
         bg="white"
         color={useColorModeValue('gray.600', 'white')}
         minH={'60px'}
@@ -54,7 +73,7 @@ export default function WithSubnavigation() {
         </Flex>
         <Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'center' }} gap={{base:0,lg:20}} pl={{base:0,md:10}} pr={{base:0,md:10}}>
 
-          <Image marginRight={{base:0,lg:20}} src={logo} />
+          <Image marginRight={{base:0,lg:20}}  src={logo} />
 
 
 

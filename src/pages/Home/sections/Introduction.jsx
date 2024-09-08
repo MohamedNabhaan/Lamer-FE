@@ -1,14 +1,13 @@
-import { Box, Center } from "@chakra-ui/react";
-import Carousel from "../../../components/Carousel"
-import Wave from 'react-wavify'
+import { Box, Center, Image } from "@chakra-ui/react";
+import pic from "../../../assets/Introduction/quarry.jpeg"
 
 
 export default function Introduction (){
     return (
-        <Box overflow={"hidden"}>
-        <Center paddingBlockStart={"2.5%"}  >
-            <Box w='85%'>
-                <Carousel></Carousel>  
+        <Box overflow={"hidden"} >
+        <Center>
+            <Box w='100%'>
+                <Image w='100%' height={'780px'}  src={pic}></Image>
                 
            </Box>
         </Center>

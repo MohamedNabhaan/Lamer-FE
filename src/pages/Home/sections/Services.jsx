@@ -14,9 +14,9 @@ export default function Services (){
     return (
 
         
-            <Container maxW={{base:'container.sm',md:'100%'}} overflow={'hidden'} paddingTop={12} paddingBottom={12}  m={0} w={'100%'} bgColor={'design.200'}>
-                <Center paddingBlockEnd={8}>
-                <Heading textColor={'brand.400'} size={'2xl'}>Our Services</Heading>
+            <Container maxW={{base:'container.sm',md:'100%'}} overflow={'hidden'} paddingTop={8} paddingBottom={12}  m={0} w={'100%'} >
+                <Center paddingBlockEnd={12}>
+                <Heading textColor={'brand.400'}>Our Services</Heading>
                 </Center>
                 
                 <Stack direction={'row'} display={'flex'} spacing={10} flexWrap={{base:"wrap", lg:"nowrap"}} paddingInline={{base:0, md:56}}>
