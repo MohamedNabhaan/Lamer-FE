@@ -9,14 +9,11 @@ import Footer  from "../../components/Footer"
 
 export default function Home (){
     return (
-        <Box>
-        <Navbar/>
+        <Box> 
         <Introduction ></Introduction>
-        
         <Services></Services>
         <Featured></Featured>
         <Clients></Clients>
-        <Footer></Footer>
         </Box>
     );
 }

@@ -28,7 +28,7 @@ const accounts = [
 
 const Footer = () => {
   return (
-    <Box bgGradient='linear(to-b,whiteAlpha.50 10%,brand.400 50%,brand.400 90%)' marginBlockStart={10}>
+    <Box bgGradient='linear(to-b,whiteAlpha.50 10%,brand.400 50%,brand.400 90%)' marginBlockStart={10} bottom={0}>
     <Wave fill='#435BA1'
         paused={false}
         style={{ display: 'flex', position:'absolute'}}
