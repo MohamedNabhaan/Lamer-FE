@@ -30,24 +30,25 @@ export const CLIENTS = [
 export const NAV_ITEMS = [
     {
         label : "Home",
-        path : ""
+        path : "",
+        subRoutes:[]
 
         },
     {
         label : "Services",
-        path : "Services"
+        path : "Services",
+        subRoutes:[]
         },
     {
         label : "Projects",
         path : "Projects",
+        subRoutes:['/Projects','/Clients'],
         children : [
             {
-                parent: "Projects",
                 label: "Projects",
                 path: "Projects"
             },
             {
-                parent: "Projects",
                 label:"Clients",
                 path:"Clients"
             }
@@ -56,6 +57,7 @@ export const NAV_ITEMS = [
     {
         label : "About Us",
         path : "AboutUs",
+        subRoutes: ["/AboutUs","/OurTeam"],
         children : [
             {
                 parent: "About Us",
@@ -72,6 +74,7 @@ export const NAV_ITEMS = [
     {
         label : "Careers",
         path : "Careers",
+        subRoutes:[]
 
      },
 ]

@@ -1,6 +1,6 @@
 'use client'
 
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import logo from "../assets/logo3.png"
 import { NAV_ITEMS } from "../index.js";
 import {
@@ -19,6 +19,7 @@ import {
   useColorModeValue,
   useDisclosure,
   Center,
+  useClipboard,
 } from '@chakra-ui/react'
 import {
   HamburgerIcon,
@@ -96,12 +97,12 @@ export default function WithSubnavigation() {
 }
 
 const DesktopNav = () => {
-  const [subNavActive,setSubNavActive] = useState('');
+  const { pathname }= useLocation();
   const linkColor = useColorModeValue('black.600', 'gray.200')
   const linkHoverColor = useColorModeValue('gray.800', 'white')
   const popoverContentBgColor = useColorModeValue('white', 'gray.800')
   
-
+   console.log(pathname);
   return (
     <Stack as="nav" direction={'row'} spacing={{base:4,lg:8}} alignItems={'center'}>
       {NAV_ITEMS.map((navItem) => (
@@ -123,7 +124,7 @@ const DesktopNav = () => {
                   >
                   <NavLink to={`${navItem.path}`}>
                     {({isActive})=> (
-                      <Text fontWeight={isActive || (subNavActive&& navItem.label===subNavActive ) ? 600 : 500}  color={'brand.400'} _hover={{color: isActive || subNavActive ? 'brand.400': linkHoverColor}} >
+                      <Text fontWeight={ (isActive || (navItem.subRoutes.includes(pathname))) ? 600 : 500}  color={'brand.400'} _hover={{color: (isActive || (navItem.subRoutes.includes(pathname))) ? 'brand.400': linkHoverColor}} >
                       {navItem.label}</Text>
                     )}
                       </NavLink>
@@ -140,7 +141,7 @@ const DesktopNav = () => {
                   minW={'sm'}>
                   <Stack>
                     {navItem.children.map((child) => (
-                      <DesktopSubNav key={child.label} {...child} subMenu={()=>setSubNavActive(child.parent)} />
+                      <DesktopSubNav key={child.label} {...child} />
                     ))}
                   </Stack>
                 </PopoverContent>
@@ -167,7 +168,7 @@ const DesktopNav = () => {
   )
 }
 
-const DesktopSubNav = ({ label,path,subMenu}) => {
+const DesktopSubNav = ({label,path}) => {
   
   return (
     <Box
@@ -182,7 +183,7 @@ const DesktopSubNav = ({ label,path,subMenu}) => {
             transition={'all .3s ease'}
             _groupHover={{ color: 'pink.400' }}
             fontWeight={500}
-            onClick={subMenu}
+            
             >
             <NavLink to={`${path}`} >{label}</NavLink>
           </Text>
