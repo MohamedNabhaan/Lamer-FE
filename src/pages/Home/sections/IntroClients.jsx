@@ -18,7 +18,7 @@ const autoScroll = keyframes`
 `;
 
 
-export default function Clients (){
+export default function IntroClients (){
     const scrollAnimation= `${autoScroll} infinite 50s linear`;
     return (
         <Container w={'100%'} maxW={{base:'container.sm',md:'container.xl'}} p={0}marginBlockEnd={18} paddingTop={12}> 

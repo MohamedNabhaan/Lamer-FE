@@ -2,10 +2,10 @@ import { Box,Heading } from "@chakra-ui/react";
 
 
 
-export default function AboutUs (){
+export default function Projects (){
     return (
         <Box>
-            <Heading> About US</Heading>
+            <Heading>Projects</Heading>
         </Box>
     );
 }

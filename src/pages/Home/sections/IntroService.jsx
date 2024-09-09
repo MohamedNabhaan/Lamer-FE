@@ -9,7 +9,7 @@ import {
 
 import { SERVICES } from "../../../index.js";
 
-export default function Services (){
+export default function IntroServices (){
     
     return (
 
