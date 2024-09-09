@@ -42,10 +42,12 @@ export const NAV_ITEMS = [
         path : "Projects",
         children : [
             {
+                parent: "Projects",
                 label: "Projects",
                 path: "Projects"
             },
             {
+                parent: "Projects",
                 label:"Clients",
                 path:"Clients"
             }
@@ -56,10 +58,12 @@ export const NAV_ITEMS = [
         path : "AboutUs",
         children : [
             {
+                parent: "About Us",
                 label : "About Us",
                 path : "AboutUs"
                 },
             {
+                parent: "About Us",
                 label : "Our Team",
                 path : "OurTeam"
                 }

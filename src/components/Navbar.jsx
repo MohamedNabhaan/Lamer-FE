@@ -1,4 +1,5 @@
 'use client'
+
 import { NavLink } from "react-router-dom";
 import logo from "../assets/logo3.png"
 import { NAV_ITEMS } from "../index.js";
@@ -29,6 +30,7 @@ import { useEffect,useState } from "react";
 
 export default function WithSubnavigation() {
   const { isOpen, onToggle } = useDisclosure();
+  
   const [shrink, setShrink] = useState(false);
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -37,6 +39,7 @@ export default function WithSubnavigation() {
     }
   }, []);
 
+  
   const handleScroll = () => {
     if (window.scrollY >= 80) {
       setShrink(true);
@@ -93,9 +96,11 @@ export default function WithSubnavigation() {
 }
 
 const DesktopNav = () => {
+  const [subNavActive,setSubNavActive] = useState('');
   const linkColor = useColorModeValue('black.600', 'gray.200')
   const linkHoverColor = useColorModeValue('gray.800', 'white')
   const popoverContentBgColor = useColorModeValue('white', 'gray.800')
+  
 
   return (
     <Stack as="nav" direction={'row'} spacing={{base:4,lg:8}} alignItems={'center'}>
@@ -109,17 +114,19 @@ const DesktopNav = () => {
                   p={{base:0,lg:2}}
                   
                   fontSize={{base:'sm', lg:'lg'}}
-                  fontWeight={500}
-                  color={"brand.400"}
+                  
+                  
                   borderRadius={'xl'}
                 
                  
-
-                  _hover={{
-                    textDecoration: 'none',
-                    color: linkHoverColor,
-                  }}>
-                  <NavLink to={`${navItem.path}`}>{navItem.label} </NavLink>
+                  
+                  >
+                  <NavLink to={`${navItem.path}`}>
+                    {({isActive})=> (
+                      <Text fontWeight={isActive || (subNavActive&& navItem.label===subNavActive ) ? 600 : 500}  color={'brand.400'} _hover={{color: isActive || subNavActive ? 'brand.400': linkHoverColor}} >
+                      {navItem.label}</Text>
+                    )}
+                      </NavLink>
                 </Box>
               </PopoverTrigger>
 
@@ -133,7 +140,7 @@ const DesktopNav = () => {
                   minW={'sm'}>
                   <Stack>
                     {navItem.children.map((child) => (
-                      <DesktopSubNav key={child.label} {...child} />
+                      <DesktopSubNav key={child.label} {...child} subMenu={()=>setSubNavActive(child.parent)} />
                     ))}
                   </Stack>
                 </PopoverContent>
@@ -160,7 +167,8 @@ const DesktopNav = () => {
   )
 }
 
-const DesktopSubNav = ({ label,path }) => {
+const DesktopSubNav = ({ label,path,subMenu}) => {
+  
   return (
     <Box
       role={'group'}
@@ -173,7 +181,9 @@ const DesktopSubNav = ({ label,path }) => {
           <Text
             transition={'all .3s ease'}
             _groupHover={{ color: 'pink.400' }}
-            fontWeight={500}>
+            fontWeight={500}
+            onClick={subMenu}
+            >
             <NavLink to={`${path}`} >{label}</NavLink>
           </Text>
           <Text fontSize={'sm'}></Text>
