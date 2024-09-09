@@ -30,44 +30,44 @@ export const CLIENTS = [
 export const NAV_ITEMS = [
     {
         label : "Home",
-        href : ""
+        path : ""
 
         },
     {
         label : "Services",
-        href : ""
+        path : "Services"
         },
     {
         label : "Projects",
-        href : "",
+        path : "Projects",
         children : [
             {
                 label: "Projects",
-                href: ""
+                path: "Projects"
             },
             {
                 label:"Clients",
-                href:""
+                path:"Clients"
             }
         ]
         },
     {
         label : "About Us",
-        href : "",
+        path : "AboutUs",
         children : [
             {
                 label : "About Us",
-                href : ""
+                path : "AboutUs"
                 },
             {
                 label : "Our Team",
-                href : ""
+                path : "OurTeam"
                 }
         ]
         },
     {
-        label : "Career",
-        href : "",
+        label : "Careers",
+        path : "Careers",
 
      },
 ]

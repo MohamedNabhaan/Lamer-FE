@@ -1,4 +1,5 @@
 'use client'
+import { NavLink } from "react-router-dom";
 import logo from "../assets/logo3.png"
 import { NAV_ITEMS } from "../index.js";
 import {
@@ -104,9 +105,9 @@ const DesktopNav = () => {
             <Popover trigger={'hover'} placement={'bottom-start'}>
               <PopoverTrigger>
                 <Box
-                  as="a"
+                  
                   p={{base:0,lg:2}}
-                  href={navItem.href ?? '#'}
+                  
                   fontSize={{base:'sm', lg:'lg'}}
                   fontWeight={500}
                   color={"brand.400"}
@@ -118,7 +119,7 @@ const DesktopNav = () => {
                     textDecoration: 'none',
                     color: linkHoverColor,
                   }}>
-                  {navItem.label}
+                  <NavLink to={`${navItem.path}`}>{navItem.label} </NavLink>
                 </Box>
               </PopoverTrigger>
 
@@ -159,11 +160,9 @@ const DesktopNav = () => {
   )
 }
 
-const DesktopSubNav = ({ label, href }) => {
+const DesktopSubNav = ({ label,path }) => {
   return (
     <Box
-      as="a"
-      href={href}
       role={'group'}
       display={'block'}
       p={2}
@@ -175,7 +174,7 @@ const DesktopSubNav = ({ label, href }) => {
             transition={'all .3s ease'}
             _groupHover={{ color: 'pink.400' }}
             fontWeight={500}>
-            {label}
+            <NavLink to={`${path}`} >{label}</NavLink>
           </Text>
           <Text fontSize={'sm'}></Text>
         </Box>
@@ -204,22 +203,20 @@ const MobileNav = () => {
   )
 }
 
-const MobileNavItem = ({ label, children, href }) => {
+const MobileNavItem = ({ label, children, path }) => {
   const { isOpen, onToggle } = useDisclosure()
 
   return (
     <Stack spacing={4} onClick={children && onToggle}>
       <Box
         py={2}
-        as="a"
-        href={href ?? '#'}
         justifyContent="space-between"
         alignItems="center"
         _hover={{
           textDecoration: 'none',
         }}>
         <Text fontWeight={600} color={useColorModeValue('gray.600', 'gray.200')}>
-          {label}
+          {label}  
         </Text>
         {children && (
           <Icon
@@ -242,8 +239,8 @@ const MobileNavItem = ({ label, children, href }) => {
           align={'start'}>
           {children &&
             children.map((child) => (
-              <Box as="a" key={child.label} py={2} href={child.href}>
-                {child.label}
+              <Box key={child.label} py={2}>
+                <NavLink to={`${child.path}`}>{child.label}</NavLink>
               </Box>
             ))}
         </Stack>
