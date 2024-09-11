@@ -26,10 +26,10 @@
     height: 20px;
     padding: 5px;
     cursor: pointer;
-    color: transparent;
+    color: white;
     border: 0;
     outline: none;
-    background: transparent;
+    
 }
 .vertical-dots li button:hover,
 .vertical-dots li button:focus
@@ -58,7 +58,8 @@
     text-align: center;
 
     opacity: .25;
-    color: black;
+    color: white;
+    
 
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -66,5 +67,10 @@
 .vertical-dots li.slick-active button:before
 {
     opacity: .75;
-    color: black;
+    color: white;
+
+}
+
+.slick-slide {
+    text-align: center;
 }

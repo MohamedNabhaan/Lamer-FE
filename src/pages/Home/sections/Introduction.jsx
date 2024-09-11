@@ -1,16 +1,16 @@
-import { Box, Center, Image } from "@chakra-ui/react";
-import pic from "../../../assets/Introduction/quarry.jpeg"
+import { Box, Center, Image, Text } from "@chakra-ui/react";
 
+import ImageCarousel from "../../../components/ImageCarousel";
+import { INTRODUCTION_IMAGES } from "../../../index.js";
 
-export default function Introduction (){
-    return (
-        <Box overflow={"hidden"} >
-        <Center>
-            <Box w='100%'>
-                <Image w='100%' height={'780px'}  src={pic}></Image>
-                
-           </Box>
-        </Center>
+export default function Introduction() {
+  return (
+    <Box overflow={"hidden"}>
+      <Center>
+        <Box w="100%">
+          <ImageCarousel images={INTRODUCTION_IMAGES} />
         </Box>
-    );
+      </Center>
+    </Box>
+  );
 }
