@@ -58,8 +58,8 @@ export default function WithSubnavigation() {
       }}
     >
       <Flex
-        borderBottom={`${shrink ? "solid" : ""}`}
-        borderColor={`${shrink ? "design.200" : ""}`}
+        borderBottom={"solid"}
+        borderColor={"design.200"}
         height={`${shrink ? "8vh" : "12vh"}`}
         transition={"ease"}
         transitionDuration={"600ms"}
