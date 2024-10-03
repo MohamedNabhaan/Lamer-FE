@@ -217,7 +217,7 @@ export const ABOUT_US = {
   history:
     "Founded in the year 2000, Land and Marine Environmental Resource(LAMER) Group is one of the first environmental consultancy firms established in the Maldives, specializing in environmental assessment andmanagement, community consultation, and land use planning. Providing a wide range of services and practical solutions to the public and private sector. It employs qualified urban planners, community consultation specialists, experienced environmental specialists and auditors. Our team has extensive experience with major state, private sector projects in the country and a few international development projects.",
   vision:
-    "Our vision is to strive to continue as a leading environmental consultancy firm assisted by science and its application for sound and informed environmental management and governance.",
+    " is to strive to continue as a leading environmental consultancy firm assisted by science and its application for sound and informed environmental management and governance.",
   missionValues: [
     "Honesty and transparency in all our business.",
     "Maintain professional integrity and deliver on our commitments.",

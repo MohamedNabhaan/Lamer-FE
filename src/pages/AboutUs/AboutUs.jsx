@@ -42,6 +42,7 @@ export default function AboutUs() {
           <Box>
             <Text w={"95%"}>{ABOUT_US.history}</Text>
             <Text paddingTop={12} w={"95%"}>
+              Our <b>Vision</b>
               {ABOUT_US.vision}
             </Text>
           </Box>
