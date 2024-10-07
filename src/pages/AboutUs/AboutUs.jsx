@@ -24,6 +24,8 @@ export default function AboutUs() {
         justifyContent={"center"}
       >
         <Heading
+          borderLeft={"solid 20px"}
+          paddingLeft={2}
           as="h1"
           size={"3xl"}
           fontWeight={500}

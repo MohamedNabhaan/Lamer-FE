@@ -55,6 +55,8 @@ export default function Projects() {
         justifyContent={"center"}
       >
         <Heading
+          borderLeft={"solid 20px"}
+          paddingLeft={2}
           as="h1"
           size={"3xl"}
           fontWeight={500}
@@ -62,11 +64,11 @@ export default function Projects() {
           display={"block"}
           textAlign={{ base: "center", md: "left" }}
         >
-          Projects
+          Our Projects
         </Heading>
       </Container>
       <Box paddingInline={16} paddingBlock={8}>
-        <Stack direction={"column"}>
+        <Stack direction={"column"} spacing={8}>
           {projects.map((project) => {
             console.log(project);
             return (
@@ -74,9 +76,11 @@ export default function Projects() {
                 direction={{ base: "column", md: "row" }}
                 overflow={"hidden"}
                 variant={"outline"}
+                align={"center"}
               >
                 <Image
-                  maxW={"200px"}
+                  w={"250px"}
+                  h={"250px"}
                   src={project.images[0]}
                   fallbackSrc={fallback}
                 ></Image>
@@ -84,13 +88,14 @@ export default function Projects() {
                   borderLeft={"solid"}
                   borderColor={"design.200"}
                   padding={0}
+                  paddingBottom={6}
                 >
                   <Box>
                     <Heading
                       w="100%"
                       as={"h2"}
                       size={"2xl"}
-                      paddingBlock={4}
+                      paddingBottom={4}
                       paddingLeft={8}
                       borderBottom={"solid 2px"}
                       borderColor="design.200"

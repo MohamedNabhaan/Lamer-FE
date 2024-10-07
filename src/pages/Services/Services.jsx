@@ -24,6 +24,8 @@ export default function Services() {
       >
         <Stack direction={"column"} spacing={10}>
           <Heading
+            borderLeft={"solid 20px"}
+            paddingLeft={2}
             as="h1"
             size={"3xl"}
             fontWeight={500}

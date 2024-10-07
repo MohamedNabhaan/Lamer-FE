@@ -71,7 +71,8 @@ export default function Clients() {
               variant={"outline"}
               align={"center"}
               border={"solid"}
-              borderColor={"design.200"}
+              borderColor={"design.100"}
+              bgColor={"brand.300"}
             >
               <CardBody paddingBottom={4}>
                 <Image height={"200px"} src={client.logo[0]}></Image>
@@ -80,7 +81,8 @@ export default function Clients() {
                 w={"100%"}
                 paddingTop={4}
                 borderTop={"solid"}
-                borderColor={"design.200"}
+                borderColor={"design.100"}
+                bgColor="design.200"
               >
                 <Text fontSize={"lg"} w={"100%"} textAlign={"center"}>
                   {client.clientName}
