@@ -228,6 +228,29 @@ export const ABOUT_US = {
   relatedEstablishment: [associate1, associate2],
 };
 
+export const ADMIN_NAV_ITEMS = [
+  {
+    label: "Projects",
+    path: "Projects",
+    subRoutes: [],
+  },
+  {
+    label: "Clients",
+    path: "Clients",
+    subRoutes: [],
+  },
+  {
+    label: "Team",
+    path: "Team",
+    subRoutes: [],
+  },
+  {
+    label: "Careers",
+    path: "Careers",
+    subRoutes: [],
+  },
+];
+
 // const NAV_ITEMS = ['Home','Services','Projects','About Us','Career','Contact Us']
 
 // const SUB_NAV_ITEMS = [

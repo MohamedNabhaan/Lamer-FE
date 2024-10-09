@@ -9,6 +9,14 @@ import Team from "./pages/Team/Team";
 import Careers from "./pages/Careers/Careers";
 import Projects from "./pages/Projects/Projects";
 
+import AdminProjects from "./pages/AdminPages/AdminProjects";
+import { checkAuthLoader } from "./utils/auth";
+import AdminCareers from "./pages/AdminPages/AdminCareers";
+import AdminClients from "./pages/AdminPages/AdminClients";
+import AdminTeam from "./pages/AdminPages/AdminTeam";
+import AdminDash, { action as logOutAction } from "./AdminDash";
+import LoginPage, { action as authAction } from "./pages/LoginPage/Login";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -21,6 +29,19 @@ const router = createBrowserRouter([
       { path: "AboutUs", element: <AboutUs /> },
       { path: "OurTeam", element: <Team /> },
       { path: "Careers", element: <Careers /> },
+    ],
+  },
+  { path: "Admin", element: <LoginPage />, action: authAction },
+  {
+    path: "AdminDash",
+    element: <AdminDash />,
+    loader: checkAuthLoader,
+    action: logOutAction,
+    children: [
+      { path: "Projects", element: <AdminProjects />, loader: checkAuthLoader },
+      { path: "Careers", element: <AdminCareers />, loader: checkAuthLoader },
+      { path: "Clients", element: <AdminClients />, loader: checkAuthLoader },
+      { path: "Team", element: <AdminTeam />, loader: checkAuthLoader },
     ],
   },
 ]);
