@@ -24,7 +24,7 @@ export default function Pagination({
                   key={number}
                   onClick={() => paginate(number)}
                   paddingInline={4}
-                  _hover={{ bgColor: "design.200" }}
+                  _hover={{ bgColor: "design.100" }}
                 >
                   <Text>{number}</Text>
                 </Center>

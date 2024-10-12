@@ -56,7 +56,7 @@ export default function Careers() {
         paddingLeft={20}
         paddingBottom={12}
         borderBottom={"solid"}
-        borderColor={"design.200"}
+        borderColor={"design.100"}
         justifyContent={"center"}
       >
         <Heading
@@ -92,7 +92,7 @@ export default function Careers() {
         {vacancies.map((vacancy) => {
           return (
             <Card variant={"outline"}>
-              <CardHeader borderBottom={"solid"} borderColor={"design.200"}>
+              <CardHeader borderBottom={"solid"} borderColor={"design.100"}>
                 <Heading as="h2" size="2xl" fontWeight={500} paddingBottom={2}>
                   {vacancy.positionName}
                 </Heading>

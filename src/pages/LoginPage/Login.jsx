@@ -11,13 +11,8 @@ import { json, redirect } from "react-router-dom";
 
 export default function LoginPage() {
   return (
-    <Box height={"100vh"} bgColor={"design.200"}>
-      <Container
-        maxW={"container.xl"}
-        borderBottom={"solid"}
-        paddingBlock={20}
-        borderColor={"design.200"}
-      >
+    <Box height={"100vh"} bgColor={"white"}>
+      <Container maxW={"container.xl"} paddingBlock={20}>
         <Heading textAlign={"center"} color={"brand.400"}>
           LoginPage
         </Heading>

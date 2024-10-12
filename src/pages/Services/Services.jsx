@@ -19,7 +19,7 @@ export default function Services() {
         paddingLeft={20}
         paddingBottom={16}
         borderBottom={"solid"}
-        borderColor={"design.200"}
+        borderColor={"design.100"}
         justifyContent={"center"}
       >
         <Stack direction={"column"} spacing={10}>

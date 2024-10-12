@@ -20,7 +20,7 @@ export default function AboutUs() {
         paddingLeft={20}
         paddingBottom={12}
         borderBottom={"solid"}
-        borderColor={"design.200"}
+        borderColor={"design.100"}
         justifyContent={"center"}
       >
         <Heading
@@ -52,7 +52,7 @@ export default function AboutUs() {
         </Stack>
       </Box>
       <Box
-        bgColor={"design.200"}
+        bgColor={"design.100"}
         paddingInline={16}
         paddingTop={8}
         paddingBottom={8}

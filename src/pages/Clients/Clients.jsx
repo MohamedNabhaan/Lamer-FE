@@ -45,7 +45,7 @@ export default function Clients() {
         paddingLeft={20}
         paddingBottom={12}
         borderBottom={"solid"}
-        borderColor={"design.200"}
+        borderColor={"design.100"}
         justifyContent={"center"}
       >
         <Heading
@@ -82,7 +82,7 @@ export default function Clients() {
                 paddingTop={4}
                 borderTop={"solid"}
                 borderColor={"design.100"}
-                bgColor="design.200"
+                bgColor="design.100"
               >
                 <Text fontSize={"lg"} w={"100%"} textAlign={"center"}>
                   {client.clientName}

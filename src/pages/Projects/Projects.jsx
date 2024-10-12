@@ -174,7 +174,7 @@ export default function Projects() {
           paddingTop={12}
           paddingLeft={20}
           borderBottom={"solid"}
-          borderColor={"design.200"}
+          borderColor={"design.100"}
           justifyContent={"center"}
         >
           <Heading
@@ -220,7 +220,7 @@ export default function Projects() {
                       ></Image>
                       <CardBody
                         borderLeft={"solid"}
-                        borderColor={"design.200"}
+                        borderColor={"design.100"}
                         padding={0}
                         paddingBottom={6}
                       >
@@ -232,7 +232,7 @@ export default function Projects() {
                             paddingBottom={4}
                             paddingLeft={8}
                             borderBottom={"solid 2px"}
-                            borderColor="design.200"
+                            borderColor="design.100"
                           >
                             {project.title}
                           </Heading>
