@@ -15,5 +15,4 @@ export async function checkAuthLoader() {
     return redirect("/Admin");
   }
   return null;
-  console.log(response);
 }
