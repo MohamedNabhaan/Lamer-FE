@@ -41,7 +41,11 @@ export default function ServiceCard(props) {
           }}
         ></Image>
       </Box>
-      <Collapse in={isOpen}>
+      <Collapse
+        in={isOpen}
+        transition={{ enter: { duration: 1 }, exit: { duration: 0.5 } }}
+        transitionTimingFunction="ease-in-out"
+      >
         <Text
           bgColor={"brand.400"}
           borderBottomRadius={16}
