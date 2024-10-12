@@ -20,7 +20,6 @@ export async function action() {
     credentials: "include",
   });
 
-  console.log(response);
   if (response.status === 201) {
     return redirect("/Admin");
   }

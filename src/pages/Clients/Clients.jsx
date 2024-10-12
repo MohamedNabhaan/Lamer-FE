@@ -38,7 +38,7 @@ export default function Clients() {
   }, []);
 
   return (
-    <Box>
+    <Box minH={"72vh"}>
       <Container
         maxW={"container.xl"}
         paddingTop={12}

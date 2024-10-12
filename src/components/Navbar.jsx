@@ -113,7 +113,6 @@ const DesktopNav = () => {
   const linkHoverColor = useColorModeValue("gray.800", "white");
   const popoverContentBgColor = useColorModeValue("white", "gray.800");
 
-  console.log(pathname);
   return (
     <Stack
       as="nav"

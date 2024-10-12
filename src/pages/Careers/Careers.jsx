@@ -49,7 +49,7 @@ export default function Careers() {
   }, []);
 
   return (
-    <Box h={isFetching ? "68vh" : ""}>
+    <Box minH={"72vh"}>
       <Container
         maxW={"container.xl"}
         paddingTop={12}

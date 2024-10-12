@@ -12,7 +12,7 @@ import { useEffect } from "react";
 
 export default function Services() {
   return (
-    <Box overflow={"hidden"}>
+    <Box overflow={"hidden"} minH={"72vh"}>
       <Container
         maxW={"container.xl"}
         paddingTop={12}

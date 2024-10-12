@@ -34,7 +34,7 @@ export async function action({ request }) {
     email: data.get("email"),
     password: data.get("password"),
   };
-  console.log(JSON.stringify(authData));
+
   const response = await fetch("http://localhost:3000/auth/signin", {
     method: "POST",
     headers: {
@@ -54,16 +54,5 @@ export async function action({ request }) {
     throw json({ message: "Authentication issue" }, { status: 500 });
   }
 
-  const resData = await response.json();
-  const session = response.session;
-  console.log("session", session);
-  console.log(document.cookies);
-  for (let entry of response.headers.entries()) {
-    console.log("header", entry);
-  }
-  //console.log(document.cookie);
-  //console.log(response.session);
-  //   resData.headers.forEach(console.log);
-
-  return redirect("/AdminDash/Projects");
+  return redirect("/Admin/Projects");
 }
