@@ -206,7 +206,8 @@ const DesktopSubNav = ({ label, path }) => {
         <Box>
           <Text
             transition={"all .3s ease"}
-            _groupHover={{ color: "pink.400" }}
+            color={"brand.400"}
+            _groupHover={{ color: "gray.800" }}
             fontWeight={500}
           >
             <NavLink to={`${path}`}>{label}</NavLink>
@@ -222,7 +223,7 @@ const DesktopSubNav = ({ label, path }) => {
           align={"center"}
           flex={1}
         >
-          <Icon color={"pink.400"} w={5} h={5} as={ChevronRightIcon} />
+          <Icon color={"gray.800"} w={5} h={5} as={ChevronRightIcon} />
         </Flex>
       </Stack>
     </Box>
