@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import "./index.css";
-import { ChakraProvider, extendTheme } from "@chakra-ui/react";
+import { ChakraProvider, extendTheme, Modal } from "@chakra-ui/react";
 import "@fontsource/fraunces";
 import "@fontsource/montserrat";
 
@@ -29,6 +29,18 @@ const theme = extendTheme({
   fonts: {
     heading: `'Fraunces', sans-serif`,
     body: `'Montserrat', sans-serif`,
+  },
+  components: {
+    Modal: {
+      baseStyle: (props) => ({
+        dialog: {
+          bg: "white",
+          maxH: "900px",
+          border: "solid",
+          borderColor: "#F2F4F4",
+        },
+      }),
+    },
   },
 });
 

@@ -251,6 +251,62 @@ export const ADMIN_NAV_ITEMS = [
   },
 ];
 
+export const PROJ_CATEGORIES = [
+  {
+    label: "Environmental and Social Impact Assessment",
+    value: "EIA",
+  },
+  {
+    label: "Environmental conservation and management training",
+    value: "ECMT",
+  },
+  {
+    label: "Environmental management systems",
+    value: "EMS",
+  },
+  {
+    label: "Environmental Monitoring and Reporting",
+    value: "EMR",
+  },
+  {
+    label: "Environmental Education and Awareness",
+    value: "EEA",
+  },
+  {
+    label: "Project Management",
+    value: "PM",
+  },
+  {
+    label: "Resiliant Planning and Sustainable Development",
+    value: "RSP",
+  },
+  {
+    label: "Coastal engineering, beach replenishment and restoration",
+    value: "CEBR",
+  },
+  {
+    label: "Coastal and Reef Habitat Mapping",
+    value: "CRHM",
+  },
+  {
+    label: "Reef rehabilitation and restoration",
+
+    value: "RRR",
+  },
+  {
+    label: "Land, Hydrographic & Oceanographic Surveys",
+
+    value: "LHOS",
+  },
+  {
+    label: "Ecological Surveys",
+    value: "ES",
+  },
+  {
+    label: "Fisheries resources assessment",
+    value: "FRM",
+  },
+];
 // const NAV_ITEMS = ['Home','Services','Projects','About Us','Career','Contact Us']
 
 // const SUB_NAV_ITEMS = [

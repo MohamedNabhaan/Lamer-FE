@@ -9,13 +9,14 @@ import Team from "./pages/Team/Team";
 import Careers from "./pages/Careers/Careers";
 import Projects from "./pages/Projects/Projects";
 
-import AdminProjects from "./pages/AdminPages/AdminProjects";
+import AdminProjects from "./pages/AdminPages/AdminProjects/AdminProjects";
 import { checkAuthLoader } from "./utils/auth";
-import AdminCareers from "./pages/AdminPages/AdminCareers";
-import AdminClients from "./pages/AdminPages/AdminClients";
-import AdminTeam from "./pages/AdminPages/AdminTeam";
+import AdminCareers from "./pages/AdminPages/AdminCareers/AdminCareers";
+import AdminClients from "./pages/AdminPages/AdminClients/AdminClients";
+import AdminTeam from "./pages/AdminPages/AdminTeam/AdminTeam";
 import AdminDash, { action as logOutAction } from "./AdminDash";
 import LoginPage, { action as authAction } from "./pages/LoginPage/Login";
+import ProjectModal from "./components/ProjectModal";
 
 const router = createBrowserRouter([
   {
@@ -25,15 +26,19 @@ const router = createBrowserRouter([
       { path: "", element: <Home /> },
       { path: "Services", element: <Services /> },
       { path: "Clients", element: <Clients /> },
-      { path: "Projects", element: <Projects /> },
+      {
+        path: "Projects",
+        element: <Projects />,
+        children: [{ path: ":id", element: <ProjectModal /> }],
+      },
       { path: "AboutUs", element: <AboutUs /> },
       { path: "OurTeam", element: <Team /> },
       { path: "Careers", element: <Careers /> },
     ],
   },
-  { path: "Admin", element: <LoginPage />, action: authAction },
+  { path: "AdminLogin", element: <LoginPage />, action: authAction },
   {
-    path: "AdminDash",
+    path: "Admin",
     element: <AdminDash />,
     loader: checkAuthLoader,
     action: logOutAction,
