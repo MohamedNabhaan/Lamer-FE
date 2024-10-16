@@ -8,7 +8,6 @@ import Clients from "./pages/Clients/Clients";
 import Team from "./pages/Team/Team";
 import Careers from "./pages/Careers/Careers";
 import Projects from "./pages/Projects/Projects";
-
 import AdminProjects from "./pages/AdminPages/AdminProjects/AdminProjects";
 import { checkAuthLoader } from "./utils/auth";
 import AdminCareers from "./pages/AdminPages/AdminCareers/AdminCareers";
@@ -17,6 +16,7 @@ import AdminTeam from "./pages/AdminPages/AdminTeam/AdminTeam";
 import AdminDash, { action as logOutAction } from "./AdminDash";
 import LoginPage, { action as authAction } from "./pages/LoginPage/Login";
 import ProjectModal from "./components/ProjectModal";
+import ContactUs from "./pages/ContactUs/ContactUs";
 
 const router = createBrowserRouter([
   {
@@ -34,6 +34,7 @@ const router = createBrowserRouter([
       { path: "AboutUs", element: <AboutUs /> },
       { path: "OurTeam", element: <Team /> },
       { path: "Careers", element: <Careers /> },
+      { path: "ContactUs", element: <ContactUs /> },
     ],
   },
   { path: "AdminLogin", element: <LoginPage />, action: authAction },
