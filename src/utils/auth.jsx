@@ -12,7 +12,7 @@ export async function checkAuthLoader() {
   });
 
   if (response.status !== 200) {
-    return redirect("/Admin");
+    return redirect("/adminLogin");
   }
   return null;
 }
