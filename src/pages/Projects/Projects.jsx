@@ -25,6 +25,7 @@ import { PROJ_CATEGORIES } from "../..";
 import ProjectModal from "../../components/ProjectModal";
 import { Link, Outlet, Route, Routes, useLocation } from "react-router-dom";
 import Pagination from "../../components/Pagination";
+import { ProjectCard } from "../../components/ProjectCard";
 
 export default function Projects() {
   const [isFetching, setIsFetching] = useState(false);
@@ -158,7 +159,6 @@ export default function Projects() {
   function paginate(number) {
     setCurrentPage(number);
     if (number < Math.ceil(projects.length / projPerPage + 1) && number > 0) {
-      console.log(number);
       const indexOfLastProj = number * projPerPage;
       const indexOfFirstProj = indexOfLastProj - projPerPage;
       setCurrentPageProjs(projects.slice(indexOfFirstProj, indexOfLastProj));
@@ -206,50 +206,13 @@ export default function Projects() {
               {currentPageProjs.map((project) => {
                 return (
                   <Link to={`${project.id}`}>
-                    <Card
-                      direction={{ base: "column", md: "row" }}
-                      overflow={"hidden"}
-                      variant={"outline"}
-                      align={"center"}
-                    >
-                      <Image
-                        w={"250px"}
-                        h={"250px"}
-                        src={project.images[0]}
-                        fallbackSrc={fallback}
-                      ></Image>
-                      <CardBody
-                        borderLeft={"solid"}
-                        borderColor={"design.100"}
-                        padding={0}
-                        paddingBottom={6}
-                      >
-                        <Box>
-                          <Heading
-                            w="100%"
-                            as={"h2"}
-                            size={"2xl"}
-                            paddingBottom={4}
-                            paddingLeft={8}
-                            borderBottom={"solid 2px"}
-                            borderColor="design.100"
-                          >
-                            {project.title}
-                          </Heading>
-                          <Box paddingLeft={8} paddingTop={4}>
-                            <Text fontSize={"xl"}>
-                              Client : {project.clientName}
-                            </Text>
-                            <Text fontSize={"xl"}>
-                              Date : {project.projectDate}
-                            </Text>
-                            <Text fontSize={"xl"}>
-                              Project Category : {project.projectCategory}
-                            </Text>
-                          </Box>
-                        </Box>
-                      </CardBody>
-                    </Card>
+                    <ProjectCard
+                      images={project.images}
+                      title={project.title}
+                      clientName={project.clientName}
+                      projectDate={project.projectDate}
+                      projectCategory={project.projectCategory}
+                    ></ProjectCard>
                   </Link>
                 );
               })}

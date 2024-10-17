@@ -70,9 +70,8 @@ export default function ProjectModal(props) {
         <ModalOverlay />
         <ModalContent top={"5%"}>
           <ModalCloseButton />
-
           <ModalHeader>
-            <Heading size={"2xl"}>{project ? project.title : ""}</Heading>
+            <Heading>{project ? project.title : ""}</Heading>
           </ModalHeader>
           <ModalBody>
             <SimpleGrid columns={{ base: 1, md: 2 }} spacing={2}>
