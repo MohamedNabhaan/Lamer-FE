@@ -1,6 +1,6 @@
 "use client";
 
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, redirect, useLocation } from "react-router-dom";
 import logo from "../assets/logo3.png";
 import { NAV_ITEMS } from "../index.js";
 import {
@@ -174,21 +174,24 @@ const DesktopNav = () => {
         </Center>
       ))}
 
-      <Button
-        bg={"brand.400"}
-        textColor={"white"}
-        fontWeight={600}
-        border="solid"
-        transition={"0.5s"}
-        _hover={{
-          textDecoration: "none",
-          textColor: "brand.400",
-          bgColor: "white",
-          border: "solid",
-        }}
-      >
-        Contact Us
-      </Button>
+      <NavLink to={"/ContactUs"}>
+        {" "}
+        <Button
+          bg={"brand.400"}
+          textColor={"white"}
+          fontWeight={600}
+          border="solid"
+          transition={"0.5s"}
+          _hover={{
+            textDecoration: "none",
+            textColor: "brand.400",
+            bgColor: "white",
+            border: "solid",
+          }}
+        >
+          Contact Us
+        </Button>
+      </NavLink>
     </Stack>
   );
 };
