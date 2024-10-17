@@ -38,7 +38,6 @@ export default function Careers() {
           date.getMonth() + 1
         }/${date.getFullYear()}`;
         data.image = vals;
-        console.log(data.image);
       });
 
       setVacancies(resData);
