@@ -8,7 +8,9 @@ import Clients from "./pages/Clients/Clients";
 import Team from "./pages/Team/Team";
 import Careers from "./pages/Careers/Careers";
 import Projects from "./pages/Projects/Projects";
-import AdminProjects from "./pages/AdminPages/AdminProjects/AdminProjects";
+import AdminProjects, {
+  action as editProject,
+} from "./pages/AdminPages/AdminProjects/AdminProjects";
 import { checkAuthLoader } from "./utils/auth";
 import AdminCareers from "./pages/AdminPages/AdminCareers/AdminCareers";
 import AdminClients from "./pages/AdminPages/AdminClients/AdminClients";
@@ -17,6 +19,8 @@ import AdminDash, { action as logOutAction } from "./AdminDash";
 import LoginPage, { action as authAction } from "./pages/LoginPage/Login";
 import ProjectModal from "./components/ProjectModal";
 import ContactUs from "./pages/ContactUs/ContactUs";
+import EditForm from "./components/EditForm";
+import { projectLoader } from "./utils/project";
 
 const router = createBrowserRouter([
   {
@@ -44,7 +48,14 @@ const router = createBrowserRouter([
     loader: checkAuthLoader,
     action: logOutAction,
     children: [
-      { path: "Projects", element: <AdminProjects />, loader: checkAuthLoader },
+      {
+        path: "Projects",
+        element: <AdminProjects />,
+        loader: checkAuthLoader,
+        children: [
+          { path: ":id", element: <EditForm />, loader: projectLoader },
+        ],
+      },
       { path: "Careers", element: <AdminCareers />, loader: checkAuthLoader },
       { path: "Clients", element: <AdminClients />, loader: checkAuthLoader },
       { path: "Team", element: <AdminTeam />, loader: checkAuthLoader },
