@@ -9,7 +9,7 @@ import Team from "./pages/Team/Team";
 import Careers from "./pages/Careers/Careers";
 import Projects from "./pages/Projects/Projects";
 import AdminProjects, {
-  action as editProject,
+  projectsLoader,
 } from "./pages/AdminPages/AdminProjects/AdminProjects";
 import { checkAuthLoader } from "./utils/auth";
 import AdminCareers from "./pages/AdminPages/AdminCareers/AdminCareers";
@@ -19,7 +19,7 @@ import AdminDash, { action as logOutAction } from "./AdminDash";
 import LoginPage, { action as authAction } from "./pages/LoginPage/Login";
 import ProjectModal from "./components/ProjectModal";
 import ContactUs from "./pages/ContactUs/ContactUs";
-import EditForm from "./components/EditForm";
+import EditForm, { action as editAction } from "./components/EditForm";
 import { projectLoader } from "./utils/project";
 
 const router = createBrowserRouter([
@@ -51,9 +51,14 @@ const router = createBrowserRouter([
       {
         path: "Projects",
         element: <AdminProjects />,
-        loader: checkAuthLoader,
+        loader: projectsLoader,
         children: [
-          { path: ":id", element: <EditForm />, loader: projectLoader },
+          {
+            path: ":id",
+            element: <EditForm />,
+            loader: projectLoader,
+            action: editAction,
+          },
         ],
       },
       { path: "Careers", element: <AdminCareers />, loader: checkAuthLoader },

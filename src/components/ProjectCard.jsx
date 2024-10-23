@@ -21,8 +21,12 @@ export function ProjectCard({
   projectCategory,
   delProject,
   editProject,
+  searchParams,
 }) {
   const location = useLocation();
+
+  const pathname = location.pathname;
+  const search = location.search;
 
   return (
     <Card
@@ -46,23 +50,13 @@ export function ProjectCard({
         <Box>
           {location.pathname.toLowerCase() === "/admin/projects" ? (
             <Box position={"absolute"} top={0} right={0} zIndex={1}>
-              <NavLink to={`${projId}`}>
-                <Button
-                  variant={"ghost"}
-                  rounded={false}
-                  zIndex={1}
-                  onClick={() => editProject(project)}
-                >
+              <NavLink to={`${projId}`} state={{ from: [pathname + search] }}>
+                <Button variant={"ghost"} rounded={false} zIndex={1}>
                   <EditIcon></EditIcon>
                 </Button>
               </NavLink>
 
-              <Button
-                variant={"ghost"}
-                rounded={false}
-                onClick={() => delProject(projId, projIndex)}
-                zIndex={9999999}
-              >
+              <Button variant={"ghost"} rounded={false} zIndex={9999999}>
                 <DeleteIcon></DeleteIcon>
               </Button>
             </Box>

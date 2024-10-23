@@ -7,184 +7,74 @@ import {
   Text,
   Select,
   Input,
+  filter,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { PROJ_CATEGORIES } from "../../..";
-import { Link, Outlet } from "react-router-dom";
+import {
+  Link,
+  Outlet,
+  useLoaderData,
+  useSearchParams,
+  useLocation,
+} from "react-router-dom";
 import Pagination from "../../../components/Pagination";
 import { ProjectCard } from "../../../components/ProjectCard";
 import EditForm from "../../../components/EditForm";
 
 export default function AdminProjects() {
-  const [isFetching, setIsFetching] = useState(false);
-  let [projects, setProjects] = useState([]);
-  const [edited, setEdited] = useState(false);
-  const [showing, setShowing] = useState(false);
-  const [selected, setSelected] = useState();
-  const [filtered, setFiltered] = useState(false);
-  const [filterVal, setFilterVal] = useState("");
-  const [projPerPage, setProjPerPage] = useState(10);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [currentPageProjs, setCurrentPageProjs] = useState([]);
-
-  async function fetchProjects() {
-    setIsFetching(true);
-    const response = await fetch("http://localhost:3000/projects");
-
-    const resData = await response.json();
-
-    resData.map((data) => {
-      const vals = data.images
-        .replace("[", "")
-        .replace("]", "")
-        .replace(/["]/g, "")
-        .split(",");
-      const date = new Date(data.projectDate);
-
-      data.projectDate = `${date.getDate()}/${
-        date.getMonth() + 1
-      }/${date.getFullYear()}`;
-      data.images = vals;
-    });
-
-    setProjects(resData);
-    const indexOfLastProj = currentPage * projPerPage;
-    const indexOfFirstProj = indexOfLastProj - projPerPage;
-    setCurrentPageProjs(resData.slice(indexOfFirstProj, indexOfLastProj));
-    setIsFetching(false);
-    resData;
-  }
-
-  async function filteredFetchProjects() {
-    setIsFetching(true);
-    const response = await fetch(
-      `http://localhost:3000/projects?projectCategory=` + `${filterVal}`
-    );
-
-    const resData = await response.json();
-
-    resData.map((data) => {
-      const vals = data.images
-        .replace("[", "")
-        .replace("]", "")
-        .replace(/["]/g, "")
-        .split(",");
-      const date = new Date(data.projectDate);
-
-      data.projectDate = `${date.getDate()}/${
-        date.getMonth() + 1
-      }/${date.getFullYear()}`;
-      data.images = vals;
-    });
-
-    setProjects(resData);
-    const indexOfLastProj = currentPage * projPerPage;
-    const indexOfFirstProj = indexOfLastProj - projPerPage;
-    setCurrentPageProjs(resData.slice(indexOfFirstProj, indexOfLastProj));
-    setIsFetching(false);
-  }
+  const { search } = useLocation();
+  const projects = useLoaderData();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [filterVal, setFilterVal] = useState({});
+  const [isSelected, setIsSelected] = useState(false);
+  const [searchParamSave, setsearchParamSave] = useState("");
+  const urlSearchString = window.location.search;
+  const params = new URLSearchParams(urlSearchString);
 
   useEffect(() => {
-    if (filtered) {
-      filteredFetchProjects();
-    } else {
-      fetchProjects();
+    if (searchParams.get("projectCategory")) {
+      setIsSelected(true);
+      let searchVals = {
+        projectCategory: searchParams.get("projectCategory"),
+      };
+      if (searchParams.get("title")) {
+        const addedVals = { title: searchParams.get("title") };
+        searchVals = { ...searchVals, ...addedVals };
+      }
+      setFilterVal(searchVals);
     }
   }, []);
 
-  async function onFilterValueChanged(e) {
+  useEffect(() => {
+    setSearchParams(filterVal);
+  }, [filterVal]);
+
+  function setCategoryVal(e) {
     if (e.target.value !== "") {
-      const response = await fetch(
-        "http://localhost:3000/projects?projectCategory=" + `${e.target.value}`
-      );
-      const resData = await response.json();
-
-      resData.map((data) => {
-        const vals = data.images
-          .replace("[", "")
-          .replace("]", "")
-          .replace(/["]/g, "")
-          .split(",");
-        const date = new Date(data.projectDate);
-
-        data.projectDate = `${date.getDate()}/${
-          date.getMonth() + 1
-        }/${date.getFullYear()}`;
-        data.images = vals;
-      });
-      setProjects(resData);
-      const indexOfLastProj = 1 * projPerPage;
-      const indexOfFirstProj = indexOfLastProj - projPerPage;
-      setCurrentPageProjs(resData.slice(indexOfFirstProj, indexOfLastProj));
-      setCurrentPage(1);
-      setFilterVal(e.target.value);
-      setFiltered(true);
+      const newVal = { projectCategory: e.target.value };
+      setsearchParamSave(document.location.search);
+      setFilterVal({ ...filterVal, ...newVal });
+      setIsSelected(true);
     } else {
-      const response = await fetch("http://localhost:3000/projects");
-
-      const resData = await response.json();
-
-      resData.map((data) => {
-        const vals = data.images
-          .replace("[", "")
-          .replace("]", "")
-          .replace(/["]/g, "")
-          .split(",");
-        const date = new Date(data.projectDate);
-
-        data.projectDate = `${date.getDate()}/${
-          date.getMonth() + 1
-        }/${date.getFullYear()}`;
-        data.images = vals;
-      });
-      setProjects(resData);
-      setCurrentPage(1);
-      const indexOfLastProj = 1 * projPerPage;
-      const indexOfFirstProj = indexOfLastProj - projPerPage;
-      setCurrentPageProjs(resData.slice(indexOfFirstProj, indexOfLastProj));
-
-      setFilterVal(e.target.value);
-      setFiltered(false);
+      setsearchParamSave(document.location.search);
+      setIsSelected(false);
+      setFilterVal({});
     }
   }
 
-  function paginate(number) {
-    setCurrentPage(number);
-    projects;
-    if (number < Math.ceil(projects.length / projPerPage + 1) && number > 0) {
-      const indexOfLastProj = number * projPerPage;
-      const indexOfFirstProj = indexOfLastProj - projPerPage;
-      setCurrentPageProjs(projects.slice(indexOfFirstProj, indexOfLastProj));
-      window.scrollTo(0, 0);
-    }
-  }
-
-  async function deleteProject(id, projIndex) {
-    const projPos = (currentPage - 1) * 10 + projIndex;
-
-    projPos;
-    const indexOfLastProj = currentPage * projPerPage;
-    const indexOfFirstProj = indexOfLastProj - projPerPage;
-    const response = await fetch("http://localhost:3000/projects/" + id, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Credentials": true,
-        "Access-Control-Allow-Origin": null,
-      },
-      credentials: "include",
-    });
-
-    if (response.status === 200) {
-      projects
-        .filter((project, index) => index !== projPos)
-        .slice(indexOfFirstProj, indexOfLastProj);
-      setProjects(projects.filter((project, index) => index !== projPos));
-      setCurrentPageProjs(
-        projects
-          .filter((project, index) => index !== projPos)
-          .slice(indexOfFirstProj, indexOfLastProj)
+  function setTitleVal(e) {
+    if (e.target.value !== "") {
+      const newVal = { title: e.target.value };
+      setsearchParamSave(document.location.search);
+      setFilterVal({ ...filterVal, ...newVal });
+    } else {
+      const removeVal = Object.fromEntries(
+        Object.entries(filterVal).filter(([key]) => key !== "title")
       );
+
+      setsearchParamSave(document.location.search);
+      setFilterVal(removeVal);
     }
   }
 
@@ -222,47 +112,53 @@ export default function AdminProjects() {
             Our Projects
           </Heading>
           <Box paddingTop={12} paddingBottom={8}>
-            <Select placeholder="All" onChange={onFilterValueChanged}>
+            <Select
+              placeholder="All"
+              onChange={setCategoryVal}
+              defaultValue={
+                searchParams.get("projectCategory")
+                  ? searchParams.get("projectCategory")
+                  : ""
+              }
+            >
               {PROJ_CATEGORIES.map((category) => {
                 return <option value={category.value}>{category.label}</option>;
               })}
             </Select>
+            {isSelected ? (
+              <Select
+                placeholder="All"
+                onChange={setTitleVal}
+                defaultValue={
+                  searchParams.get("title") ? searchParams.get("title") : ""
+                }
+              >
+                <option value={"zxczx xz zxc"}>Numeric Model</option>
+              </Select>
+            ) : (
+              ""
+            )}
           </Box>
         </Container>
         <Box paddingInline={16} paddingBlock={8}>
-          {currentPageProjs.length === 0 ? (
-            <Text>No Projects at the moment</Text>
-          ) : (
-            ""
-          )}
-          {isFetching ? (
-            <Text>Loading</Text>
-          ) : (
-            <Stack>
-              {currentPageProjs.map((project, index) => {
-                return (
-                  <ProjectCard
-                    project={project}
-                    projId={project.id}
-                    projIndex={index}
-                    images={project.images}
-                    title={project.title}
-                    clientName={project.clientName}
-                    projectDate={project.projectDate}
-                    projectCategory={project.projectCategory}
-                    delProject={deleteProject}
-                    editProject={open}
-                  ></ProjectCard>
-                );
-              })}
-            </Stack>
-          )}
-          <Pagination
-            projPerPage={projPerPage}
-            totalProj={projects.length}
-            paginate={paginate}
-            currentPage={currentPage}
-          ></Pagination>
+          <Stack>
+            {projects.map((project, index) => {
+              return (
+                <ProjectCard
+                  project={project}
+                  projId={project.id}
+                  projIndex={index}
+                  images={project.images}
+                  title={project.title}
+                  clientName={project.clientName}
+                  projectDate={project.projectDate}
+                  projectCategory={project.projectCategory}
+                  editProject={open}
+                  searchParams={searchParamSave}
+                ></ProjectCard>
+              );
+            })}
+          </Stack>
         </Box>
       </Box>
       <Outlet></Outlet>
@@ -270,28 +166,34 @@ export default function AdminProjects() {
   );
 }
 
-export async function action({ request }) {
-  const data = await request.formData();
-  const updates = Object.fromEntries(formData);
-  updates;
-  // const response = await fetch("http://localhost:3000/projects/", {
-  //   method: "Patch",
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //     "Access-Control-Allow-Credentials": true,
-  //     "Access-Control-Allow-Origin": null,
-  //   },
-  //   credentials: "include",
-  //   body: JSON.stringify(authData),
-  // });
+export async function projectsLoader({ request, params }) {
+  const url = new URL(request.url);
 
-  // if (response.status === 404 || response.status === 400) {
-  //   return response;
-  // }
+  const response = await fetch("http://localhost:3000/projects/" + url.search, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Credentials": true,
+      "Access-Control-Allow-Origin": null,
+    },
+    credentials: "include",
+  });
 
-  // if (!response.ok) {
-  //   throw json({ message: "Authentication issue" }, { status: 500 });
-  // }
+  const projects = await response.json();
 
-  // return redirect("/Admin/Projects");
+  projects.map((data) => {
+    const vals = data.images
+      .replace("[", "")
+      .replace("]", "")
+      .replace(/["]/g, "")
+      .split(",");
+    const date = new Date(data.projectDate);
+
+    data.projectDate = `${date.getDate()}/${
+      date.getMonth() + 1
+    }/${date.getFullYear()}`;
+    data.images = vals;
+  });
+
+  return projects;
 }
