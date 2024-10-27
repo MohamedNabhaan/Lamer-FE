@@ -34,7 +34,9 @@ const router = createBrowserRouter([
       {
         path: "Projects",
         element: <Projects />,
-        children: [{ path: ":id", element: <ProjectModal /> }],
+        children: [
+          { path: ":id", element: <ProjectModal />, loader: projectLoader },
+        ],
       },
       { path: "AboutUs", element: <AboutUs /> },
       { path: "OurTeam", element: <Team /> },

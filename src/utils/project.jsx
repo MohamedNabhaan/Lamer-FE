@@ -11,6 +11,17 @@ export async function projectLoader({ params }) {
   });
 
   const project = await response.json();
+  const vals = project.images
+    .replace("[", "")
+    .replace("]", "")
+    .replace(/["]/g, "")
+    .split(",");
+  const date = new Date(project.projectDate);
+  project.projectDate = `${date.getDate()}/${
+    date.getMonth() + 1
+  }/${date.getFullYear()}`;
+  project.images = vals;
 
+  console.log(project);
   return { project };
 }
