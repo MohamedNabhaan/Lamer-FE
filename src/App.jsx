@@ -21,6 +21,7 @@ import ProjectModal from "./components/ProjectModal";
 import ContactUs from "./pages/ContactUs/ContactUs";
 import EditForm, { action as editAction } from "./components/EditForm";
 import { projectLoader } from "./utils/project";
+import AddForm, { action as AddAction } from "./components/AddForm";
 
 const router = createBrowserRouter([
   {
@@ -64,6 +65,11 @@ const router = createBrowserRouter([
       { path: "Careers", element: <AdminCareers />, loader: checkAuthLoader },
       { path: "Clients", element: <AdminClients />, loader: checkAuthLoader },
       { path: "Team", element: <AdminTeam />, loader: checkAuthLoader },
+      {
+        path: "create",
+        element: <AddForm />,
+        action: AddAction,
+      },
     ],
   },
 ]);

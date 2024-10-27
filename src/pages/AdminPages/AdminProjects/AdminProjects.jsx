@@ -1,26 +1,23 @@
 import {
-  Image,
   Box,
   Heading,
   Container,
   Stack,
-  Text,
   Select,
-  Input,
-  filter,
+  Button,
+  Flex,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { PROJ_CATEGORIES } from "../../..";
 import {
-  Link,
   Outlet,
   useLoaderData,
   useSearchParams,
   useLocation,
+  NavLink,
 } from "react-router-dom";
 import Pagination from "../../../components/Pagination";
 import { ProjectCard } from "../../../components/ProjectCard";
-import EditForm from "../../../components/EditForm";
 
 export default function AdminProjects() {
   const { search } = useLocation();
@@ -111,36 +108,49 @@ export default function AdminProjects() {
           >
             Our Projects
           </Heading>
-          <Box paddingTop={12} paddingBottom={8}>
-            <Select
-              placeholder="All"
-              onChange={setCategoryVal}
-              defaultValue={
-                searchParams.get("projectCategory")
-                  ? searchParams.get("projectCategory")
-                  : ""
-              }
-            >
-              {PROJ_CATEGORIES.map((category) => {
-                return <option value={category.value}>{category.label}</option>;
-              })}
-            </Select>
-            {isSelected ? (
+          <Box paddingTop={12} paddingBottom={8} display={"flex"}>
+            <Stack direction={"row"} flex={1}>
               <Select
+                w={{ base: "8rem", sm: "16rem", md: "32rem" }}
                 placeholder="All"
-                onChange={setTitleVal}
+                onChange={setCategoryVal}
                 defaultValue={
-                  searchParams.get("title") ? searchParams.get("title") : ""
+                  searchParams.get("projectCategory")
+                    ? searchParams.get("projectCategory")
+                    : ""
                 }
               >
-                <option value={"zxczx xz zxc"}>Numeric Model</option>
+                {PROJ_CATEGORIES.map((category) => {
+                  return (
+                    <option value={category.value}>{category.label}</option>
+                  );
+                })}
               </Select>
-            ) : (
-              ""
-            )}
+              {isSelected ? (
+                <Select
+                  w={{ base: "8rem", sm: "16rem", md: "32rem" }}
+                  placeholder="All"
+                  onChange={setTitleVal}
+                  defaultValue={
+                    searchParams.get("title") ? searchParams.get("title") : ""
+                  }
+                >
+                  <option value={"zxczx xz zxc"}>Numeric Model</option>
+                </Select>
+              ) : (
+                ""
+              )}
+            </Stack>
           </Box>
         </Container>
-        <Box paddingInline={16} paddingBlock={8}>
+        <Box paddingInline={16} paddingBottom={8} paddingTop={4}>
+          <Flex paddingBottom={4} justify={"flex-end"}>
+            <NavLink to={`/Admin/create`}>
+              <Button bg={"brand.400"} color={"white"}>
+                Create Project
+              </Button>
+            </NavLink>
+          </Flex>
           <Stack>
             {projects.map((project, index) => {
               return (
