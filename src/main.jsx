@@ -1,6 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
+import "swiper/css";
+import "swiper/css/effect-coverflow";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
 import "./index.css";
 import { ChakraProvider, extendTheme, Modal } from "@chakra-ui/react";
 import "@fontsource/fraunces";
@@ -38,6 +42,9 @@ const theme = extendTheme({
           maxH: "900px",
           border: "solid",
           borderColor: "#F2F4F4",
+        },
+        overlay: {
+          bg: "white", //change the background
         },
       }),
     },
