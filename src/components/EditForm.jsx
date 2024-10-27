@@ -26,7 +26,6 @@ import {
   useNavigate,
 } from "react-router-dom";
 import { PROJ_CATEGORIES } from "..";
-import { Formik, useFormik } from "formik";
 
 export default function EditForm({ selected, open, updateProjects }) {
   const { project } = useLoaderData();
