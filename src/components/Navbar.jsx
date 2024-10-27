@@ -21,13 +21,15 @@ import {
   Center,
   useClipboard,
 } from "@chakra-ui/react";
+import { GiHamburgerMenu as HamburgerIcon } from "react-icons/gi";
+
 import {
-  HamburgerIcon,
-  CloseIcon,
-  ChevronDownIcon,
-  ChevronRightIcon,
-} from "@chakra-ui/icons";
-import { useEffect, useState } from "react";
+  FaRegWindowClose as CloseIcon,
+  FaChevronDown as ChevronDownIcon,
+  FaChevronRight as ChevronRightIcon,
+} from "react-icons/fa";
+
+import { useState, useEffect } from "react";
 
 export default function WithSubnavigation() {
   const { isOpen, onToggle } = useDisclosure();

@@ -13,7 +13,7 @@ import {
   Center,
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
-import { ExternalLinkIcon } from "@chakra-ui/icons";
+import { ExternalLink as ExternalLinkIcon } from "lucide-react";
 
 export default function Careers() {
   let [vacancies, setVacancies] = useState([]);

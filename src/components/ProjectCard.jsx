@@ -9,7 +9,12 @@ import {
 } from "@chakra-ui/react";
 import fallback from "../assets/logo.png";
 import { NavLink, useLocation } from "react-router-dom";
-import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
+
+import {
+  Trash2Icon as DeleteIcon,
+  FilePenLine as EditIcon,
+} from "lucide-react";
+
 export function ProjectCard({
   project,
   projId,
