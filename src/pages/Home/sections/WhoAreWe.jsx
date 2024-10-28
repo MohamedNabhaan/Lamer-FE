@@ -8,7 +8,6 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import { FOUNDERS } from "../../..";
-import bg from "../../../assets/bg.png";
 
 export default function WhoAreWe() {
   return (
