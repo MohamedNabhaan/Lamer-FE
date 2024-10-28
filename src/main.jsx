@@ -7,8 +7,9 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import "./index.css";
 import { ChakraProvider, extendTheme, Modal } from "@chakra-ui/react";
+import "@fontsource/bebas-neue";
 import "@fontsource/fraunces";
-import "@fontsource/montserrat";
+import "@fontsource/open-sans";
 
 const theme = extendTheme({
   colors: {
@@ -24,6 +25,7 @@ const theme = extendTheme({
       100: "#E6E8E8",
       200: "#F2F4F4",
       300: "#E1D9D1",
+      400: "#00000026",
     },
 
     nav: {
@@ -31,7 +33,7 @@ const theme = extendTheme({
     },
   },
   fonts: {
-    heading: `'Fraunces', sans-serif`,
+    heading: `'Open-Sans', sans-serif`,
     body: `'Montserrat', sans-serif`,
   },
   components: {

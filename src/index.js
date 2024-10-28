@@ -29,6 +29,7 @@ import ES from "./assets/servicepage/ES.png";
 import FRM from "./assets/servicepage/FRM.png";
 import associate1 from "./assets/aboutus/associate1.png";
 import associate2 from "./assets/aboutus/associate2.png";
+import hb from "./assets/founders/HB.jpg";
 
 export const CLIENTS = [
   dhiraagu,
@@ -111,19 +112,15 @@ export const NAV_ITEMS = [
 
 export const SERVICES = [
   {
-    label: "Enviromental Engineering Consultation",
-    img: eeLogo,
-  },
-  {
-    label: "Project Management",
-    img: pmLogo,
-  },
-  {
-    label: "Coastal Engineering Consultation",
+    label: "Coastal Engineering",
     img: ceLogo,
   },
   {
-    label: "Ecological,Land, Hydrographic & Oceanographic Surveys",
+    label: "Enviromental Engineering",
+    img: eeLogo,
+  },
+  {
+    label: "Surveying",
     img: sLogo,
   },
   {
@@ -305,6 +302,34 @@ export const PROJ_CATEGORIES = [
   {
     label: "Fisheries resources assessment",
     value: "FRM",
+  },
+];
+
+export const FOUNDERS = [
+  {
+    name: "Hussein Zahir",
+    title: "Executive Director / Co-Founder",
+    credentials: ["MPhil in Coral Reef Ecology "],
+    experience: "25",
+    picture: hb,
+  },
+  {
+    name: "Mohamed Aslam",
+    title: "Co-Founder / Consultant",
+    credentials: [
+      "MSc in Geography ",
+      "Bsc(Honors) in Geological Oceanography",
+    ],
+
+    experience: "27",
+    picture: hb,
+  },
+  {
+    name: "Ismail Abid",
+    title: "Managing Director",
+    credentials: [],
+    experience: "25",
+    picture: hb,
   },
 ];
 // const NAV_ITEMS = ['Home','Services','Projects','About Us','Career','Contact Us']
