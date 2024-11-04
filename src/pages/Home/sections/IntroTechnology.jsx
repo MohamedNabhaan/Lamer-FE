@@ -7,7 +7,6 @@ import {
   Center,
 } from "@chakra-ui/react";
 import { TECHNOLOGY } from "../../..";
-import bg from "../../../assets/bg.png";
 
 export default function IntroTechnology() {
   return (
