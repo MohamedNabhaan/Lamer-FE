@@ -22,6 +22,7 @@ import ContactUs from "./pages/ContactUs/ContactUs";
 import EditForm, { action as editAction } from "./components/EditForm";
 import { projectLoader } from "./utils/project";
 import AddForm, { action as AddAction } from "./components/AddForm";
+import SIRC from "./pages/SIRC/SIRC";
 
 const router = createBrowserRouter([
   {
@@ -42,6 +43,7 @@ const router = createBrowserRouter([
       { path: "OurTeam", element: <Team /> },
       { path: "Careers", element: <Careers /> },
       { path: "ContactUs", element: <ContactUs /> },
+      { path: "SIRC", element: <SIRC /> },
     ],
   },
   { path: "AdminLogin", element: <LoginPage />, action: authAction },

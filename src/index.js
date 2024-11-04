@@ -30,6 +30,9 @@ import FRM from "./assets/servicepage/FRM.png";
 import associate1 from "./assets/aboutus/associate1.png";
 import associate2 from "./assets/aboutus/associate2.png";
 import hb from "./assets/founders/HB.jpg";
+import drone from "./assets/tech/djiZenmuseL1.jpg";
+import drone2 from "./assets/tech/drone2.png";
+import apache3 from "./assets/tech/apache3.png";
 
 export const CLIENTS = [
   dhiraagu,
@@ -330,6 +333,16 @@ export const FOUNDERS = [
     credentials: [],
     experience: "25",
     picture: hb,
+  },
+];
+
+export const TECHNOLOGY = [
+  { label: "DJI Zenmuse Li (Lidar)", use: "numericals", image: drone },
+  { label: "CHCNAV Apache 3", use: "ewdwedwe", image: apache3 },
+  {
+    label: "Phantom 4 RTK drone with D-RTK 2 Mobile Station",
+    use: "ewdwedwe",
+    image: drone2,
   },
 ];
 // const NAV_ITEMS = ['Home','Services','Projects','About Us','Career','Contact Us']
