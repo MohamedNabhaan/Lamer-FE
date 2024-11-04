@@ -6,62 +6,86 @@ import {
   Center,
   Container,
   Stack,
+  SimpleGrid,
+  Text,
+  textDecoration,
 } from "@chakra-ui/react";
 
 import { SERVICES } from "../../../index.js";
+import { Link } from "react-router-dom";
 
 export default function IntroServices() {
   return (
-    <Container
-      maxW={{ base: "container.sm", md: "100%" }}
-      overflow={"hidden"}
-      paddingTop={8}
-      paddingBottom={12}
-      m={0}
-      w={"100%"}
+    <Box
+      minH={"28rem"}
+      paddingBlock={{ base: 0, md: 12 }}
+      paddingInline={16}
+      bgColor={"design.500"}
     >
-      <Center paddingBlockEnd={12}>
-        <Heading textColor={"brand.400"} size={"3xl"}>
-          Core Services
-        </Heading>
-      </Center>
-
-      <Stack
-        direction={"row"}
-        display={"flex"}
-        spacing={10}
-        flexWrap={{ base: "wrap", lg: "nowrap" }}
-        paddingInline={{ base: 0, md: 56 }}
-      >
-        {SERVICES.map((service) => (
-          <Flex
-            flexDirection={"column"}
-            justifyContent={"center"}
-            alignItems={"center"}
-            w="100%"
-            paddingBlockStart={4}
+      <SimpleGrid columns={{ base: 1, md: 1 }} spacing={8}>
+        <Box>
+          <Heading
+            textColor={"brand.400"}
+            size={"3xl"}
+            paddingBottom={4}
+            paddingLeft={{ base: 0, md: 4 }}
           >
-            <Image
-              border={"solid"}
-              borderColor={"design.100"}
-              borderRadius={"50%"}
-              boxSize={"auto"}
-              h={"100%"}
-              src={service.img}
-            />
+            Core Services
+          </Heading>
+          <Heading
+            color={"blackAlpha.600"}
+            paddingLeft={{ base: 0, md: 6 }}
+            fontWeight={400}
+            size={"lg"}
+          >
+            We provide an array of services under these categories
+          </Heading>
+        </Box>
 
-            <Box
-              fontSize={"lg"}
-              h={"100%"}
-              p={2}
-              color={"blackAlpha.700"}
-              textAlign={"center"}
+        <SimpleGrid columns={{ base: 1, md: 4 }} h={"100%"} spacing={2}>
+          {SERVICES.map((service) => (
+            <Flex
+              role="group"
+              border={"solid"}
+              h={"20rem"}
+              flexDirection={"column"}
+              justifyContent={"center"}
+              alignItems={"center"}
+              paddingBlockStart={12}
+              borderColor={"design.100"}
+              borderRadius={"1rem"}
+              transitionDuration={"600ms"}
+              _hover={{
+                bgColor: "blackAlpha.200",
+              }}
             >
-              {service.label}
-            </Box>
-          </Flex>
-        ))}
-      </Stack>
-    </Container>
+              <Image
+                h={"50%"}
+                border={"solid"}
+                borderColor={"design.100"}
+                borderRadius={"50%"}
+                objectFit={"cover"}
+                src={service.img}
+              />
+
+              <Box
+                fontSize={"xl"}
+                paddingTop={8}
+                color={"blackAlpha.700"}
+                textAlign={"center"}
+              >
+                <Text paddingInline={8} paddingBottom={8}>
+                  {service.label}
+                </Text>
+              </Box>
+
+              <Text _groupHover={{ textDecoration: "underline" }}>
+                Learn More...
+              </Text>
+            </Flex>
+          ))}
+        </SimpleGrid>
+      </SimpleGrid>
+    </Box>
   );
 }
