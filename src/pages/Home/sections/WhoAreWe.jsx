@@ -13,9 +13,10 @@ export default function WhoAreWe() {
   return (
     <>
       <Box
-        minH={{ base: "115rem", md: "40rem" }}
-        marginBottom={12}
+        minH={{ base: "110rem", md: "40rem" }}
+        marginBottom={10}
         paddingTop={4}
+        paddingBottom={8}
       >
         {/* <Heading
           as="h1"
@@ -37,7 +38,7 @@ export default function WhoAreWe() {
           color={"brand.400"}
         >
           {" "}
-          The Faces of LAMER Group.
+          The Faces of LaMEr Group.
         </Heading>
         <Heading
           as={"h3"}
