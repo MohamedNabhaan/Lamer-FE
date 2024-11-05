@@ -46,7 +46,7 @@ export default function IntroSirc() {
             <Text paddingBottom={2}>
               The Center has facilitated several research papers and studies.
             </Text>
-            <Link>
+            <Link to={"/SIRC"}>
               <Text fontWeight={600} _hover={{ textDecoration: "underline" }}>
                 {" "}
                 Learn More...
