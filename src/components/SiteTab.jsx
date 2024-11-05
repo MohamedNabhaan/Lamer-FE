@@ -25,12 +25,20 @@ export default function SiteTab() {
           Research Sites
         </Heading>
 
-        <Text paddingTop={6} paddingRight={12} fontSize={"xl"}>
+        <Text
+          paddingTop={6}
+          paddingRight={12}
+          fontSize={{ base: "lg", md: "xl" }}
+        >
           All islands, lagoons and reefs within the red outline (with the
           exception of resort island) are available research sites for students
           and researchers interested in carrying out research in the area.
         </Text>
-        <Text paddingTop={2} paddingRight={8} fontSize={"xl"}>
+        <Text
+          paddingTop={2}
+          paddingRight={8}
+          fontSize={{ base: "lg", md: "xl" }}
+        >
           The Research Centre has exclusive use of the islands of
           Maahutigalaa(1), Hoothodaa(2) and Faathiyehuttaa(3). The facility at
           Maathoda and the three islands which function as individual
@@ -51,7 +59,11 @@ export default function SiteTab() {
           </Heading>
 
           <Box>
-            <Text paddingBottom={2} paddingRight={16} fontSize={"xl"}>
+            <Text
+              paddingBottom={2}
+              paddingRight={16}
+              fontSize={{ base: "lg", md: "xl" }}
+            >
               The island is our Coral Reef laboratory and the reef system around
               the island has good potential as a coral reef research habitat.
               The island has large potential for the study of beach dynamics and
@@ -68,7 +80,11 @@ export default function SiteTab() {
           </Heading>
 
           <Box>
-            <Text paddingBottom={2} paddingRight={16} fontSize={"xl"}>
+            <Text
+              paddingBottom={2}
+              paddingRight={16}
+              fontSize={{ base: "lg", md: "xl" }}
+            >
               The island of Hoothodaa is located to the immediate west of Fares
               Maathodaa on the same reef system. The island has a rocky
               shoreline all around and exposed beach rock.
@@ -85,7 +101,11 @@ export default function SiteTab() {
           </Heading>
 
           <Box>
-            <Text paddingBottom={2} paddingRight={16} fontSize={"xl"}>
+            <Text
+              paddingBottom={2}
+              paddingRight={16}
+              fontSize={{ base: "lg", md: "xl" }}
+            >
               In comparison to most of the islands on the peripheral reef
               system, the island of Faathiyehuttaa has beach all around the
               island.
