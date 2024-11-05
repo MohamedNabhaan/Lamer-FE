@@ -6,7 +6,7 @@ import "swiper/css/effect-coverflow";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import "./index.css";
-import { ChakraProvider, extendTheme, Modal } from "@chakra-ui/react";
+import { ChakraProvider, extendTheme, Modal, Tab } from "@chakra-ui/react";
 import "@fontsource/bebas-neue";
 import "@fontsource/fraunces";
 import "@fontsource/open-sans";
