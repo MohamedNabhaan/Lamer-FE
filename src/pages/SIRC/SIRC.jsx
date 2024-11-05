@@ -20,6 +20,7 @@ import logo from "../../assets/SIRC/logo.png";
 import sirc from "../../assets/SIRC/SIRC.png";
 import StudyItem from "../../components/StudyItem";
 import ProgramTab from "../../components/ProgramTab";
+import SiteTab from "../../components/SiteTab";
 
 export default function SIRC() {
   return (
@@ -160,26 +161,25 @@ export default function SIRC() {
           borderColor={"design.100"}
           isFitted
           variant={"soft-rounded"}
-          colorScheme="red"
         >
           <TabList
             bgColor={"design.500"}
             overflowX={{ base: "scroll", md: "hidden" }}
           >
             <Tab
-              _hover={{ bgColor: "brand.300" }}
+              _hover={{ bgColor: "brand.500" }}
               _selected={{ bgColor: "brand.400", color: "white" }}
             >
               Programs
             </Tab>
             <Tab
-              _hover={{ bgColor: "brand.300" }}
+              _hover={{ bgColor: "brand.500" }}
               _selected={{ bgColor: "brand.400", color: "white" }}
             >
               Research Sites
             </Tab>
             <Tab
-              _hover={{ bgColor: "brand.300" }}
+              _hover={{ bgColor: "brand.500" }}
               _selected={{ bgColor: "brand.400", color: "white" }}
             >
               Facilities
@@ -203,8 +203,8 @@ export default function SIRC() {
             <TabPanel>
               <ProgramTab></ProgramTab>
             </TabPanel>
-            <TabPanel>
-              <p>two!</p>
+            <TabPanel paddingTop={0}>
+              <SiteTab></SiteTab>
             </TabPanel>
             <TabPanel>
               <p>three!</p>
