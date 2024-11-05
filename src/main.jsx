@@ -20,6 +20,7 @@ const theme = extendTheme({
       400: "#435BA1",
       500: "#8aa1e3",
       600: "#19A357",
+      700: "#2e75b5",
     },
     design: {
       100: "#E6E8E8",
