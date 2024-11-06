@@ -1,5 +1,15 @@
-import { Box, Text, Image, Collapse, useDisclosure } from "@chakra-ui/react";
+import {
+  Box,
+  Text,
+  Image,
+  Collapse,
+  useDisclosure,
+  List,
+  ListItem,
+  Heading,
+} from "@chakra-ui/react";
 import { useState } from "react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 export default function ServiceCard(props) {
   const { isOpen, onToggle } = useDisclosure();
@@ -7,23 +17,45 @@ export default function ServiceCard(props) {
   return (
     <Box>
       <Box
-        height={"32vh"}
+        id={`${props.service.path}`}
+        height={{ base: "24", md: "40vh" }}
         position={"relative"}
         bgColor={"black"}
         overflow={"hidden"}
         onClick={onToggle}
       >
-        <Text
+        <Heading
           position={"absolute"}
           color={"white"}
           w={"100%"}
           zIndex={1}
-          bottom={2}
+          bottom={3}
           left={4}
-          fontSize={"xl"}
+          size={{ base: "lg", md: "4xl" }}
+          fontWeight={300}
+          textOverflow={"ellipsis"}
         >
           {props.service.label}
-        </Text>
+        </Heading>
+        {isOpen ? (
+          <Box
+            position={"absolute"}
+            right={0}
+            zIndex={1}
+            bottom={{ base: 4, md: 24 }}
+          >
+            <ChevronUp size={40} color="white"></ChevronUp>
+          </Box>
+        ) : (
+          <Box
+            position={"absolute"}
+            right={0}
+            zIndex={1}
+            bottom={{ base: 4, md: 24 }}
+          >
+            <ChevronDown size={40} color="white"></ChevronDown>
+          </Box>
+        )}
 
         <Image
           transform={"scale(1.10)"}
@@ -41,19 +73,50 @@ export default function ServiceCard(props) {
           }}
         ></Image>
       </Box>
-      <Collapse
-        in={isOpen}
-        transition={{ enter: { duration: 1 }, exit: { duration: 0.5 } }}
-        transitionTimingFunction="ease-in-out"
-      >
-        <Text
+      <Collapse in={isOpen} animateOpacity={true}>
+        <List
           bgColor={"brand.400"}
-          borderBottomRadius={16}
-          padding={4}
-          color={"white"}
+          paddingTop={1}
+          paddingBottom={3}
+          borderBottomRadius={8}
         >
-          {props.service.description}
-        </Text>
+          <ListItem _hover={{ bgColor: "brand.800" }}>
+            <Text
+              marginInline={2}
+              paddingInline={2}
+              borderBottom={"1px solid"}
+              borderColor={"white"}
+              color={"white"}
+              fontSize={"3xl"}
+            >
+              Georno
+            </Text>
+          </ListItem>
+          <ListItem _hover={{ bgColor: "brand.800" }}>
+            <Text
+              marginInline={2}
+              paddingInline={2}
+              borderBottom={"1px solid"}
+              borderColor={"white"}
+              color={"white"}
+              fontSize={"3xl"}
+            >
+              Georno
+            </Text>
+          </ListItem>
+          <ListItem _hover={{ bgColor: "brand.800" }}>
+            <Text
+              marginInline={2}
+              paddingInline={2}
+              borderBottom={"1px solid"}
+              borderColor={"white"}
+              color={"white"}
+              fontSize={"3xl"}
+            >
+              Georno
+            </Text>
+          </ListItem>
+        </List>
       </Collapse>
     </Box>
   );

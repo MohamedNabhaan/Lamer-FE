@@ -12,7 +12,7 @@ import { useEffect } from "react";
 
 export default function Services() {
   return (
-    <Box overflow={"hidden"} minH={"72vh"}>
+    <Box overflow={"hidden"} minH={"72vh"} paddingBottom={4}>
       <Container
         maxW={"container.xl"}
         paddingTop={12}
@@ -41,7 +41,7 @@ export default function Services() {
         </Stack>
       </Container>
       <SimpleGrid
-        columns={{ base: 1, md: 2 }}
+        columns={{ base: 1, md: 1 }}
         spacing={4}
         paddingTop={8}
         paddingInline={16}

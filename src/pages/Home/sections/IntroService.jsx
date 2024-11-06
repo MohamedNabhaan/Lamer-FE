@@ -44,45 +44,47 @@ export default function IntroServices() {
 
         <SimpleGrid columns={{ base: 1, md: 4 }} h={"100%"} spacing={2}>
           {SERVICES.map((service) => (
-            <Flex
-              role="group"
-              border={"solid"}
-              h={"20rem"}
-              flexDirection={"column"}
-              justifyContent={"center"}
-              alignItems={"center"}
-              paddingBlockStart={12}
-              borderColor={"design.100"}
-              borderRadius={"1rem"}
-              transitionDuration={"600ms"}
-              _hover={{
-                bgColor: "blackAlpha.200",
-              }}
-            >
-              <Image
-                h={"50%"}
+            <Link to={`/Services#${service.path}`}>
+              <Flex
+                role="group"
                 border={"solid"}
+                h={"20rem"}
+                flexDirection={"column"}
+                justifyContent={"center"}
+                alignItems={"center"}
+                paddingBlockStart={12}
                 borderColor={"design.100"}
-                borderRadius={"50%"}
-                objectFit={"cover"}
-                src={service.img}
-              />
-
-              <Box
-                fontSize={"xl"}
-                paddingTop={8}
-                color={"blackAlpha.700"}
-                textAlign={"center"}
+                borderRadius={"1rem"}
+                transitionDuration={"600ms"}
+                _hover={{
+                  bgColor: "blackAlpha.200",
+                }}
               >
-                <Text paddingInline={8} paddingBottom={8}>
-                  {service.label}
-                </Text>
-              </Box>
+                <Image
+                  h={"50%"}
+                  border={"solid"}
+                  borderColor={"design.100"}
+                  borderRadius={"50%"}
+                  objectFit={"cover"}
+                  src={service.img}
+                />
 
-              <Text _groupHover={{ textDecoration: "underline" }}>
-                Learn More...
-              </Text>
-            </Flex>
+                <Box
+                  fontSize={"xl"}
+                  paddingTop={8}
+                  color={"blackAlpha.700"}
+                  textAlign={"center"}
+                >
+                  <Text paddingInline={8} paddingBottom={8}>
+                    {service.label}
+                  </Text>
+                </Box>
+
+                <Text _groupHover={{ textDecoration: "underline" }}>
+                  Learn More...
+                </Text>
+              </Flex>
+            </Link>
           ))}
         </SimpleGrid>
       </SimpleGrid>

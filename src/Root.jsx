@@ -1,13 +1,27 @@
 import { Outlet } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 export default function RootPage() {
-  const { pathname } = useLocation();
+  const location = useLocation();
+  const lastHash = useRef("");
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [pathname]);
+
+    if (location.hash) {
+      lastHash.current = location.hash.slice(1); // safe hash for further use after navigation
+    }
+
+    if (lastHash.current && document.getElementById(lastHash.current)) {
+      setTimeout(() => {
+        document
+          .getElementById(lastHash.current)
+          ?.scrollIntoView({ behavior: "smooth", block: "start" });
+        lastHash.current = "";
+      }, 100);
+    }
+  }, [location]);
   return (
     <>
       <Navbar></Navbar>
