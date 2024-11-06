@@ -21,6 +21,8 @@ import sirc from "../../assets/SIRC/SIRC.png";
 import StudyItem from "../../components/StudyItem";
 import ProgramTab from "../../components/ProgramTab";
 import SiteTab from "../../components/SiteTab";
+import FacilityTab from "../../components/FacilityTab";
+import ResearchersTab from "../../components/ResearchersTab";
 
 export default function SIRC() {
   return (
@@ -108,7 +110,7 @@ export default function SIRC() {
               <Heading
                 borderTopRadius={8}
                 paddingTop={2}
-                paddingLeft={2}
+                paddingLeft={4}
                 size={"lg"}
                 bg={"brand.400"}
                 paddingBottom={2}
@@ -182,7 +184,7 @@ export default function SIRC() {
               _hover={{ bgColor: "brand.500" }}
               _selected={{ bgColor: "brand.400", color: "white" }}
             >
-              Facilities
+              Facilities and Equipment
             </Tab>
 
             <Tab
@@ -191,23 +193,20 @@ export default function SIRC() {
             >
               Researchers
             </Tab>
-            <Tab
-              _hover={{ bgColor: "brand.500", color: "white" }}
-              _selected={{ bgColor: "brand.400", color: "white" }}
-            >
-              Available Equipments
-            </Tab>
           </TabList>
 
           <TabPanels>
-            <TabPanel>
+            <TabPanel paddingTop={0}>
               <ProgramTab></ProgramTab>
             </TabPanel>
             <TabPanel paddingTop={0}>
               <SiteTab></SiteTab>
             </TabPanel>
-            <TabPanel>
-              <p>three!</p>
+            <TabPanel paddingTop={0}>
+              <FacilityTab></FacilityTab>
+            </TabPanel>
+            <TabPanel paddingTop={0}>
+              <ResearchersTab></ResearchersTab>
             </TabPanel>
           </TabPanels>
         </Tabs>
