@@ -3,8 +3,16 @@ import { Box, List, ListItem, Text, Heading } from "@chakra-ui/react";
 export default function ProgramTab() {
   return (
     <>
-      <Box paddingBottom={8} paddingTop={4}>
-        <List spacing={8}>
+      <Box
+        paddingTop={6}
+        paddingBottom={2}
+        paddingInline={12}
+        bgColor={"design.500"}
+      >
+        <Heading color={"brand.400"} size={"2xl"}>
+          Researchers
+        </Heading>
+        <List spacing={8} paddingTop={4}>
           <ListItem>
             <Heading color={"brand.400"}>
               Coral Reef Systems: Form and Function
