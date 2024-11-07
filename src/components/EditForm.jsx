@@ -81,6 +81,7 @@ export default function EditForm({ selected, open, updateProjects }) {
               <FormControl>
                 <FormLabel>Project Code</FormLabel>
                 <Input
+                  isRequired={true}
                   type="text"
                   defaultValue={project.projectCode}
                   name="projectCode"
@@ -89,6 +90,7 @@ export default function EditForm({ selected, open, updateProjects }) {
               <FormControl>
                 <FormLabel>Title</FormLabel>
                 <Input
+                  isRequired={true}
                   type="text"
                   defaultValue={project.title}
                   name="title"
@@ -97,6 +99,7 @@ export default function EditForm({ selected, open, updateProjects }) {
               <FormControl>
                 <FormLabel>Client Name</FormLabel>
                 <Input
+                  isRequired={true}
                   type="text"
                   defaultValue={project.clientName}
                   name="clientName"
@@ -105,6 +108,8 @@ export default function EditForm({ selected, open, updateProjects }) {
               <FormControl>
                 <FormLabel>Date</FormLabel>
                 <Input
+                  isRequired={true}
+                  min={"2000-01-01"}
                   type="date"
                   defaultValue={project.projectDate}
                   name="projectDate"
@@ -186,7 +191,7 @@ export async function action({ request, params }) {
   }
 
   if (updates.redirect === "") {
-    return redirect(updates.redirect);
+    return redirect("/Admin/Projects");
   }
   return redirect(updates.redirect);
 }

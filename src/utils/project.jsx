@@ -18,8 +18,8 @@ export async function projectLoader({ params }) {
     .split(",");
   const date = new Date(project.projectDate);
   project.projectDate = `${date.getFullYear()}-${
-    date.getMonth() + 1
-  }-${date.getDate()}`;
+    date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1
+  }-${date.getDate() < 10 ? "0" + date.getDate() : date.getDate()}`;
   project.images = vals;
 
   console.log(project);
