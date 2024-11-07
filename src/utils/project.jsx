@@ -17,9 +17,9 @@ export async function projectLoader({ params }) {
     .replace(/["]/g, "")
     .split(",");
   const date = new Date(project.projectDate);
-  project.projectDate = `${date.getDate()}/${
+  project.projectDate = `${date.getFullYear()}-${
     date.getMonth() + 1
-  }/${date.getFullYear()}`;
+  }-${date.getDate()}`;
   project.images = vals;
 
   console.log(project);
