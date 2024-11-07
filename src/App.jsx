@@ -24,8 +24,7 @@ import EditForm, { action as editAction } from "./components/EditForm";
 import { projectLoader } from "./utils/project";
 import AddForm, { action as AddAction } from "./components/AddForm";
 import SIRC from "./pages/SIRC/SIRC";
-import DeleteForm from "./components/DeleteForm";
-import { action as destroyProject } from "./utils/destroyProject.jsx";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -59,7 +58,7 @@ const router = createBrowserRouter([
         path: "Projects",
         element: <AdminProjects />,
         loader: projectsLoader,
-        action: deleteAction,
+
         children: [
           {
             path: ":id",
