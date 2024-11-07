@@ -86,6 +86,7 @@ export default function AddForm() {
             <FormControl>
               <FormLabel paddingTop={2}>Code</FormLabel>
               <Input
+                isRequired={true}
                 type="text"
                 name="projectCode"
                 placeholder="ProjectCode"
@@ -94,6 +95,7 @@ export default function AddForm() {
             <FormControl>
               <FormLabel paddingTop={2}>Title</FormLabel>
               <Input
+                isRequired={true}
                 type="text"
                 name="title"
                 placeholder="Project Name..."
@@ -102,6 +104,7 @@ export default function AddForm() {
             <FormControl>
               <FormLabel paddingTop={2}>Client Name</FormLabel>
               <Input
+                isRequired={true}
                 type="text"
                 name="clientName"
                 placeholder="Client Name..."
@@ -109,7 +112,7 @@ export default function AddForm() {
             </FormControl>
             <FormControl>
               <FormLabel paddingTop={2}>Date</FormLabel>
-              <Input type="date" name="projectDate"></Input>
+              <Input isRequired={true} type="date" name="projectDate"></Input>
             </FormControl>
             <FormControl>
               <FormLabel paddingTop={2}>Category</FormLabel>
