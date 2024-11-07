@@ -6,9 +6,21 @@ import {
   Heading,
   Text,
   Button,
+  Input,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverHeader,
+  PopoverBody,
+  PopoverFooter,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverAnchor,
+  useDisclosure,
+  Flex,
 } from "@chakra-ui/react";
 import fallback from "../assets/logo.png";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, Form, useSubmit, Link } from "react-router-dom";
 
 import {
   Trash2Icon as DeleteIcon,
@@ -29,6 +41,7 @@ export function ProjectCard({
   searchParams,
 }) {
   const location = useLocation();
+  const { onOpen, onClose, isOpen } = useDisclosure();
 
   const pathname = location.pathname;
   const search = location.search;
@@ -61,9 +74,64 @@ export function ProjectCard({
                 </Button>
               </NavLink>
 
-              <Button variant={"ghost"} rounded={false} zIndex={9999999}>
-                <DeleteIcon></DeleteIcon>
-              </Button>
+              <Input name="id" value={`${projId}`} type="hidden"></Input>
+
+              <Popover
+                isOpen={isOpen}
+                onOpen={onOpen}
+                onClose={onClose}
+                isLazy
+                closeOnBlur={true}
+              >
+                <PopoverTrigger>
+                  <Button variant={"ghost"} rounded={false} zIndex={9999999}>
+                    <DeleteIcon></DeleteIcon>
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent>
+                  <PopoverBody>
+                    <Text paddingBlock={2} paddingLeft={1}>
+                      Are you sure?
+                    </Text>
+                    <Form method="post" action={`${projId}/destroy`}>
+                      <Input
+                        type="hidden"
+                        defaultValue={`${pathname + search}`}
+                        name="redirect"
+                      ></Input>
+                      <Flex gap={1}>
+                        <Button
+                          bgColor={"design.100"}
+                          color={"blackAlpha.700"}
+                          w={"100%"}
+                          type="submit"
+                          onClick={onClose}
+                          _hover={{
+                            bgColor: "red.500",
+                            color: "white",
+                            transitionDuration: "500ms",
+                          }}
+                        >
+                          Delete
+                        </Button>
+                        <Button
+                          w={"100%"}
+                          color={"blackAlpha.700"}
+                          bgColor={"design.100"}
+                          onClick={onClose}
+                          _hover={{
+                            bgColor: "blue.200",
+                            color: "white",
+                            transitionDuration: "500ms",
+                          }}
+                        >
+                          Cancel
+                        </Button>
+                      </Flex>
+                    </Form>
+                  </PopoverBody>
+                </PopoverContent>
+              </Popover>
             </Box>
           ) : (
             ""

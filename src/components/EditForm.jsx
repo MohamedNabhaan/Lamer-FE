@@ -29,6 +29,7 @@ import { PROJ_CATEGORIES } from "..";
 
 export default function EditForm({ selected, open, updateProjects }) {
   const { project } = useLoaderData();
+  console.log(project);
   const location = useLocation();
   const redirectTo = location.state?.from;
   const [opened, setOpened] = useState(true);
@@ -96,7 +97,7 @@ export default function EditForm({ selected, open, updateProjects }) {
               <FormControl>
                 <FormLabel>Date</FormLabel>
                 <Input
-                  type="text"
+                  type="date"
                   defaultValue={project.projectDate}
                   name="projectDate"
                 ></Input>
@@ -176,6 +177,8 @@ export async function action({ request, params }) {
     throw json({ message: "Issues" }, { status: 500 });
   }
 
-  // return redirect("/Admin/Projects");
+  if (updates.redirect === "") {
+    return redirect(updates.redirect);
+  }
   return redirect(updates.redirect);
 }

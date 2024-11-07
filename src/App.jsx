@@ -10,6 +10,7 @@ import Careers from "./pages/Careers/Careers";
 import Projects from "./pages/Projects/Projects";
 import AdminProjects, {
   projectsLoader,
+  action as deleteProject,
 } from "./pages/AdminPages/AdminProjects/AdminProjects";
 import { checkAuthLoader } from "./utils/auth";
 import AdminCareers from "./pages/AdminPages/AdminCareers/AdminCareers";
@@ -23,7 +24,8 @@ import EditForm, { action as editAction } from "./components/EditForm";
 import { projectLoader } from "./utils/project";
 import AddForm, { action as AddAction } from "./components/AddForm";
 import SIRC from "./pages/SIRC/SIRC";
-
+import DeleteForm from "./components/DeleteForm";
+import { action as destroyProject } from "./utils/destroyProject.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -57,6 +59,7 @@ const router = createBrowserRouter([
         path: "Projects",
         element: <AdminProjects />,
         loader: projectsLoader,
+        action: deleteAction,
         children: [
           {
             path: ":id",
@@ -64,13 +67,18 @@ const router = createBrowserRouter([
             loader: projectLoader,
             action: editAction,
           },
+          {
+            path: ":id/destroy",
+
+            action: deleteProject,
+          },
         ],
       },
       { path: "Careers", element: <AdminCareers />, loader: checkAuthLoader },
       { path: "Clients", element: <AdminClients />, loader: checkAuthLoader },
       { path: "Team", element: <AdminTeam />, loader: checkAuthLoader },
       {
-        path: "create",
+        path: "Projects/Create",
         element: <AddForm />,
         action: AddAction,
       },

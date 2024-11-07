@@ -6,6 +6,7 @@ import {
   Select,
   Button,
   Flex,
+  Text,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { PROJ_CATEGORIES } from "../../..";
@@ -15,19 +16,18 @@ import {
   useSearchParams,
   useLocation,
   NavLink,
+  useSubmit,
 } from "react-router-dom";
 import Pagination from "../../../components/Pagination";
 import { ProjectCard } from "../../../components/ProjectCard";
 
 export default function AdminProjects() {
-  const { search } = useLocation();
   const projects = useLoaderData();
   const [searchParams, setSearchParams] = useSearchParams();
   const [filterVal, setFilterVal] = useState({});
   const [isSelected, setIsSelected] = useState(false);
   const [searchParamSave, setsearchParamSave] = useState("");
   const urlSearchString = window.location.search;
-  const params = new URLSearchParams(urlSearchString);
 
   useEffect(() => {
     if (searchParams.get("projectCategory")) {
@@ -145,32 +145,39 @@ export default function AdminProjects() {
         </Container>
         <Box paddingInline={16} paddingBottom={8} paddingTop={4}>
           <Flex paddingBottom={4} justify={"flex-end"}>
-            <NavLink to={`/Admin/create`}>
+            <NavLink to={`Create`}>
               <Button bg={"brand.400"} color={"white"}>
                 Create Project
               </Button>
             </NavLink>
           </Flex>
-          <Stack>
-            {projects.map((project, index) => {
-              return (
-                <ProjectCard
-                  project={project}
-                  projId={project.id}
-                  projIndex={index}
-                  images={project.images}
-                  title={project.title}
-                  clientName={project.clientName}
-                  projectDate={project.projectDate}
-                  projectCategory={project.projectCategory}
-                  editProject={open}
-                  searchParams={searchParamSave}
-                ></ProjectCard>
-              );
-            })}
-          </Stack>
+          {projects.length === 0 ? (
+            <Text color={"brand.400"} textAlign={"center"} fontSize={"2xl"}>
+              No Projects
+            </Text>
+          ) : (
+            <Stack>
+              {projects.map((project, index) => {
+                return (
+                  <ProjectCard
+                    project={project}
+                    projId={project.id}
+                    projIndex={index}
+                    images={project.images}
+                    title={project.title}
+                    clientName={project.clientName}
+                    projectDate={project.projectDate}
+                    projectCategory={project.projectCategory}
+                    editProject={open}
+                    searchParams={searchParamSave}
+                  ></ProjectCard>
+                );
+              })}
+            </Stack>
+          )}
         </Box>
       </Box>
+
       <Outlet></Outlet>
     </>
   );
@@ -206,4 +213,21 @@ export async function projectsLoader({ request, params }) {
   });
 
   return projects;
+}
+
+export async function action({ request, params }) {
+  const data = await request.formData();
+  const form = Object.fromEntries(data);
+  console.log(form.redirect);
+  console.log(params);
+  const response = await fetch("http://localhost:3000/projects/" + params.id, {
+    method: "DELETE",
+    headers: {
+      "Access-Control-Allow-Credentials": true,
+      "Access-Control-Allow-Origin": null,
+    },
+    credentials: "include",
+  });
+
+  return redirect(`${form.redirect}`);
 }
