@@ -79,6 +79,14 @@ export default function EditForm({ selected, open, updateProjects }) {
           <ModalBody>
             <Form method="patch">
               <FormControl>
+                <FormLabel>Project Code</FormLabel>
+                <Input
+                  type="text"
+                  defaultValue={project.projectCode}
+                  name="projectCode"
+                ></Input>
+              </FormControl>
+              <FormControl>
                 <FormLabel>Title</FormLabel>
                 <Input
                   type="text"

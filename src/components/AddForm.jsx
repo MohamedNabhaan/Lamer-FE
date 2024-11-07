@@ -54,6 +54,7 @@ export default function AddForm() {
     formData.append(e.target[3].name, e.target[3].value);
     formData.append(e.target[4].name, e.target[4].value);
     formData.append(e.target[5].name, e.target[5].value);
+    formData.append(e.target[6].name, e.target[6].value);
 
     console.log(files);
     if (files.length !== 0) {
@@ -82,6 +83,14 @@ export default function AddForm() {
             encType="multipart/form-data"
             onSubmit={handleSubmit}
           >
+            <FormControl>
+              <FormLabel paddingTop={2}>Code</FormLabel>
+              <Input
+                type="text"
+                name="projectCode"
+                placeholder="ProjectCode"
+              ></Input>
+            </FormControl>
             <FormControl>
               <FormLabel paddingTop={2}>Title</FormLabel>
               <Input
