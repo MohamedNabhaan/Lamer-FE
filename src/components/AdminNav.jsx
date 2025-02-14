@@ -54,7 +54,6 @@ export default function WithSubnavigation() {
       <Box
         sx={{
           position: "-webkit-sticky",
-          position: "sticky",
           top: "0",
           zIndex: "99999",
         }}
