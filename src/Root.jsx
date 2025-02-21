@@ -1,4 +1,5 @@
 import { Outlet } from "react-router-dom";
+import { Box } from "@chakra-ui/react";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import { useEffect, useRef } from "react";
@@ -24,7 +25,7 @@ export default function RootPage() {
   }, [location]);
   return (
     <>
-      <Navbar></Navbar>
+      {location.pathname.toLowerCase().includes('admin')==true? <></> : <Navbar></Navbar>}
       <Outlet />
       <Footer></Footer>
     </>

@@ -45,44 +45,46 @@ const router = createBrowserRouter([
       { path: "Careers", element: <Careers /> },
       { path: "ContactUs", element: <ContactUs /> },
       { path: "SIRC", element: <SIRC /> },
-    ],
-  },
-  { path: "AdminLogin", element: <LoginPage />, action: authAction },
-  {
-    path: "Admin",
-    element: <AdminDash />,
-    loader: checkAuthLoader,
-    action: logOutAction,
-    children: [
+      { path: "AdminLogin", element: <LoginPage />, action: authAction },
       {
-        path: "Projects",
-        element: <AdminProjects />,
-        loader: projectsLoader,
-
+        path: "Admin",
+        element: <AdminDash />,
+        loader: checkAuthLoader,
+        action: logOutAction,
         children: [
           {
-            path: ":id",
-            element: <EditForm />,
-            loader: projectLoader,
-            action: editAction,
+            path: "Projects",
+            element: <AdminProjects />,
+            loader: projectsLoader,
+    
+            children: [
+              {
+                path: ":id",
+                element: <EditForm />,
+                loader: projectLoader,
+                action: editAction,
+              },
+              {
+                path: ":id/destroy",
+    
+                action: deleteProject,
+              },
+            ],
           },
+          { path: "Careers", element: <AdminCareers />, loader: checkAuthLoader },
+          { path: "Clients", element: <AdminClients />, loader: checkAuthLoader },
+          { path: "Team", element: <AdminTeam />, loader: checkAuthLoader },
           {
-            path: ":id/destroy",
-
-            action: deleteProject,
+            path: "Projects/Create",
+            element: <AddForm />,
+            action: AddAction,
           },
         ],
       },
-      { path: "Careers", element: <AdminCareers />, loader: checkAuthLoader },
-      { path: "Clients", element: <AdminClients />, loader: checkAuthLoader },
-      { path: "Team", element: <AdminTeam />, loader: checkAuthLoader },
-      {
-        path: "Projects/Create",
-        element: <AddForm />,
-        action: AddAction,
-      },
     ],
   },
+  
+  
 ]);
 
 function App() {

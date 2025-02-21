@@ -11,9 +11,7 @@ import mtcc from "./assets/clients/mtcc.png";
 import jbic from "./assets/clients/jbic.png";
 import undp from "./assets/clients/undp.png";
 import unops from "./assets/clients/unops.png";
-import Intro1 from "./assets/introduction/Intro1.png";
-import Intro2 from "./assets/introduction/Intro2.png";
-import Intro3 from "./assets/introduction/Intro3.png";
+
 import EIA from "./assets/servicepage/EIA.png";
 import ECMT from "./assets/servicepage/ECMT.png";
 import EMS from "./assets/servicepage/EMS.png";
@@ -45,23 +43,7 @@ export const CLIENTS = [
   undp,
 ];
 
-export const INTRODUCTION_IMAGES = [
-  {
-    image: Intro1,
-    heading: "Your Choice Environmental and Coastal Firm.",
-    subHeading: "With over 200 successful projects.",
-  },
-  {
-    image: Intro2,
-    heading: "Empowering our Clients with the best solutions.",
-    subHeading: "Solutions that protect the environment and our clients.",
-  },
-  {
-    image: Intro3,
-    heading: "25+ Years of Experience and Excellence.",
-    subHeading: "Resilience shown through time.",
-  },
-];
+
 
 export const NAV_ITEMS = [
   {

@@ -10,11 +10,12 @@ export default function Home() {
   return (
     <Box>
       <Introduction></Introduction>
+      <IntroClients></IntroClients>
       <WhoAreWe></WhoAreWe>
       <IntroServices></IntroServices>
       <IntroTechnology></IntroTechnology>
       <IntroSirc></IntroSirc>
-      <IntroClients></IntroClients>
+      
     </Box>
   );
 }

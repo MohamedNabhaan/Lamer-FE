@@ -1,7 +1,7 @@
 "use client";
 
 import { NavLink, redirect, useLocation } from "react-router-dom";
-import logo from "../assets/logo3.png";
+import logo from "../assets/logo.png";
 import { NAV_ITEMS } from "../index.js";
 import {
   Image,
@@ -53,7 +53,7 @@ export default function WithSubnavigation() {
   return (
     <Box
       sx={{
-        position: "-webkit-sticky",
+        position: "sticky",
         top: "0",
         zIndex: "99999",
       }}
@@ -64,7 +64,7 @@ export default function WithSubnavigation() {
         height={`${shrink ? "8vh" : "12vh"}`}
         transition={"ease"}
         transitionDuration={"600ms"}
-        bg="white"
+        bg={shrink? "white": "white"}
         color={useColorModeValue("gray.600", "white")}
         minH={"60px"}
         py={{ base: 1 }}
@@ -86,16 +86,17 @@ export default function WithSubnavigation() {
             aria-label={"Toggle Navigation"}
           />
         </Flex>
+        
         <Flex
           flex={{ base: 1 }}
           justify={{ base: "center", md: "center" }}
-          gap={{ base: 0, lg: 20 }}
+          gap={{ base: 0, lg: 10 }}
           pl={{ base: 0, md: 10 }}
           pr={{ base: 0, md: 10 }}
         >
-          <Image marginRight={{ base: 0, lg: 20 }} src={logo} />
+          <Image  src={logo} />
 
-          <Flex display={{ base: "none", md: "flex" }} ml={{ base: 0, md: 10 }}>
+          <Flex display={{ base: "none", md: "flex" }} ml={{ base: 0, md: 0 }}>
             <DesktopNav />
           </Flex>
         </Flex>
@@ -139,11 +140,11 @@ const DesktopNav = () => {
                             ? 600
                             : 500
                         }
-                        color={"brand.400"}
+                        color={"brand.900"}
                         _hover={{
                           color:
                             isActive || navItem.subRoutes.includes(pathname)
-                              ? "brand.400"
+                              ? "brand.900"
                               : linkHoverColor,
                         }}
                       >
