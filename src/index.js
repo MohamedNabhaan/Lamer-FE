@@ -267,7 +267,7 @@ export const FOUNDERS = [
   {
     name: "Ismail Abid",
     title: "Managing Director",
-    credentials: [],
+    credentials: ['Worked on Numerous Successfull Projects'],
     experience: "25",
     picture: hb,
   },
