@@ -20,7 +20,7 @@ export default function IntroServices() {
       minH={"28rem"}
       paddingBlock={{ base: 0, md: 12 }}
       paddingInline={16}
-      bgColor={"design.500"}
+      
     >
       <SimpleGrid columns={{ base: 1, md: 1 }} spacing={8}>
         <Box>
