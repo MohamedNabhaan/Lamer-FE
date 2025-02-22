@@ -70,7 +70,7 @@ export default function IntroServices() {
                 />
 
                 <Box
-                  fontSize={"xl"}
+                  fontSize={"lg"}
                   paddingTop={8}
                   color={"blackAlpha.700"}
                   textAlign={"center"}
