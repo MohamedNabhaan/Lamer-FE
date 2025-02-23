@@ -28,8 +28,8 @@ import FRM from "./assets/servicepage/FRM.png";
 import associate1 from "./assets/aboutus/associate1.png";
 import associate2 from "./assets/aboutus/associate2.png";
 import hb from "./assets/founders/HB.jpg";
-import drone from "./assets/tech/djiZenmuseL1.jpg";
-import drone2 from "./assets/tech/drone2.png";
+import drone from "./assets/tech/drone2.png";
+import drone2 from "./assets/tech/zenmuse.png";
 import apache3 from "./assets/tech/apache3.png";
 
 export const CLIENTS = [
@@ -274,11 +274,11 @@ export const FOUNDERS = [
 ];
 
 export const TECHNOLOGY = [
-  { label: "DJI Zenmuse Li (Lidar)", use: "numericals", image: drone },
-  { label: "CHCNAV Apache 3", use: "ewdwedwe", image: apache3 },
+  { label: "DJI Zenmuse Li (Lidar)", use: "Provides high-precision 3D mapping and terrain modeling for erosion monitoring and land use planning.", image: drone },
+  { label: "CHCNAV Apache 3", use: "For hydrographic surveys, water quality monitoring, and habitat mapping in rivers, lakes, and coastal areas.", image: apache3 },
   {
     label: "Phantom 4 RTK drone with D-RTK 2 Mobile Station",
-    use: "ewdwedwe",
+    use: "Provides high-precision mapping for land surveys, habitat monitoring, erosion tracking, and flood assessment",
     image: drone2,
   },
 ];
