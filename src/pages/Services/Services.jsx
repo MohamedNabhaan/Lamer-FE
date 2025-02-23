@@ -34,7 +34,7 @@ export default function Services() {
           >
             Services
           </Heading>
-          <Text fontSize={"2xl"}>
+          <Text fontSize={{base:"xl",md:"2xl"}}>
             To ensure our clients recieve the best possible solutions, we offer
             a variety of specific services.
           </Text>
