@@ -34,7 +34,7 @@ export default function Services() {
           >
             Services
           </Heading>
-          <Text fontSize={{base:"xl",md:"2xl"}}>
+          <Text fontSize={{base:"xl",md:"2xl"}} paddingRight={{base:12,md:0}}>
             To ensure our clients recieve the best possible solutions, we offer
             a variety of specific services.
           </Text>
