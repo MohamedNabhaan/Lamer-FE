@@ -53,7 +53,7 @@ export default function IntroTechnology() {
           </Box>
           </Flex>
 
-          <Flex borderWidth={'thick'}  borderRadius={24} bgColor={'design.200'}  border={'solid'}  borderColor={'design.100'} maxH={{sm:"9rem",md:"18rem"}}>
+          <Flex borderWidth={'thick'}  borderRadius={24} bgColor={'design.200'}  border={'solid'}  borderColor={'design.100'} minH={{base:"13rem"}} maxH={{sm:"11rem",md:"18rem"}}>
           <Box w={"50%"}>
             <Heading
             paddingTop={4}
