@@ -20,7 +20,7 @@ export default function IntroServices() {
       minH={"28rem"}
       paddingBlock={{ base: 0, md: 12 }}
       paddingInline={16}
-      paddingBottom={{base:4,md:0}}
+      paddingBottom={{base:4,lg:0}}
       
     >
       <SimpleGrid columns={{ base: 1, md: 1 }} spacing={8}>
@@ -45,7 +45,7 @@ export default function IntroServices() {
           </Heading>
         </Box>
 
-        <SimpleGrid columns={{ base: 1, md: 4 }} h={"100%"} spacing={2}>
+        <SimpleGrid columns={{ base: 1, md: 2,lg:4 }} h={"100%"} spacing={2}>
           {SERVICES.map((service) => (
             <Link to={`/Services#${service.path}`}>
               <Flex
@@ -73,17 +73,17 @@ export default function IntroServices() {
                 />
 
                 <Box
-                  fontSize={{base:"md",md:"lg"}}
+                  fontSize={{base:"md",lg:"lg"}}
                   paddingTop={{base:1,md:8}}
                   color={"blackAlpha.700"}
                   textAlign={"center"}
                 >
-                  <Text paddingInline={{base:2,md:8}} paddingBottom={{base:1,md:8}}>
+                  <Text paddingInline={{base:2,lg:8}} paddingBottom={{base:1,lg:8}}>
                     {service.label}
                   </Text>
                 </Box>
 
-                <Text fontSize={{base:"small",md:"md"}} _groupHover={{ textDecoration: "underline" }}>
+                <Text fontSize={{base:"small",lg:"md"}} _groupHover={{ textDecoration: "underline" }}>
                   Learn More...
                 </Text>
               </Flex>
