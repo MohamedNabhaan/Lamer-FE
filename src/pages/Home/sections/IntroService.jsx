@@ -20,13 +20,15 @@ export default function IntroServices() {
       minH={"28rem"}
       paddingBlock={{ base: 0, md: 12 }}
       paddingInline={16}
+      paddingBottom={{base:4,md:0}}
       
     >
       <SimpleGrid columns={{ base: 1, md: 1 }} spacing={8}>
         <Box>
           <Heading
+          textAlign={{base:"center",md:"left"}}
             textColor={"brand.400"}
-            size={"3xl"}
+            size={{base:"2xl",md:"3xl"}}
             paddingBottom={4}
             paddingLeft={{ base: 0, md: 4 }}
           >
@@ -36,7 +38,8 @@ export default function IntroServices() {
             color={"blackAlpha.600"}
             paddingLeft={{ base: 0, md: 6 }}
             fontWeight={400}
-            size={"lg"}
+            size={{base:"md",md:"lg"}}
+            textAlign={{base:"center",md:"left"}}
           >
             We provide an array of services under these categories
           </Heading>
@@ -48,11 +51,11 @@ export default function IntroServices() {
               <Flex
                 role="group"
                 border={"solid"}
-                h={"20rem"}
+                h={{base:"10rem",md:"20rem"}}
                 flexDirection={"column"}
                 justifyContent={"center"}
                 alignItems={"center"}
-                paddingBlockStart={12}
+                paddingBlockStart={{base:4,md:12}}
                 borderColor={"design.100"}
                 borderRadius={"1rem"}
                 transitionDuration={"600ms"}
@@ -61,7 +64,7 @@ export default function IntroServices() {
                 }}
               >
                 <Image
-                  h={"50%"}
+                  h={{base:"50%",md:"50%"}}
                   border={"solid"}
                   borderColor={"design.100"}
                   borderRadius={"50%"}
@@ -70,17 +73,17 @@ export default function IntroServices() {
                 />
 
                 <Box
-                  fontSize={"lg"}
-                  paddingTop={8}
+                  fontSize={{base:"md",md:"lg"}}
+                  paddingTop={{base:1,md:8}}
                   color={"blackAlpha.700"}
                   textAlign={"center"}
                 >
-                  <Text paddingInline={8} paddingBottom={8}>
+                  <Text paddingInline={{base:2,md:8}} paddingBottom={{base:1,md:8}}>
                     {service.label}
                   </Text>
                 </Box>
 
-                <Text _groupHover={{ textDecoration: "underline" }}>
+                <Text fontSize={{base:"small",md:"md"}} _groupHover={{ textDecoration: "underline" }}>
                   Learn More...
                 </Text>
               </Flex>
