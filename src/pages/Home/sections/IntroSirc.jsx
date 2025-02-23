@@ -15,7 +15,7 @@ export default function IntroSirc() {
         minH={"32rem"}
         paddingBlock={{ base: 0, md: 12 }}
         paddingLeft={14}
-        bgColor={"design.500"}
+        
       >
         <SimpleGrid columns={2} paddingInline={4}>
           <Box paddingRight={8}>
