@@ -31,13 +31,13 @@ export default function IntroTechnology() {
             paddingLeft={4}
             paddingRight={1}
               as={"h2"}
-              size={{ base: "sm", md: "lg" }}
+              size={{ base: "sm",sm:'md', lg: "lg" }}
               
               color={"blackAlpha.700"}
             >
               {TECHNOLOGY[0].label}
             </Heading>
-            <Text paddingLeft={4} paddingRight={6} fontSize={{base:'xs',md:"md"}} paddingTop={{base:1,md:4}}>
+            <Text paddingLeft={4} paddingRight={6} fontSize={{base:'xs',sm:"sm",lg:"md"}} paddingTop={{base:1,lg:4}}>
               {TECHNOLOGY[0].use}
             </Text>
           </Box>
@@ -59,7 +59,7 @@ export default function IntroTechnology() {
             paddingTop={4}
             paddingLeft={4}
               as={"h2"}
-              size={{ base: "sm", md: "lg" }}
+              size={{ base: "sm",sm:'md', lg: "lg" }}
               
               color={"blackAlpha.700"}
             >
@@ -67,9 +67,9 @@ export default function IntroTechnology() {
             </Heading>
             <Text
               paddingLeft={4}
-              paddingTop={{base:1,md:4}}
+              paddingTop={{base:1,lg:4}}
               paddingRight={6}
-              fontSize={{ base: "xs", md: "md" }}
+              fontSize={{base:'xs',sm:"sm",lg:"md"}}
             >
               {TECHNOLOGY[1].use}
             </Text>
@@ -90,13 +90,13 @@ export default function IntroTechnology() {
             paddingLeft={4}
             paddingRight={1}
               as={"h2"}
-              size={{ base: "sm", md: "lg" }}
+              size={{ base: "sm",sm:"md", lg: "lg" }}
               
               color={"blackAlpha.700"}
             >
               {TECHNOLOGY[2].label}
             </Heading>
-            <Text paddingLeft={4} fontSize={{base:"xs",md:"md"}} paddingTop={{base:1,md:4}} paddingRight={6}>
+            <Text paddingLeft={4} fontSize={{base:'xs',sm:"sm",lg:"md"}} paddingTop={{base:1,lg:4}} paddingRight={6}>
               {TECHNOLOGY[2].use}
             </Text>
           </Box>
