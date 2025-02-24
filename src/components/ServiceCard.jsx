@@ -31,7 +31,7 @@ export default function ServiceCard(props) {
           zIndex={1}
           bottom={3}
           left={4}
-          size={{ base: "lg", md: "4xl" }}
+          size={{ base: "md",md:'lg', lg: "4xl" }}
           fontWeight={300}
           textOverflow={"ellipsis"}
         >
