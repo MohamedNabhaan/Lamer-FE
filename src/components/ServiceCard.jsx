@@ -80,7 +80,7 @@ export default function ServiceCard(props) {
           paddingBottom={3}
           borderBottomRadius={8}
         >
-          <ListItem _hover={{ bgColor: "brand.800" }}>
+          {props.subServices.filter(service=> {return props.service.path===service.serviceCategory}).map((service)=> (<ListItem _hover={{ bgColor: "brand.800" }}>
             <Text
               marginInline={2}
               paddingInline={2}
@@ -89,33 +89,10 @@ export default function ServiceCard(props) {
               color={"white"}
               fontSize={"3xl"}
             >
-              Georno
+              {service.serviceName}
             </Text>
-          </ListItem>
-          <ListItem _hover={{ bgColor: "brand.800" }}>
-            <Text
-              marginInline={2}
-              paddingInline={2}
-              borderBottom={"1px solid"}
-              borderColor={"white"}
-              color={"white"}
-              fontSize={"3xl"}
-            >
-              Georno
-            </Text>
-          </ListItem>
-          <ListItem _hover={{ bgColor: "brand.800" }}>
-            <Text
-              marginInline={2}
-              paddingInline={2}
-              borderBottom={"1px solid"}
-              borderColor={"white"}
-              color={"white"}
-              fontSize={"3xl"}
-            >
-              Georno
-            </Text>
-          </ListItem>
+          </ListItem>))}
+          
         </List>
       </Collapse>
     </Box>
