@@ -55,6 +55,7 @@ export default function AddForm() {
     formData.append(e.target[4].name, e.target[4].value);
     formData.append(e.target[5].name, e.target[5].value);
     formData.append(e.target[6].name, e.target[6].value);
+    formData.append(e.target[7].name, e.target[7].value);
 
     console.log(files);
     if (files.length !== 0) {
@@ -117,6 +118,16 @@ export default function AddForm() {
             <FormControl>
               <FormLabel paddingTop={2}>Category</FormLabel>
               <Select name="projectCategory">
+                {PROJ_CATEGORIES.map((category) => {
+                  return (
+                    <option value={category.value}>{category.label}</option>
+                  );
+                })}
+              </Select>
+            </FormControl>
+            <FormControl>
+              <FormLabel paddingTop={2}>Service</FormLabel>
+              <Select name="projectService">
                 {PROJ_CATEGORIES.map((category) => {
                   return (
                     <option value={category.value}>{category.label}</option>
