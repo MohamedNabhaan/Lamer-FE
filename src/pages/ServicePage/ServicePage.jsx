@@ -1,5 +1,7 @@
-
+import { useLoaderData } from "react-router-dom"
 
 export default function ServicePage(){
-    retur (<></>)
+    const service= useLoaderData();
+    console.log(service)
+    return (<></>)
 }

@@ -25,6 +25,7 @@ import { projectLoader } from "./utils/project";
 import AddForm, { action as AddAction } from "./components/AddForm";
 import SIRC from "./pages/SIRC/SIRC";
 import ServicePage from "./pages/ServicePage/ServicePage";
+import { serviceLoader } from "./utils/service";
 
 const router = createBrowserRouter([
   {
@@ -33,7 +34,7 @@ const router = createBrowserRouter([
     children: [
       { path: "", element: <Home /> },
       { path: "Services", element: <Services />, loader:servicesLoader },
-      {path:"Services/:id", element:<ServicePage/>},
+      {path:"Services/:id", element:<ServicePage/>,loader:serviceLoader},
       { path: "Clients", element: <Clients /> },
       {
         path: "Projects",
