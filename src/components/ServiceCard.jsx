@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { NavLink } from "react-router-dom";
 
 export default function ServiceCard(props) {
   const { isOpen, onToggle } = useDisclosure();
@@ -80,7 +81,9 @@ export default function ServiceCard(props) {
           paddingBottom={3}
           borderBottomRadius={8}
         >
-          {props.subServices.filter(service=> {return props.service.path===service.serviceCategory}).map((service)=> (<ListItem _hover={{ bgColor: "brand.800" }}>
+          {props.subServices.filter(service=> {return props.service.path===service.serviceCategory}).map((service)=> (
+            <NavLink to={`${service.serviceName}`}>
+              <ListItem _hover={{ bgColor: "brand.800" }}>
             <Text
               marginInline={2}
               paddingInline={2}
@@ -91,7 +94,8 @@ export default function ServiceCard(props) {
             >
               {service.serviceName}
             </Text>
-          </ListItem>))}
+          </ListItem>
+            </NavLink>))}
           
         </List>
       </Collapse>
