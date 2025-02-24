@@ -3,7 +3,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./pages/Home/Home";
 import AboutUs from "./pages/AboutUs/AboutUs";
 import RootPage from "./Root";
-import Services from "./pages/Services/Services";
+import Services, {loader as servicesLoader} from "./pages/Services/Services";
 import Clients from "./pages/Clients/Clients";
 import Team from "./pages/Team/Team";
 import Careers from "./pages/Careers/Careers";
@@ -24,6 +24,7 @@ import EditForm, { action as editAction } from "./components/EditForm";
 import { projectLoader } from "./utils/project";
 import AddForm, { action as AddAction } from "./components/AddForm";
 import SIRC from "./pages/SIRC/SIRC";
+import ServicePage from "./pages/ServicePage/ServicePage";
 
 const router = createBrowserRouter([
   {
@@ -31,7 +32,8 @@ const router = createBrowserRouter([
     element: <RootPage />,
     children: [
       { path: "", element: <Home /> },
-      { path: "Services", element: <Services /> },
+      { path: "Services", element: <Services />, loader:servicesLoader },
+      {path:"Services/:id", element:<ServicePage/>},
       { path: "Clients", element: <Clients /> },
       {
         path: "Projects",
