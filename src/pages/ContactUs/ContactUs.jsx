@@ -191,21 +191,21 @@ export default function ContactUs() {
           <Text color={'brand.900'} fontWeight={600} fontSize={'xl'}>Call us</Text>
           <Text color={'gray'} paddingTop={0} fontSize={'sm'} >Our team is available from 8am to 4pm (GMT+5)</Text>
           <Flex flexDir={'row'} paddingTop={3}>
-          <Center><PhoneCallIcon size={16}></PhoneCallIcon><Link paddingLeft={1} href="tel:+960-330-5049">+960 330 5049</Link></Center>
+          <Center><PhoneCallIcon size={16}></PhoneCallIcon><Link paddingLeft={1} href="tel:+960-330-5049" isExternal>+960 330 5049</Link></Center>
           </Flex>
           </Center>
           <Center flexDir={'column'} paddingTop={8}>
           <Text color={'brand.900'} fontWeight={600} fontSize={'xl'}>Email us</Text>
           <Text color={'gray'} paddingTop={0} fontSize={'sm'} >We will reply as soon as possible</Text>
           <Flex flexDir={'row'} paddingTop={3}>
-          <Center><MailIcon size={16}></MailIcon><Link paddingLeft={1} href="mailto:info@lamer.com.mv">info@lamer.com.mv</Link></Center>
+          <Center><MailIcon size={16}></MailIcon><Link paddingLeft={1} href="mailto:info@lamer.com.mv" isExternal>info@lamer.com.mv</Link></Center>
           </Flex>
           </Center>
           <Center flexDir={'column'} paddingTop={8}>
           <Text color={'brand.900'} fontWeight={600} fontSize={'xl'}>Visit us</Text>
           <Text color={'gray'} paddingTop={0} fontSize={'sm'} >Meet us at our Office.</Text>
           <Flex flexDir={'row'} paddingTop={3}>
-          <Center><MapPin size={16}></MapPin><Link paddingLeft={1} href="https://maps.app.goo.gl/RxVDMp8gR8aC22ni7">5GC8+89V, Malé, Maldives</Link></Center>
+          <Center><MapPin size={16}></MapPin><Link paddingLeft={1} href="https://maps.app.goo.gl/RxVDMp8gR8aC22ni7" isExternal>5GC8+89V, Malé, Maldives</Link></Center>
           </Flex>
           </Center>
         </Flex>
