@@ -12,7 +12,7 @@ export default function ProgramTab(props) {
         borderBottomRadius={24}
       >
         <Box borderBottom={'solid'} borderColor={'design.200'}>
-        <Heading color={"brand.900"} size={"2xl"} paddingInline={12}>
+        <Heading color={"brand.900"} size={"xl"} paddingInline={12}>
           Programs Offered by the Center
         </Heading>
         <Heading color={"gray"} size={"md"}paddingTop={4} paddingInline={12} paddingBottom={4}> 
