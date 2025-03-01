@@ -32,7 +32,7 @@ export default function FacilityTab(props) {
           </Heading>
           <Flex  flexDir={'column'} gap={2}>
           <Heading  color={"brand.900"} size={'xl'}>
-            Classroom and internet services.
+            Classroom and Internet Services.
           </Heading>
           <Text
         
@@ -49,7 +49,7 @@ export default function FacilityTab(props) {
           <Flex flexDir={'column'} paddingBlock={2} gap={2}
           >
             <Heading  color={"brand.900"}>
-            Lab facility.
+            Lab Facility.
           </Heading>
           <Text
             
@@ -63,7 +63,7 @@ export default function FacilityTab(props) {
 
           <Flex  flexDir={'column'}  gap={2}  paddingBottom={4}>
           <Heading color={"brand.900"}>
-            Equipment and gear for field work
+            Equipment and Gear for Field Work
           </Heading>
           <Text
            
