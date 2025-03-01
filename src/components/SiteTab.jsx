@@ -25,12 +25,12 @@ export default function SiteTab() {
         bgColor={"brand.1000"}
       > 
       
-        <Heading borderBottom={'solid'} borderColor={'design.200'} color={"brand.900"} size={"2xl"}>
-          Research Sites
+        <Heading borderBottom={'solid'} borderColor={'design.200'} color={"brand.900"} size={"xl"}>
+         Region
         </Heading>
       
         
-        <Flex paddingTop={4} flexDir={{base:'column',md:'row'}}  alignItems={{base:'center',md:'flex-start'}} >
+        <Flex paddingTop={2} flexDir={{base:'column',md:'row'}}  alignItems={{base:'center',md:'flex-start'}} >
         <Flex flexDir={'column'} gap={4} w={{base:'',md:'50%'}} paddingBottom={{base:3,md:0}} justifyContent={'flex-start'}>
         <Text
            paddingRight={{base:0,md:12}}
