@@ -22,6 +22,9 @@ export default function FacilityTab(props) {
         paddingBottom={2}
         paddingInline={12}
         bgColor={"design.200"}
+        borderInline={'solid'}
+        borderBottom={'solid'}
+        borderColor={'design.200'}
       >
         
           <Heading>

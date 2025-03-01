@@ -22,7 +22,12 @@ export default function SiteTab() {
         paddingTop={5}
         paddingBottom={2}
         paddingInline={12}
+        borderInline={'solid'}
+        
         bgColor={"brand.1000"}
+        borderBottom={'solid'}
+        borderColor={'design.200'}
+        borderBottomRadius={24}
       > 
       
         <Heading borderBottom={'solid'} borderColor={'design.200'} color={"brand.900"} size={"xl"}>
