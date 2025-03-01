@@ -1,6 +1,6 @@
 import { Box, Heading, Text, ListItem } from "@chakra-ui/react";
 
-export default function StudyItem() {
+export default function StudyItem(props) {
   return (
     <>
       <ListItem>
@@ -9,7 +9,8 @@ export default function StudyItem() {
           paddingInline={2}
           minH={"5rem"}
           bgColor={"design.500"}
-          borderRadius={8}
+          borderRadius={8} border={'solid'}
+          borderColor={'design.100'}
         >
           <Heading
             borderBottom={"1px solid"}
@@ -18,11 +19,10 @@ export default function StudyItem() {
             color={"blackAlpha.800"}
             _hover={{ color: "brand.400", textDecoration: "underline" }}
           >
-            Climate change and coral reef bleaching: An ecological assessment of
-            long-term impacts, recovery trends and future outlook
+            {props.study.title}
           </Heading>
           <Text paddingTop={2} fontSize={"small"}>
-            Chris T. Perry, Kyle M. Morgan, Michael A. Salter Year : 2020
+            {props.study.authors} Year : {props.study.year}
           </Text>
         </Box>
       </ListItem>

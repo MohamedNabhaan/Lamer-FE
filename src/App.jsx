@@ -23,7 +23,7 @@ import ContactUs from "./pages/ContactUs/ContactUs";
 import EditForm, { action as editAction } from "./components/EditForm";
 import { projectLoader } from "./utils/project";
 import AddForm, { action as AddAction } from "./components/AddForm";
-import SIRC from "./pages/SIRC/SIRC";
+import SIRC,{loader as SIRCLoader} from "./pages/SIRC/SIRC";
 import ServicePage from "./pages/ServicePage/ServicePage";
 import { serviceLoader } from "./utils/service";
 
@@ -47,7 +47,7 @@ const router = createBrowserRouter([
       { path: "OurTeam", element: <Team /> },
       { path: "Careers", element: <Careers /> },
       { path: "ContactUs", element: <ContactUs /> },
-      { path: "SIRC", element: <SIRC /> },
+      { path: "SIRC", element: <SIRC /> ,loader:SIRCLoader},
       { path: "AdminLogin", element: <LoginPage />, action: authAction },
       {
         path: "Admin",

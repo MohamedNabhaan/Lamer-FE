@@ -23,8 +23,13 @@ import ProgramTab from "../../components/ProgramTab";
 import SiteTab from "../../components/SiteTab";
 import FacilityTab from "../../components/FacilityTab";
 import ResearchersTab from "../../components/ResearchersTab";
+import { useLoaderData } from "react-router-dom";
 
 export default function SIRC() {
+  const data = useLoaderData()
+  console.log(data.research)
+  console.log(data.programs)
+  console.log(data.equipment)
   return (
     <>
       <Box minH={"36rem"} overflow={"hidden"}>
@@ -77,7 +82,7 @@ export default function SIRC() {
               marginRight={4}
             >
               <Heading
-                color={"brand.400"}
+                color={"brand.900"}
                 paddingTop={2}
                 paddingBottom={1}
                 size={"lg"}
@@ -106,6 +111,7 @@ export default function SIRC() {
               bgColor={"white"}
               marginTop={4}
               marginRight={4}
+              overflow={'hidden'}
             >
               <Heading
                 borderTopRadius={8}
@@ -125,6 +131,7 @@ export default function SIRC() {
                 height={"32rem"}
                 overflowY={"scroll"}
                 paddingLeft={1}
+                paddingRight={1}
                 scrollBehavior={"smooth"}
                 paddingTop={1}
                 sx={{
@@ -139,34 +146,26 @@ export default function SIRC() {
                   },
                 }}
               >
-                <StudyItem></StudyItem>
-                <StudyItem></StudyItem>
-                <StudyItem></StudyItem>
-                <StudyItem></StudyItem>
-                <StudyItem></StudyItem>
-                <StudyItem></StudyItem>
-                <StudyItem></StudyItem>
-                <StudyItem></StudyItem>
-                <StudyItem></StudyItem>
-                <StudyItem></StudyItem>
-                <StudyItem></StudyItem>
-                <StudyItem></StudyItem>
-                <StudyItem></StudyItem>
-                <StudyItem></StudyItem>
-                <StudyItem></StudyItem>
+                {data.research.map((study)=>{
+                  return (<StudyItem study={study}></StudyItem>)
+                })}
+                
               </List>
             </Box>
           </Stack>
         </Box>
         <Tabs
-          borderTop={"1px solid "}
-          borderColor={"design.100"}
+          
+          
+          borderColor={"brand.900"}
           isFitted
           variant={"soft-rounded"}
         >
           <TabList
-            bgColor={"design.500"}
+            bgColor={"design.200"}
             overflowX={{ base: "scroll", md: "hidden" }}
+            borderBlock={"2px solid "}
+            borderColor={'design.100'}
           >
             <Tab
               _hover={{ bgColor: "brand.500" }}
@@ -197,7 +196,7 @@ export default function SIRC() {
 
           <TabPanels>
             <TabPanel paddingTop={0}>
-              <ProgramTab></ProgramTab>
+              <ProgramTab program={data.programs}></ProgramTab>
             </TabPanel>
             <TabPanel paddingTop={0}>
               <SiteTab></SiteTab>
@@ -213,4 +212,48 @@ export default function SIRC() {
       </Box>
     </>
   );
+}
+
+export async function loader({ request, params }) {
+  const url = new URL(request.url);
+
+  const response = await fetch("http://localhost:3000/programs", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Credentials": true,
+      "Access-Control-Allow-Origin": null,
+    },
+    credentials: "include",
+  });
+
+  const programs = await response.json();
+
+  const response2 = await fetch("http://localhost:3000/research", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Credentials": true,
+      "Access-Control-Allow-Origin": null,
+    },
+    credentials: "include",
+  });
+  const research = await response2.json()
+
+  const response3 = await fetch("http://localhost:3000/equipment", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Credentials": true,
+      "Access-Control-Allow-Origin": null,
+    },
+    credentials: "include",
+  });
+  const equipment= await response3.json()
+
+  console.log(equipment)
+  
+  console.log(research)
+   console.log(programs)
+  return {programs,research,equipment};
 }
