@@ -1,7 +1,7 @@
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./pages/Home/Home";
-import AboutUs from "./pages/AboutUs/AboutUs";
+import AboutUs,{loader as teamLoader} from "./pages/AboutUs/AboutUs";
 import RootPage from "./Root";
 import Services, {loader as servicesLoader} from "./pages/Services/Services";
 import Clients from "./pages/Clients/Clients";
@@ -43,7 +43,7 @@ const router = createBrowserRouter([
           { path: ":id", element: <ProjectModal />, loader: projectLoader },
         ],
       },
-      { path: "AboutUs", element: <AboutUs /> },
+      { path: "AboutUs", element: <AboutUs /> ,loader:teamLoader},
       { path: "OurTeam", element: <Team /> },
       { path: "Careers", element: <Careers /> },
       { path: "ContactUs", element: <ContactUs /> },

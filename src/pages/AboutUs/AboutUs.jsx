@@ -11,8 +11,10 @@ import {
 } from "@chakra-ui/react";
 import aboutus from "../../assets/aboutus/aboutus.png";
 import { ABOUT_US } from "../../index.js";
+import { useLoaderData } from "react-router-dom";
 
 export default function AboutUs() {
+  const employees = useLoaderData();
   return (
     <Box>
       <Container
@@ -83,6 +85,88 @@ export default function AboutUs() {
           })}
         </Stack>
       </Box>
+      <Container maxW={"container.lg"} padding={0}>
+                  <Flex
+                    display={"flex"}
+                    flexWrap={"wrap"}
+                    justifyContent={"space-evenly"}
+                  >
+                    {employees.map((employee) => {
+                      return (
+                        <Stack
+                          flexBasis={{ base: "100%", sm: "50%", md: "33.33" }}
+                          padding={8}
+                        >
+                          <Box
+                            width={{ base: "60vh", md: "20vh" }}
+                            height={{ base: "70vh", md: "30vh" }}
+                            justifyContent={{ base: "center", md: "flex-start" }}
+                            alignItems={{ base: "center", md: "flex-start" }}
+                          >
+                            <Image
+                              borderRadius={10}
+                              width={"100%"}
+                              height={"100%"}
+                              objectFit={"cover"}
+                              src={employee.displayPic}
+                              fallbackSrc={pfp}
+                              boxShadow={"lg"}
+                            ></Image>
+                          </Box>
+                          <Box paddingBlock={2}>
+                            <Text
+                              fontSize={"xl"}
+                              fontWeight={"800"}
+                              paddingTop={1}
+                              paddingLeft={2}
+                            >
+                              {employee.name}
+                            </Text>
+                            <Text
+                              fontSize={"lg"}
+                              fontWeight={"500"}
+                              paddingBottom={1}
+                              paddingLeft={2}
+                            >
+                              {employee.position}
+                            </Text>
+      
+                            <Text
+                              fontSize={"md"}
+                              color={"gray.500"}
+                              fontWeight={"500"}
+                              paddingTop={2}
+                              paddingBottom={1}
+                              paddingLeft={2}
+                            >
+                              {employee.qualifications}
+                            </Text>
+                          </Box>
+                        </Stack>
+                      );
+                    })}
+                  </Flex>
+                </Container>
     </Box>
   );
+}
+
+export async function loader({ request, params }) {
+  const url = new URL(request.url);
+
+  const response = await fetch("http://localhost:3000/employee", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Credentials": true,
+      "Access-Control-Allow-Origin": null,
+    },
+    credentials: "include",
+  });
+
+  const employees = await response.json();
+
+  
+  console.log(employees);
+  return employees;
 }
