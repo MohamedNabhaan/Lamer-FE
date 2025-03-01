@@ -1,52 +1,33 @@
 import { Box, List, ListItem, Text, Heading } from "@chakra-ui/react";
 
-export default function ProgramTab() {
+export default function ProgramTab(props) {
   return (
     <>
       <Box
-        paddingTop={6}
-        paddingBottom={2}
-        paddingInline={12}
-        bgColor={"design.500"}
+        paddingTop={5}
+        borderInline={'solid'}
+        
+        bgColor={"brand.1000"}
+        borderColor={'design.200'}
+        borderBottomRadius={24}
       >
-        <Heading color={"brand.400"} size={"2xl"}>
-          Researchers
+        <Box borderBottom={'solid'} borderColor={'design.200'}>
+        <Heading color={"brand.900"} size={"2xl"} paddingInline={12}>
+          Programs Offered by the Center
         </Heading>
-        <List spacing={8} paddingTop={4}>
-          <ListItem>
-            <Heading color={"brand.400"}>
-              Coral Reef Systems: Form and Function
-            </Heading>
-            <Text>
-              This course provides a unique opportunity to study and examine the
-              physical ecological and oceanographic processes of tropical coral
-              reef systems. Topics include: the structure and formation of coral
-              reefs, reef geomorphology, coral reef ecology, reef hydrodynamics
-              and ecomorphodynamic processes. You will learn fundamental
-              concepts and field techniques for use in tropical coral reef
-              systems. The course will 100% internally assessed.
-            </Text>
-          </ListItem>
-          <ListItem>
-            <Heading color={"brand.400"}>
-              Summer coral reef ecology course in Maldives
-            </Heading>
-            <Text>
-              This course is designed to provide students of any level with a
-              sound foundation in ecological concepts, survey techniques and
-              experimental design in field research applied to coral reef
-              ecosystems. It provides a brief introduction on coral ecology,
-              focusing on corals, sponges, echinoderms, reef fish and other
-              organisms. We will cover lecturers on coral anatomy, physiology
-              and ecological requirements. We will also assess the roles of
-              these organisms on the reef and cover ways the reefs are being
-              impacted by both anthropogenic and natural factors. Reef health
-              sampling techniques will be discussed and practiced in the field
-              and we will go over numerous experimental designs and sampling
-              schemes aimed at describing the reef community and reef health
-              status as a whole.
-            </Text>
-          </ListItem>
+        <Heading color={"gray"} size={"md"}paddingTop={4} paddingInline={12} paddingBottom={4}> 
+          If you have any questions feel free to contact us!
+        </Heading>
+        </Box>
+        <List spacing={8} paddingTop={4} bgColor={'white'} borderBottom={'solid'} borderColor={'design.200'} paddingBottom={4} borderBottomRadius={24}>
+          {props.program.map((program)=>{
+            return(<ListItem paddingInline={12} paddingBlock={2}>
+              <Heading as={'h2'} size={'lg'} color={'brand.900'}>{program.title}</Heading>
+              <Text color={'grey'}>Duration: {program.duration}</Text>
+              <Text paddingRight={32}>{program.desc}</Text>
+              </ListItem>)
+          })}
+          
         </List>
       </Box>
     </>
