@@ -156,7 +156,7 @@ export default function SiteTab() {
              
              zIndex:1,
              cursor: "pointer",
-           }}  href="https://maps.app.goo.gl/https://maps.app.goo.gl/7A87dew9f6LvVjmU9" isExternal >
+           }}  href="https://maps.app.goo.gl/7A87dew9f6LvVjmU9" isExternal >
             <Image zIndex={9999} _groupHover={{
              
             opacity: 0.8,
