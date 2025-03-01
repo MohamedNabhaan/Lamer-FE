@@ -72,6 +72,12 @@ export const NAV_ITEMS = [
     ],
   },
   {
+    label: "SIRC",
+    path: "SIRC",
+    subRoutes: [],
+
+  },
+  {
     label: "About Us",
     path: "AboutUs",
     subRoutes: ["/AboutUs", "/OurTeam"],
