@@ -11,39 +11,29 @@ import {
   Td,
   TableCaption,
   TableContainer,
+  Flex
 } from "@chakra-ui/react";
 
-export default function FacilityTab() {
+export default function FacilityTab(props) {
   return (
     <>
       <Box
-        paddingTop={6}
+        paddingTop={5}
         paddingBottom={2}
         paddingInline={12}
-        bgColor={"design.500"}
+        bgColor={"design.200"}
       >
-        <Heading color={"brand.400"} size={"2xl"}>
-          Facilities
-        </Heading>
-        <Box>
-          <Text
-            paddingTop={6}
-            paddingRight={12}
-            fontSize={{ base: "lg", md: "xl" }}
-          >
-            The center will facilitate accommodation, basic lab facility,
-            classroom and internet services for students and researchers who
-            choose to carryout research work at reefs, lagoon and islands.
-          </Text>
-        </Box>
-        <Box paddingBlock={8}>
-          <Heading paddingTop={4} paddingBottom={2} color={"brand.400"}>
+        
+          <Heading>
+            
+          </Heading>
+          <Flex  flexDir={'column'} gap={2}>
+          <Heading  color={"brand.900"} size={'xl'}>
             Classroom and internet services.
           </Heading>
           <Text
-            paddingBottom={2}
-            paddingRight={16}
-            fontSize={{ base: "lg", md: "xl" }}
+        
+        paddingRight={{base:0,md:8}}
           >
             The Research Centre has one classroom where any classroom sessions
             which need to be taken during the period of field study can be
@@ -51,38 +41,40 @@ export default function FacilityTab() {
             also equiped with 4 computer stations where internet services are
             also provided.
           </Text>
+          </Flex>
 
-          <Heading paddingTop={4} paddingBottom={2} color={"brand.400"}>
+          <Flex flexDir={'column'} paddingBlock={2} gap={2}
+          >
+            <Heading  color={"brand.900"}>
             Lab facility.
           </Heading>
           <Text
-            ext
-            paddingBottom={2}
-            paddingRight={16}
-            fontSize={{ base: "lg", md: "xl" }}
+            
+            paddingRight={{base:0,md:8}}
           >
             The lab facility at the Research Centre is a basic wet lab facility
             with equipment such as microscope, spring balance, caliper etc..
             which can be used by the researchers and students.
           </Text>
-          <Heading paddingTop={4} paddingBottom={2} color={"brand.400"}>
+            </Flex>
+
+          <Flex  flexDir={'column'}  gap={2}  paddingBottom={4}>
+          <Heading color={"brand.900"}>
             Equipment and gear for field work
           </Heading>
           <Text
-            ext
-            paddingBottom={2}
-            paddingRight={16}
-            fontSize={{ base: "lg", md: "xl" }}
+           
+           paddingRight={{base:0,md:8}}
           >
             A dinghy is available for hire for researchers/students who wish to
             travel to nearby islands/sites for their field work.Boats can also
             be hired at reasonable prices for this purpose.
           </Text>
           <Text
-            ext
-            paddingBottom={2}
-            paddingRight={16}
-            fontSize={{ base: "lg", md: "xl" }}
+           
+           paddingRight={{base:0,md:16}}
+          
+
           >
             Field equipment available at LAMER can be hired/lent to
             researchers/students when needed, on an availability basis. The
@@ -90,10 +82,12 @@ export default function FacilityTab() {
             to arrival to check for their availability during the researcher’s
             period of stay.
           </Text>
+          </Flex>
+          
         </Box>
-        <Box>
-          <TableContainer>
-            <Table variant="simple" size={"sm"}>
+        <Box  bgColor={"design.200"}paddingInline={12} borderBottomRadius={24} paddingBottom={2}>
+          <TableContainer bgColor={'white'} borderRadius={12} paddingTop={2} marginBottom={4}  paddingInline={2}>
+            <Table the variant="simple" size={"sm"}>
               <TableCaption>Available Equipment and Prices</TableCaption>
               <Thead>
                 <Tr>
@@ -104,10 +98,18 @@ export default function FacilityTab() {
                   <Th>Daily Charge(USD)</Th>
                 </Tr>
               </Thead>
-              <Tbody></Tbody>
+              <Tbody>{props.equipment.map((equipment)=>{
+                return (<Tr>
+                  <Td>{equipment.equipmentName}</Td>
+                  <Td>{equipment.brand}</Td>
+                  <Td>{equipment.modelNo}</Td>
+                  <Td>{equipment.quantity}</Td>
+                  <Td>{equipment.charge}</Td>
+                  </Tr>)
+              })}</Tbody>
             </Table>
           </TableContainer>
-        </Box>
+        
       </Box>
     </>
   );

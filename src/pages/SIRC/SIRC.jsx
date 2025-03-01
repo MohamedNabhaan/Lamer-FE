@@ -202,7 +202,7 @@ export default function SIRC() {
               <SiteTab></SiteTab>
             </TabPanel>
             <TabPanel paddingTop={0}>
-              <FacilityTab></FacilityTab>
+              <FacilityTab equipment={data.equipment}></FacilityTab>
             </TabPanel>
             <TabPanel paddingTop={0}>
               <ResearchersTab></ResearchersTab>
