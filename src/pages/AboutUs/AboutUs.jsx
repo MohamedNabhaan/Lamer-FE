@@ -7,6 +7,7 @@ import {
   Image,
   ListItem,
   UnorderedList,
+  Flex
 } from "@chakra-ui/react";
 import aboutus from "../../assets/aboutus/aboutus.png";
 import { ABOUT_US } from "../../index.js";
@@ -35,22 +36,24 @@ export default function AboutUs() {
         >
           About Us
         </Heading>
+        <Text paddingTop={2} fontSize={{base:"xl",md:"2xl"}} paddingRight={{base:12,md:0}}>
+          
+        </Text>
       </Container>
-      <Box paddingInline={16} paddingTop={8} paddingBottom={12}>
+      <Flex paddingInline={16} paddingTop={8} paddingBottom={12}  flexDir={{base:'column',md:'row'}}>    
+        <Flex direction={{ base: "column", md: "column" }} spacing={2}>
         <Heading as="h2" size={"lg"} paddingBottom={4}>
           Company History
         </Heading>
-        <Stack direction={{ base: "column", md: "row" }} spacing={2}>
-          <Box>
+          
             <Text w={"95%"}>{ABOUT_US.history}</Text>
             <Text paddingTop={12} w={"95%"}>
               Our <b>Vision</b>
               {ABOUT_US.vision}
             </Text>
-          </Box>
-          <Image objectFit={"contain"} src={aboutus}></Image>
-        </Stack>
-      </Box>
+        </Flex>
+        <Image padding={6} objectFit={"contain"} src={aboutus}></Image>
+      </Flex>
       <Box
         bgColor={"design.100"}
         paddingInline={16}

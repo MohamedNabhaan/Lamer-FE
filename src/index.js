@@ -166,7 +166,7 @@ export const ABOUT_US = {
     "Maintain professional integrity and deliver on our commitments.",
     "Consulting and services based on best practice techniques,innovation and quality information.",
     "Safety and health of our staff and client will never be compromised.",
-    "We strive to maintain a workplace culture based on mutual respectand achieving positive outcomes for our clients and the environmentin general.",
+    "We strive to maintain a workplace culture based on mutual respect and achieving positive outcomes for our clients and the environment in general.",
   ],
   relatedEstablishment: [associate1, associate2],
 };
