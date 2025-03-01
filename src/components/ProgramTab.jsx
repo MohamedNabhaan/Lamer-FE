@@ -21,10 +21,10 @@ export default function ProgramTab(props) {
         </Box>
         <List spacing={8} paddingTop={4} bgColor={'white'} borderBottom={'solid'} borderColor={'design.200'} paddingBottom={4} borderBottomRadius={24}>
           {props.program.map((program)=>{
-            return(<ListItem paddingInline={12} paddingBlock={2}>
+            return(<ListItem paddingInline={{base:4,md:8,lg:12}} paddingBlock={2}>
               <Heading as={'h2'} size={'lg'} color={'brand.900'}>{program.title}</Heading>
               <Text color={'grey'}>Duration: {program.duration}</Text>
-              <Text paddingRight={32}>{program.desc}</Text>
+              <Text paddingRight={{base:0,lg:32}}>{program.desc}</Text>
               </ListItem>)
           })}
           
