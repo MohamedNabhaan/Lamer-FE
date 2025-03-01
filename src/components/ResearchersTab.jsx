@@ -9,29 +9,28 @@ export default function ResearchersTab() {
     <>
       <Box
         paddingTop={6}
-        paddingBottom={2}
+        paddingBottom={8}
         paddingInline={12}
-        bgColor={"design.500"}
+        borderInline={'solid'}
+        borderColor={'design.200'}
+        borderBottomRadius={24}
+        bgColor={"design.200"}
       >
-        <Heading color={"brand.400"} size={"2xl"}>
+        <Heading color={"brand.900"} size={"xl"}>
           Researchers
         </Heading>
 
-        <Flex
-          paddingBlock={8}
-          display={"flex"}
-          flexWrap={"wrap"}
-          justifyContent={"space-between"}
-          paddingInline={4}
-        >
-          <Stack flexBasis={{ base: "100%", sm: "50%", md: "20.40%" }}>
-            <Image objectFit={"cover"} src={kensh} borderRadius={8}></Image>
-
-            <Box padding={1}>
-              <Text textAlign={"center"} fontSize={"lg"} fontWeight={600}>
+        
+          <Flex paddingTop={4} flexDir={'column'} gap={4}>
+          <Flex gap={2} flexDir={{base:'column',md:'row'}}>
+            <Flex  borderRadius={24} h={{base:'20%',md:'10%'}} w={{base:'40%',md:'10%'}} >
+            <Image  borderRadius={24} objectFit={"contain"} src={kensh} ></Image>
+            </Flex>
+            <Flex w={"80%"} padding={1} flexDir={'column'}> 
+              <Text  fontSize={"2xl"} fontWeight={600}>
                 Professor Paul Simon Kench
               </Text>
-              <Text paddingBottom={2} fontSize={"lg"} textAlign={"center"}>
+              <Text paddingBottom={2} fontSize={"lg"} >
                 MA (Hons) (Auckland), PhD (UNSW)
               </Text>
               <Text fontSize={"sm"}>
@@ -43,40 +42,42 @@ export default function ResearchersTab() {
                 and the application of coastal science to support coastal
                 management
               </Text>
-            </Box>
-          </Stack>
+            </Flex>
+          </Flex>
 
-          <Stack flexBasis={{ base: "100%", sm: "50%", md: "20.40%" }}>
-            <Image borderRadius={8} objectFit={"cover"} src={aslam}></Image>
-
-            <Box padding={2}>
-              <Text textAlign={"center"} fontSize={"lg"} fontWeight={600}>
-                Mohamed Aslam
+          <Flex gap={2}flexDir={{base:'column',md:'row'}}>
+            <Flex justifyContent={{base:'center',md:'left'}} h={{base:'20%',md:'10%'}} w={{base:'40%',md:'10%'}} >
+            <Image  borderRadius={24} objectFit={"contain"} src={aslam} ></Image>
+            </Flex>
+            <Flex w={"80%"} padding={1} flexDir={'column'}> 
+              <Text  fontSize={"2xl"} fontWeight={600}>
+              Mohamed Aslam
               </Text>
-              <Text paddingBottom={1} fontSize={"lg"} textAlign={"center"}>
-                MSc in Geography (Auckland) , B.Sc Geological Oceanography (UK)
+              <Text paddingBottom={2} fontSize={"lg"} >
+              MSc in Geography (Auckland) , B.Sc Geological Oceanography (UK)
               </Text>
               <Text fontSize={"sm"}>
-                Director at small island research Group, with several years of
+              Director at small island research Group, with several years of
                 experience in coastal development projects and studies and
                 researches in island morphology.
               </Text>
-            </Box>
-          </Stack>
+            </Flex>
+          </Flex>
 
-          <Stack flexBasis={{ base: "100%", sm: "50%", md: "20.40%" }}>
-            <Image borderRadius={8} src={hussein} objectFit={"cover"}></Image>
-
-            <Box padding={1}>
-              <Text textAlign={"center"} fontSize={"lg"} fontWeight={600}>
-                Hussein Zahir
+          <Flex gap={2} flexDir={{base:'column',md:'row'}}>
+          <Flex h={{base:'20%',md:'10%'}} w={{base:'40%',md:'10%'}}  >
+            <Image  borderRadius={24} objectFit={"contain"} src={hussein} ></Image>
+            </Flex> 
+            <Flex w={"80%"} padding={1} flexDir={'column'}>
+            
+              <Text   fontSize={"2xl"} fontWeight={600}>
+              Hussein Zahir
               </Text>
-              <Text paddingBottom={2} fontSize={"lg"} textAlign={"center"}>
-                B.Sc. (Hon) Marine Biology(UK) , MPhil in Coral Reef Ecology
-                (UK)
+              <Text paddingBottom={2} fontSize={"lg"} >
+              B.Sc. (Hon) Marine Biology(UK) , MPhil in Coral Reef Ecology (UK)
               </Text>
               <Text fontSize={"sm"}>
-                Hussein Zahir is a marine biologist with an MPhil from the
+              Hussein Zahir is a marine biologist with an MPhil from the
                 University of Newcastle Upon Tyne. He has over 30 years of
                 experience in coral reef ecology, conservation and management of
                 coral reefs of Maldives. He is also co-foundering member and
@@ -85,9 +86,14 @@ export default function ResearchersTab() {
                 Centre a Maldives Government Institution, as senior coral reef
                 ecologist, leading the coral reef research unit.
               </Text>
-            </Box>
-          </Stack>
-        </Flex>
+            </Flex>
+          </Flex>
+          </Flex>
+          
+          
+
+          
+       
       </Box>
     </>
   );
