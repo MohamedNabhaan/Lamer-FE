@@ -71,29 +71,16 @@ export default function AboutUs() {
           })}
         </UnorderedList>
       </Box>
-      <Box paddingInline={16} paddingTop={8} paddingBottom={16}>
-        <Heading paddingBottom={6} textAlign={{ base: "center", md: "left" }}>
-          Associated Establishments of LAMER Group
-        </Heading>
-        <Stack
-          direction={{ base: "column", md: "row" }}
-          spacing={8}
-          alignItems={"center"}
-        >
-          {ABOUT_US.relatedEstablishment.map((associate) => {
-            return <Image w={"120px"} height={"90px"} src={associate}></Image>;
-          })}
-        </Stack>
-      </Box>
-      <Box bgColor={"design.100"}
+      
+      <Box 
         paddingInline={16}
         paddingTop={8}
         paddingBottom={8}>
-        <Heading>
+        <Heading textAlign={{base:'center',md:'left'}}>
           Our Team
         </Heading>
       </Box>
-      <Flex padding={0} bgColor={"design.100"} paddingInline={8}>
+      <Flex padding={0}  paddingInline={8}>
                   <Flex
                     display={"flex"}
                     flexWrap={"wrap"}
@@ -102,12 +89,12 @@ export default function AboutUs() {
                     {employees.map((employee) => {
                       return (
                         <Stack
-                          flexBasis={{ base: "100%", sm: "50%", md: "33.33" }}
+                          flexBasis={{ base: "50%%", sm: "50%", md: "33.33" }}
                           padding={8}
                         >
                           <Box
-                            width={{ base: "60vh", md: "20vh" }}
-                            height={{ base: "70vh", md: "30vh" }}
+                            width={{ base: "50vh", md: "20vh" }}
+                            height={{ base: "60vh", md: "30vh" }}
                             justifyContent={{ base: "center", md: "flex-start" }}
                             alignItems={{ base: "center", md: "flex-start" }}
                           >
@@ -119,6 +106,7 @@ export default function AboutUs() {
                               src={employee.displayPic}
                               fallbackSrc={pfp}
                               boxShadow={"lg"}
+                              border="0.5px solid"
                             ></Image>
                           </Box>
                           <Box paddingBlock={2}>
