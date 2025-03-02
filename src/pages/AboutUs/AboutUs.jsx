@@ -12,11 +12,11 @@ import {
 import aboutus from "../../assets/aboutus/aboutus.png";
 import { ABOUT_US } from "../../index.js";
 import { useLoaderData } from "react-router-dom";
-
+import pfp from "../../assets/pfp.png";
 export default function AboutUs() {
   const employees = useLoaderData();
   return (
-    <Box>
+    <Box marginBottom={4}>
       <Container
         maxW={"container.xl"}
         paddingTop={12}
@@ -71,7 +71,7 @@ export default function AboutUs() {
           })}
         </UnorderedList>
       </Box>
-      <Box paddingInline={16} paddingTop={8} paddingBottom={8}>
+      <Box paddingInline={16} paddingTop={8} paddingBottom={16}>
         <Heading paddingBottom={6} textAlign={{ base: "center", md: "left" }}>
           Associated Establishments of LAMER Group
         </Heading>
@@ -85,7 +85,15 @@ export default function AboutUs() {
           })}
         </Stack>
       </Box>
-      <Container maxW={"container.lg"} padding={0}>
+      <Box bgColor={"design.100"}
+        paddingInline={16}
+        paddingTop={8}
+        paddingBottom={8}>
+        <Heading>
+          Our Team
+        </Heading>
+      </Box>
+      <Flex padding={0} bgColor={"design.100"} paddingInline={8}>
                   <Flex
                     display={"flex"}
                     flexWrap={"wrap"}
@@ -146,7 +154,7 @@ export default function AboutUs() {
                       );
                     })}
                   </Flex>
-                </Container>
+                </Flex>
     </Box>
   );
 }
@@ -165,6 +173,15 @@ export async function loader({ request, params }) {
   });
 
   const employees = await response.json();
+
+  employees.map((data) => {
+    const vals = data.displayPic
+      .replace("[", "")
+      .replace("]", "")
+      .replace(/["]/g, "")
+      .split(",");
+    data.displayPic = vals;
+  });
 
   
   console.log(employees);
