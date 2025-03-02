@@ -80,19 +80,7 @@ export const NAV_ITEMS = [
   {
     label: "About Us",
     path: "AboutUs",
-    subRoutes: ["/AboutUs", "/OurTeam"],
-    children: [
-      {
-        parent: "About Us",
-        label: "About Us",
-        path: "AboutUs",
-      },
-      {
-        parent: "About Us",
-        label: "Our Team",
-        path: "OurTeam",
-      },
-    ],
+    subRoutes: [],
   },
   {
     label: "Careers",
