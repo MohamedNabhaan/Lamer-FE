@@ -5,7 +5,6 @@ import AboutUs,{loader as teamLoader} from "./pages/AboutUs/AboutUs";
 import RootPage from "./Root";
 import Services, {loader as servicesLoader} from "./pages/Services/Services";
 import Clients from "./pages/Clients/Clients";
-import Team from "./pages/Team/Team";
 import Careers from "./pages/Careers/Careers";
 import Projects from "./pages/Projects/Projects";
 import AdminProjects, {
@@ -44,7 +43,6 @@ const router = createBrowserRouter([
         ],
       },
       { path: "AboutUs", element: <AboutUs /> ,loader:teamLoader},
-      { path: "OurTeam", element: <Team /> },
       { path: "Careers", element: <Careers /> },
       { path: "ContactUs", element: <ContactUs /> },
       { path: "SIRC", element: <SIRC /> ,loader:SIRCLoader},
