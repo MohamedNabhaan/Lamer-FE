@@ -28,46 +28,88 @@ import {
   FaChevronDown as ChevronDownIcon,
   FaChevronRight as ChevronRightIcon,
 } from "react-icons/fa";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 
 export default function WithSubnavigation() {
   const { isOpen, onToggle } = useDisclosure();
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const lastScrollY = useRef(0);
+  const observerRef = useRef(null);
 
-  const [shrink, setShrink] = useState(false);
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      window.addEventListener("scroll", handleScroll);
-      return () => window.removeEventListener("scroll", handleScroll);
-    }
+    // Create observer for the top of the page
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsScrolled(!entry.isIntersecting);
+      },
+      { threshold: 0, rootMargin: "-80px 0px 0px 0px" }
+    );
+
+    // Create sentinel element
+    const sentinel = document.createElement("div");
+    sentinel.style.position = "absolute";
+    sentinel.style.top = "0";
+    sentinel.style.height = "1px";
+    sentinel.style.width = "100%";
+    document.body.prepend(sentinel);
+
+    observer.observe(sentinel);
+    observerRef.current = { observer, sentinel };
+
+    return () => {
+      observer.disconnect();
+      sentinel.remove();
+    };
   }, []);
 
-  const handleScroll = () => {
-    if (window.scrollY >= 70) {
-      setShrink(true);
-    } else {
-      setShrink(false);
-    }
-  };
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      const scrollingDown = currentScrollY > lastScrollY.current;
+
+      // Only hide navbar when scrolling down and not at the top
+      if (scrollingDown && currentScrollY > 100) {
+        setIsVisible(false);
+      } else {
+        setIsVisible(true);
+      }
+
+      lastScrollY.current = currentScrollY;
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <Form method="post">
       <Box
         sx={{
-          position: "-webkit-sticky",
+          position: "fixed",
           top: "0",
+          left: "0",
+          right: "0",
           zIndex: "99999",
+          transform: `translateY(${!isVisible ? "-100%" : "0"})`,
+          transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+          willChange: "transform",
         }}
       >
         <Flex
           borderBottom={"solid"}
           borderColor={"design.100"}
-          height={`${shrink ? "8vh" : "12vh"}`}
-          transition={"ease"}
-          transitionDuration={"600ms"}
-          bg="white"
-          color={useColorModeValue("gray.600", "white")}
-          minH={"60px"}
-          py={{ base: 1 }}
+          style={{
+            height: isScrolled ? "70px" : "90px",
+            transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+            willChange: "height",
+            backdropFilter: isScrolled ? "blur(8px)" : "none",
+            backgroundColor: isScrolled ? "rgba(255, 255, 255, 0.9)" : "white",
+            boxShadow: isScrolled
+              ? "0 4px 6px -1px rgba(0, 0, 0, 0.1)"
+              : "none",
+          }}
+          py={{ base: isScrolled ? 2 : 3 }}
           px={{ base: 4 }}
           align={"center"}
         >
@@ -97,7 +139,15 @@ export default function WithSubnavigation() {
             pl={{ base: 0, md: 10 }}
             pr={{ base: 0, md: 10 }}
           >
-            <Image marginRight={{ base: 0, lg: 20 }} src={logo} />
+            <Image
+              marginRight={{ base: 0, lg: 20 }}
+              src={logo}
+              style={{
+                height: isScrolled ? "60px" : "80px",
+                transition: "height 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+              }}
+              alt="Lamer Admin Logo"
+            />
 
             <Flex
               display={{ base: "none", md: "flex" }}
@@ -139,26 +189,43 @@ const DesktopNav = () => {
                   fontSize={{ base: "sm", lg: "lg" }}
                   borderRadius={"xl"}
                 >
-                  <NavLink to={`${navItem.path}`}>
-                    {({ isActive }) => (
-                      <Text
-                        fontWeight={
-                          isActive || navItem.subRoutes.includes(pathname)
-                            ? 600
-                            : 500
-                        }
-                        color={"brand.400"}
-                        _hover={{
-                          color:
+                  {navItem.path ? (
+                    <NavLink to={`${navItem.path}`}>
+                      {({ isActive }) => (
+                        <Text
+                          fontWeight={
                             isActive || navItem.subRoutes.includes(pathname)
-                              ? "brand.400"
-                              : linkHoverColor,
-                        }}
-                      >
-                        {navItem.label}
-                      </Text>
-                    )}
-                  </NavLink>
+                              ? 600
+                              : 500
+                          }
+                          color={"brand.400"}
+                          _hover={{
+                            color:
+                              isActive || navItem.subRoutes.includes(pathname)
+                                ? "brand.400"
+                                : linkHoverColor,
+                          }}
+                        >
+                          {navItem.label}
+                        </Text>
+                      )}
+                    </NavLink>
+                  ) : (
+                    <Text
+                      fontWeight={
+                        navItem.subRoutes.includes(pathname) ? 600 : 500
+                      }
+                      color={"brand.400"}
+                      _hover={{
+                        color: navItem.subRoutes.includes(pathname)
+                          ? "brand.400"
+                          : linkHoverColor,
+                        cursor: navItem.children ? "pointer" : "default",
+                      }}
+                    >
+                      {navItem.label}
+                    </Text>
+                  )}
                 </Box>
               </PopoverTrigger>
 
@@ -257,18 +324,22 @@ const MobileNavItem = ({ label, children, path }) => {
   const { isOpen, onToggle } = useDisclosure();
 
   return (
-    <Stack spacing={4} onClick={children && onToggle}>
+    <Stack spacing={4}>
       <Box
         py={2}
+        as={path ? NavLink : "div"}
+        to={path}
+        display="flex"
         justifyContent="space-between"
         alignItems="center"
+        onClick={children ? onToggle : undefined}
         _hover={{
           textDecoration: "none",
         }}
       >
         <Text
           fontWeight={600}
-          color={useColorModeValue("gray.600", "gray.200")}
+          color={useColorModeValue("brand.400", "gray.200")}
         >
           {label}
         </Text>
@@ -294,9 +365,21 @@ const MobileNavItem = ({ label, children, path }) => {
         >
           {children &&
             children.map((child) => (
-              <Box key={child.label} py={2}>
-                <NavLink to={`${child.path}`}>{child.label}</NavLink>
-              </Box>
+              <NavLink
+                key={child.label}
+                to={child.path}
+                style={({ isActive }) => ({
+                  fontWeight: isActive ? "600" : "400",
+                  color: isActive
+                    ? "var(--chakra-colors-brand-400)"
+                    : "inherit",
+                  display: "block",
+                  width: "100%",
+                  padding: "0.5rem 0",
+                })}
+              >
+                {child.label}
+              </NavLink>
             ))}
         </Stack>
       </Collapse>

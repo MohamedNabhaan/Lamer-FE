@@ -11,21 +11,21 @@ import {
   CardBody,
   CardFooter,
   Badge,
+  Image,
+  SimpleGrid,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import {
   Outlet,
   useLoaderData,
-  useSearchParams,
+  useLocation,
   NavLink,
   redirect,
   Form,
-  useLocation,
 } from "react-router-dom";
-import { ExternalLink as ExternalLinkIcon } from "lucide-react";
 
-export default function AdminCareers() {
-  const vacancies = useLoaderData();
+export default function AdminServices() {
+  const services = useLoaderData();
   const location = useLocation();
 
   return (
@@ -49,7 +49,7 @@ export default function AdminCareers() {
             color="brand.400"
             textAlign={{ base: "center", md: "left" }}
           >
-            Vacancies
+            Services
           </Heading>
         </Container>
 
@@ -75,19 +75,19 @@ export default function AdminCareers() {
             </NavLink>
           </Flex>
 
-          {vacancies.length === 0 ? (
+          {services.length === 0 ? (
             <Text
               color="brand.400"
               textAlign="center"
               fontSize={{ base: "xl", md: "2xl" }}
             >
-              No Vacancies
+              No Services
             </Text>
           ) : (
             <Stack spacing={{ base: 3, md: 5 }}>
-              {vacancies.map((vacancy) => (
+              {services.map((service) => (
                 <Card
-                  key={vacancy.id}
+                  key={service.id}
                   variant="outline"
                   borderRadius={{ base: 15, md: 30 }}
                   boxShadow="sm"
@@ -113,11 +113,14 @@ export default function AdminCareers() {
                           fontWeight={500}
                           mb={{ base: 1, md: 2 }}
                         >
-                          {vacancy.positionName}
+                          {service.serviceName}
                         </Heading>
-                        <Text fontSize={{ base: "sm", md: "md" }}>
-                          Posted On: {vacancy.created_at}
-                        </Text>
+                        {service.createdAt && (
+                          <Text fontSize={{ base: "sm", md: "md" }}>
+                            Created:{" "}
+                            {new Date(service.createdAt).toLocaleDateString()}
+                          </Text>
+                        )}
                       </Box>
 
                       <Flex
@@ -127,7 +130,7 @@ export default function AdminCareers() {
                         w={{ base: "100%", sm: "auto" }}
                       >
                         <NavLink
-                          to={`/Admin/Careers/Edit/${vacancy.id}`}
+                          to={`Edit/${service.id}`}
                           state={{
                             from: location.pathname + location.search,
                           }}
@@ -148,7 +151,7 @@ export default function AdminCareers() {
 
                         <Form
                           method="post"
-                          action={`${vacancy.id}/destroy`}
+                          action={`${service.id}/destroy`}
                           style={{ width: "100%" }}
                         >
                           <input
@@ -172,12 +175,51 @@ export default function AdminCareers() {
                   </CardHeader>
 
                   <CardBody px={{ base: 3, md: 6 }} py={{ base: 3, md: 4 }}>
-                    <Text
-                      fontSize={{ base: "sm", md: "md" }}
-                      noOfLines={{ base: 3, md: 4 }}
-                    >
-                      {vacancy.desc}
-                    </Text>
+                    <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
+                      <Box>
+                        <Text
+                          fontSize={{ base: "sm", md: "md" }}
+                          noOfLines={{ base: 3, md: 4 }}
+                          mb={3}
+                        >
+                          {service.intro}
+                        </Text>
+                        {service.bannerPic && (
+                          <Box
+                            maxW="300px"
+                            h="150px"
+                            overflow="hidden"
+                            mb={3}
+                            boxShadow="sm"
+                            borderRadius="md"
+                          >
+                            <Image
+                              src={service.bannerPic}
+                              alt={service.serviceName}
+                              w="100%"
+                              h="100%"
+                              objectFit="cover"
+                              fallbackSrc="https://via.placeholder.com/300x150?text=Banner"
+                            />
+                          </Box>
+                        )}
+                      </Box>
+                      <Box>
+                        <Text fontWeight="bold" mb={1}>
+                          Softwares
+                        </Text>
+                        <Text fontSize="sm" mb={3}>
+                          {service.softwares || "None specified"}
+                        </Text>
+
+                        <Text fontWeight="bold" mb={1}>
+                          Equipment
+                        </Text>
+                        <Text fontSize="sm">
+                          {service.equipment || "None specified"}
+                        </Text>
+                      </Box>
+                    </SimpleGrid>
                   </CardBody>
 
                   <CardFooter
@@ -200,18 +242,7 @@ export default function AdminCareers() {
                         color="white"
                         fontSize={{ base: "xs", md: "sm" }}
                       >
-                        {vacancy.positionStatus}
-                      </Badge>
-
-                      <Badge
-                        borderRadius={20}
-                        px={3}
-                        py={1.5}
-                        bg="brand.400"
-                        color="white"
-                        fontSize={{ base: "xs", md: "sm" }}
-                      >
-                        {vacancy.experience} Years
+                        Category: {service.serviceCategory}
                       </Badge>
                     </Stack>
                   </CardFooter>
@@ -227,10 +258,21 @@ export default function AdminCareers() {
   );
 }
 
-export async function vacanciesLoader({ request }) {
+export async function servicesLoader({ request }) {
   const url = new URL(request.url);
+  const serviceName = url.searchParams.get("serviceName");
+  const serviceCategory = url.searchParams.get("serviceCategory");
 
-  const response = await fetch("http://localhost:3000/vacancies" + url.search, {
+  let endpoint = "http://localhost:3000/services";
+  const params = new URLSearchParams();
+
+  if (serviceName) params.append("serviceName", serviceName);
+  if (serviceCategory) params.append("serviceCategory", serviceCategory);
+
+  const queryString = params.toString();
+  if (queryString) endpoint += `?${queryString}`;
+
+  const response = await fetch(endpoint, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -240,16 +282,37 @@ export async function vacanciesLoader({ request }) {
     credentials: "include",
   });
 
-  const vacancies = await response.json();
+  const services = await response.json();
 
-  return vacancies;
+  // Extract and format image fields
+  services.map((data) => {
+    if (data.bannerPic) {
+      const vals = data.bannerPic
+        .replace("[", "")
+        .replace("]", "")
+        .replace(/["]/g, "")
+        .split(",");
+      data.bannerPic = vals;
+    }
+
+    if (data.pagePics) {
+      const vals2 = data.pagePics
+        .replace("[", "")
+        .replace("]", "")
+        .replace(/["]/g, "")
+        .split(",");
+      data.pagePics = vals2;
+    }
+  });
+
+  return services;
 }
 
 export async function action({ request, params }) {
   const data = await request.formData();
   const form = Object.fromEntries(data);
 
-  const response = await fetch("http://localhost:3000/vacancies/" + params.id, {
+  const response = await fetch("http://localhost:3000/services/" + params.id, {
     method: "DELETE",
     headers: {
       "Access-Control-Allow-Credentials": true,

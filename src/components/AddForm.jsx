@@ -12,7 +12,7 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import { Form, redirect, useSubmit } from "react-router-dom";
-import { PROJ_CATEGORIES } from "..";
+import { SERVICE_CATEGORIES } from "..";
 import { useState, useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { ArchiveRestore } from "lucide-react";
@@ -20,6 +20,8 @@ import { X } from "lucide-react";
 
 export default function AddForm() {
   const [files, setFiles] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [availableServices, setAvailableServices] = useState([]);
   const submit = useSubmit();
 
   const onDrop = useCallback((acceptedFiles) => {
@@ -38,10 +40,28 @@ export default function AddForm() {
     });
 
   function removeFile(index) {
-    console.log("here");
     const newFiles = [...files];
     newFiles.splice(newFiles.indexOf(index), 1);
     setFiles(newFiles);
+  }
+
+  // Function to handle category change
+  function handleCategoryChange(e) {
+    const category = e.target.value;
+    setSelectedCategory(category);
+
+    // Fetch services for the selected category
+    fetch(`http://localhost:3000/services?serviceCategory=${category}`, {
+      credentials: "include",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setAvailableServices(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching services:", error);
+        setAvailableServices([]);
+      });
   }
 
   function handleSubmit(e) {
@@ -57,15 +77,12 @@ export default function AddForm() {
     formData.append(e.target[6].name, e.target[6].value);
     formData.append(e.target[7].name, e.target[7].value);
 
-    console.log(files);
     if (files.length !== 0) {
       files.map((file) => {
         formData.append("files", file, file.name);
-        console.log(file);
       });
     }
 
-    console.log("beforeaction", formData.get("files"));
     submit(formData, {
       method: "post",
       encType: "multipart/form-data",
@@ -77,7 +94,7 @@ export default function AddForm() {
       <Box>
         <Box paddingInline={72} paddingBlock={8}>
           <Heading paddingBottom={4} color={"brand.400"}>
-            Create a Project
+            Create
           </Heading>
           <Form
             method="post"
@@ -117,22 +134,28 @@ export default function AddForm() {
             </FormControl>
             <FormControl>
               <FormLabel paddingTop={2}>Category</FormLabel>
-              <Select name="projectCategory">
-                {PROJ_CATEGORIES.map((category) => {
-                  return (
-                    <option value={category.value}>{category.label}</option>
-                  );
-                })}
+              <Select
+                name="projectCategory"
+                onChange={handleCategoryChange}
+                value={selectedCategory}
+              >
+                <option value="">Select a category</option>
+                {SERVICE_CATEGORIES.map((category) => (
+                  <option key={category.value} value={category.value}>
+                    {category.label}
+                  </option>
+                ))}
               </Select>
             </FormControl>
             <FormControl>
               <FormLabel paddingTop={2}>Service</FormLabel>
-              <Select name="projectService">
-                {PROJ_CATEGORIES.map((category) => {
-                  return (
-                    <option value={category.value}>{category.label}</option>
-                  );
-                })}
+              <Select name="projectService" isDisabled={!selectedCategory}>
+                <option value="">Select a service</option>
+                {availableServices.map((service) => (
+                  <option key={service.id} value={service.id}>
+                    {service.serviceName}
+                  </option>
+                ))}
               </Select>
             </FormControl>
             <FormControl>
@@ -151,7 +174,6 @@ export default function AddForm() {
             </FormControl>
             <FormControl>
               <FormLabel paddingTop={2}>Image Upload</FormLabel>
-              {/* <Input type="file" name="files" multiple></Input> */}
               <Box
                 {...getRootProps()}
                 border={"solid 1px"}
@@ -171,41 +193,13 @@ export default function AddForm() {
                 </Text>
               </Box>
             </FormControl>
-            {fileRejections.length > 0 ? (
-              <Box>
-                <Text>{fileRejections[0].errors[0].message}</Text>
-              </Box>
-            ) : (
-              ""
-            )}
-            {files.length === 0 ? (
-              <Box padding={4}>
-                <Text textAlign={"center"}>No Files Uploaded Yet</Text>
-              </Box>
-            ) : (
-              <Flex padding={4} flexWrap={"wrap"} gap={2}>
-                {files.map((file, index) => {
-                  return (
-                    <Flex
-                      bgColor={"design.100"}
-                      padding={1}
-                      borderRadius={4}
-                      z-index={9999}
-                    >
-                      <Text>{file.name}</Text>
 
-                      <Box onClick={() => removeFile(index)}>
-                        <Text>
-                          <X></X>
-                        </Text>
-                      </Box>
-                    </Flex>
-                  );
-                })}
-              </Flex>
-            )}
-
-            <Button type="submit">Submit</Button>
+            <Flex padding={4} justifyContent={"end"} gap={1}>
+              <Button type={"submit"}>Submit</Button>
+              <Button onClick={() => navigate("/Admin/Projects")}>
+                Cancel
+              </Button>
+            </Flex>
           </Form>
         </Box>
       </Box>

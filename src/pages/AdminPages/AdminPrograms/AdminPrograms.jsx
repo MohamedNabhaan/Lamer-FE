@@ -16,16 +16,14 @@ import { useEffect, useState } from "react";
 import {
   Outlet,
   useLoaderData,
-  useSearchParams,
+  useLocation,
   NavLink,
   redirect,
   Form,
-  useLocation,
 } from "react-router-dom";
-import { ExternalLink as ExternalLinkIcon } from "lucide-react";
 
-export default function AdminCareers() {
-  const vacancies = useLoaderData();
+export default function AdminPrograms() {
+  const programs = useLoaderData();
   const location = useLocation();
 
   return (
@@ -49,7 +47,7 @@ export default function AdminCareers() {
             color="brand.400"
             textAlign={{ base: "center", md: "left" }}
           >
-            Vacancies
+            Programs
           </Heading>
         </Container>
 
@@ -75,19 +73,19 @@ export default function AdminCareers() {
             </NavLink>
           </Flex>
 
-          {vacancies.length === 0 ? (
+          {programs.length === 0 ? (
             <Text
               color="brand.400"
               textAlign="center"
               fontSize={{ base: "xl", md: "2xl" }}
             >
-              No Vacancies
+              No Programs
             </Text>
           ) : (
             <Stack spacing={{ base: 3, md: 5 }}>
-              {vacancies.map((vacancy) => (
+              {programs.map((program) => (
                 <Card
-                  key={vacancy.id}
+                  key={program.id}
                   variant="outline"
                   borderRadius={{ base: 15, md: 30 }}
                   boxShadow="sm"
@@ -113,11 +111,14 @@ export default function AdminCareers() {
                           fontWeight={500}
                           mb={{ base: 1, md: 2 }}
                         >
-                          {vacancy.positionName}
+                          {program.title}
                         </Heading>
-                        <Text fontSize={{ base: "sm", md: "md" }}>
-                          Posted On: {vacancy.created_at}
-                        </Text>
+                        {program.createdAt && (
+                          <Text fontSize={{ base: "sm", md: "md" }}>
+                            Created:{" "}
+                            {new Date(program.createdAt).toLocaleDateString()}
+                          </Text>
+                        )}
                       </Box>
 
                       <Flex
@@ -127,7 +128,7 @@ export default function AdminCareers() {
                         w={{ base: "100%", sm: "auto" }}
                       >
                         <NavLink
-                          to={`/Admin/Careers/Edit/${vacancy.id}`}
+                          to={`Edit/${program.id}`}
                           state={{
                             from: location.pathname + location.search,
                           }}
@@ -148,7 +149,7 @@ export default function AdminCareers() {
 
                         <Form
                           method="post"
-                          action={`${vacancy.id}/destroy`}
+                          action={`${program.id}/destroy`}
                           style={{ width: "100%" }}
                         >
                           <input
@@ -176,45 +177,36 @@ export default function AdminCareers() {
                       fontSize={{ base: "sm", md: "md" }}
                       noOfLines={{ base: 3, md: 4 }}
                     >
-                      {vacancy.desc}
+                      {program.desc}
                     </Text>
                   </CardBody>
 
-                  <CardFooter
-                    justifyContent="space-between"
-                    px={{ base: 3, md: 6 }}
-                    py={{ base: 2, md: 4 }}
-                    bg="gray.50"
-                  >
-                    <Stack
-                      direction={{ base: "column", xs: "row" }}
-                      spacing={{ base: 2, md: 4 }}
-                      w="100%"
-                      justify={{ base: "center", sm: "flex-start" }}
+                  {program.duration && (
+                    <CardFooter
+                      justifyContent="space-between"
+                      px={{ base: 3, md: 6 }}
+                      py={{ base: 2, md: 4 }}
+                      bg="gray.50"
                     >
-                      <Badge
-                        borderRadius={20}
-                        px={3}
-                        py={1.5}
-                        bg="brand.400"
-                        color="white"
-                        fontSize={{ base: "xs", md: "sm" }}
+                      <Stack
+                        direction={{ base: "column", xs: "row" }}
+                        spacing={{ base: 2, md: 4 }}
+                        w="100%"
+                        justify={{ base: "center", sm: "flex-start" }}
                       >
-                        {vacancy.positionStatus}
-                      </Badge>
-
-                      <Badge
-                        borderRadius={20}
-                        px={3}
-                        py={1.5}
-                        bg="brand.400"
-                        color="white"
-                        fontSize={{ base: "xs", md: "sm" }}
-                      >
-                        {vacancy.experience} Years
-                      </Badge>
-                    </Stack>
-                  </CardFooter>
+                        <Badge
+                          borderRadius={20}
+                          px={3}
+                          py={1.5}
+                          bg="brand.400"
+                          color="white"
+                          fontSize={{ base: "xs", md: "sm" }}
+                        >
+                          Duration: {program.duration}
+                        </Badge>
+                      </Stack>
+                    </CardFooter>
+                  )}
                 </Card>
               ))}
             </Stack>
@@ -227,10 +219,15 @@ export default function AdminCareers() {
   );
 }
 
-export async function vacanciesLoader({ request }) {
+export async function programsLoader({ request }) {
   const url = new URL(request.url);
+  const name = url.searchParams.get("name");
 
-  const response = await fetch("http://localhost:3000/vacancies" + url.search, {
+  const endpoint = name
+    ? `http://localhost:3000/programs?name=${name}`
+    : "http://localhost:3000/programs";
+
+  const response = await fetch(endpoint, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -240,16 +237,15 @@ export async function vacanciesLoader({ request }) {
     credentials: "include",
   });
 
-  const vacancies = await response.json();
-
-  return vacancies;
+  const programs = await response.json();
+  return programs;
 }
 
 export async function action({ request, params }) {
   const data = await request.formData();
   const form = Object.fromEntries(data);
 
-  const response = await fetch("http://localhost:3000/vacancies/" + params.id, {
+  const response = await fetch("http://localhost:3000/programs/" + params.id, {
     method: "DELETE",
     headers: {
       "Access-Control-Allow-Credentials": true,

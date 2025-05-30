@@ -7,6 +7,10 @@ import {
   Button,
   Flex,
   Text,
+  Card,
+  CardHeader,
+  CardBody,
+  Image,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { PROJ_CATEGORIES } from "../../..";
@@ -18,8 +22,8 @@ import {
   NavLink,
   useSubmit,
   redirect,
+  Form,
 } from "react-router-dom";
-import Pagination from "../../../components/Pagination";
 import { ProjectCard } from "../../../components/ProjectCard";
 
 export default function AdminProjects() {
@@ -28,6 +32,7 @@ export default function AdminProjects() {
   const [filterVal, setFilterVal] = useState({});
   const [isSelected, setIsSelected] = useState(false);
   const [searchParamSave, setsearchParamSave] = useState("");
+  const location = useLocation();
   const urlSearchString = window.location.search;
 
   useEffect(() => {
@@ -76,110 +81,214 @@ export default function AdminProjects() {
     }
   }
 
-  function open(project) {
-    setSelected(project);
-    setShowing(true);
-  }
-
-  function close() {
-    setSelected(null);
-    setShowing(false);
-  }
-
   return (
     <>
-      <Box minH={"72vh"}>
+      <Box minH="72vh" pt={0}>
         <Container
-          maxW={"container.xl"}
-          paddingTop={12}
-          paddingLeft={20}
-          borderBottom={"solid"}
-          borderColor={"design.100"}
-          justifyContent={"center"}
+          maxW="container.xl"
+          pt={{ base: 6, md: 12 }}
+          px={{ base: 4, md: 8, lg: 20 }}
+          pb={{ base: 4, md: 6 }}
+          borderBottom="1px solid"
+          borderColor="design.100"
+          mt={{ base: "70px", md: "90px" }}
         >
           <Heading
-            borderLeft={"solid 20px"}
-            paddingLeft={2}
+            borderLeft={{ base: "solid 10px", md: "solid 20px" }}
+            pl={{ base: 2, md: 4 }}
             as="h1"
-            size={"3xl"}
+            size={{ base: "2xl", md: "3xl" }}
             fontWeight={500}
-            color={"brand.400"}
-            display={"block"}
+            color="brand.400"
             textAlign={{ base: "center", md: "left" }}
           >
-            Our Projects
+            Projects
           </Heading>
-          <Box paddingTop={12} paddingBottom={8} display={"flex"}>
-            <Stack direction={"row"} flex={1}>
+
+          <Box pt={{ base: 6, md: 8 }} pb={{ base: 4, md: 6 }}>
+            <Stack
+              direction={{ base: "column", md: "row" }}
+              spacing={4}
+              w="100%"
+            >
               <Select
-                w={{ base: "8rem", sm: "16rem", md: "32rem" }}
-                placeholder="All"
+                w="full"
+                placeholder="All Categories"
                 onChange={setCategoryVal}
                 defaultValue={
                   searchParams.get("projectCategory")
                     ? searchParams.get("projectCategory")
                     : ""
                 }
+                size="lg"
               >
                 {PROJ_CATEGORIES.map((category) => {
                   return (
-                    <option value={category.value}>{category.label}</option>
+                    <option key={category.value} value={category.value}>
+                      {category.label}
+                    </option>
                   );
                 })}
               </Select>
-              {isSelected ? (
+              {isSelected && (
                 <Select
-                  w={{ base: "8rem", sm: "16rem", md: "32rem" }}
-                  placeholder="All"
+                  w="full"
+                  placeholder="All Projects"
                   onChange={setTitleVal}
                   defaultValue={
                     searchParams.get("title") ? searchParams.get("title") : ""
                   }
+                  size="lg"
                 >
                   <option value={"zxczx xz zxc"}>Numeric Model</option>
                 </Select>
-              ) : (
-                ""
               )}
             </Stack>
           </Box>
         </Container>
-        <Box paddingInline={16} paddingBottom={8} paddingTop={4}>
-          <Flex paddingBottom={4} justify={"flex-end"}>
+
+        <Container
+          maxW="container.xl"
+          px={{ base: 4, md: 8, lg: 16 }}
+          py={{ base: 4, md: 8 }}
+        >
+          <Flex
+            pb={{ base: 3, md: 5 }}
+            justify={{ base: "center", md: "flex-end" }}
+            mb={{ base: 2, md: 4 }}
+          >
             <NavLink to={`Create`}>
-              <Button bg={"brand.400"} color={"white"}>
-                Create Project
+              <Button
+                bg="brand.400"
+                color="white"
+                size={{ base: "md", md: "lg" }}
+                _hover={{ bg: "brand.500" }}
+              >
+                Create
               </Button>
             </NavLink>
           </Flex>
+
           {projects.length === 0 ? (
-            <Text color={"brand.400"} textAlign={"center"} fontSize={"2xl"}>
+            <Text
+              color="brand.400"
+              textAlign="center"
+              fontSize={{ base: "xl", md: "2xl" }}
+            >
               No Projects
             </Text>
           ) : (
-            <Stack>
-              {projects.map((project, index) => {
-                return (
-                  <ProjectCard
-                    project={project}
-                    projId={project.id}
-                    projIndex={index}
-                    images={project.images}
-                    title={project.title}
-                    clientName={project.clientName}
-                    projectDate={project.projectDate}
-                    projectCategory={project.projectCategory}
-                    editProject={open}
-                    searchParams={searchParamSave}
-                  ></ProjectCard>
-                );
-              })}
+            <Stack spacing={{ base: 3, md: 5 }}>
+              {projects.map((project, index) => (
+                <Card
+                  key={project.id}
+                  variant="outline"
+                  borderRadius={{ base: 15, md: 30 }}
+                  boxShadow="sm"
+                  overflow="hidden"
+                  direction={{ base: "column", md: "row" }}
+                >
+                  <Box
+                    width={{ base: "100%", md: "250px" }}
+                    height={{ base: "200px", md: "250px" }}
+                    bg="gray.100"
+                  >
+                    <Image
+                      src={project.images[0]}
+                      alt={project.title}
+                      objectFit="cover"
+                      width="100%"
+                      height="100%"
+                      fallbackSrc="../../../assets/logo.png"
+                    />
+                  </Box>
+
+                  <CardBody p={{ base: 3, md: 5 }}>
+                    <Flex
+                      justifyContent="space-between"
+                      alignItems={{ base: "flex-start", md: "flex-start" }}
+                      flexDirection={{ base: "column", sm: "row" }}
+                      gap={{ base: 3, sm: 0 }}
+                      mb={3}
+                    >
+                      <Box>
+                        <Heading
+                          as="h2"
+                          size={{ base: "lg", md: "xl" }}
+                          fontWeight={500}
+                          mb={2}
+                        >
+                          {project.title}
+                        </Heading>
+                        <Text fontSize={{ base: "sm", md: "md" }} mb={1}>
+                          <strong>Client:</strong> {project.clientName}
+                        </Text>
+                        <Text fontSize={{ base: "sm", md: "md" }} mb={1}>
+                          <strong>Date:</strong> {project.projectDate}
+                        </Text>
+                        <Text fontSize={{ base: "sm", md: "md" }}>
+                          <strong>Category:</strong> {project.projectCategory}
+                        </Text>
+                      </Box>
+
+                      <Flex
+                        mt={{ base: 2, sm: 0 }}
+                        gap={2}
+                        flexDirection={{ base: "column", xs: "row" }}
+                        w={{ base: "100%", sm: "auto" }}
+                      >
+                        <NavLink
+                          to={`Edit/${project.id}`}
+                          state={{
+                            from: location.pathname + location.search,
+                          }}
+                          style={{ width: "100%" }}
+                        >
+                          <Button
+                            bg="brand.400"
+                            color="white"
+                            mr={{ base: 0, xs: 2 }}
+                            w={{ base: "100%", sm: "auto" }}
+                            mb={{ base: 2, xs: 0 }}
+                            size={{ base: "sm", md: "md" }}
+                            _hover={{ bg: "brand.500" }}
+                          >
+                            Edit
+                          </Button>
+                        </NavLink>
+
+                        <Form
+                          method="post"
+                          action={`${project.id}/destroy`}
+                          style={{ width: "100%" }}
+                        >
+                          <input
+                            type="hidden"
+                            name="redirect"
+                            value={location.pathname + location.search}
+                          />
+                          <Button
+                            type="submit"
+                            bg="red.500"
+                            color="white"
+                            w={{ base: "100%", sm: "auto" }}
+                            size={{ base: "sm", md: "md" }}
+                            _hover={{ bg: "red.600" }}
+                          >
+                            Delete
+                          </Button>
+                        </Form>
+                      </Flex>
+                    </Flex>
+                  </CardBody>
+                </Card>
+              ))}
             </Stack>
           )}
-        </Box>
+        </Container>
       </Box>
 
-      <Outlet></Outlet>
+      <Outlet />
     </>
   );
 }
@@ -199,18 +308,22 @@ export async function projectsLoader({ request, params }) {
 
   const projects = await response.json();
 
-  projects.map((data) => {
-    const vals = data.images
-      .replace("[", "")
-      .replace("]", "")
-      .replace(/["]/g, "")
-      .split(",");
-    const date = new Date(data.projectDate);
+  projects.forEach((data) => {
+    try {
+      const vals = data.images
+        .replace("[", "")
+        .replace("]", "")
+        .replace(/["]/g, "")
+        .split(",");
+      const date = new Date(data.projectDate);
 
-    data.projectDate = `${date.getDate()}/${
-      date.getMonth() + 1
-    }/${date.getFullYear()}`;
-    data.images = vals;
+      data.projectDate = `${date.getDate()}/${
+        date.getMonth() + 1
+      }/${date.getFullYear()}`;
+      data.images = vals;
+    } catch (error) {
+      data.images = [];
+    }
   });
 
   return projects;
@@ -219,8 +332,7 @@ export async function projectsLoader({ request, params }) {
 export async function action({ request, params }) {
   const data = await request.formData();
   const form = Object.fromEntries(data);
-  console.log(form.redirect);
-  console.log(params);
+
   const response = await fetch("http://localhost:3000/projects/" + params.id, {
     method: "DELETE",
     headers: {

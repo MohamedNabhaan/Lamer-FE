@@ -11,26 +11,25 @@ import {
   CardBody,
   CardFooter,
   Badge,
+  SimpleGrid,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import {
   Outlet,
   useLoaderData,
-  useSearchParams,
+  useLocation,
   NavLink,
   redirect,
   Form,
-  useLocation,
 } from "react-router-dom";
-import { ExternalLink as ExternalLinkIcon } from "lucide-react";
 
-export default function AdminCareers() {
-  const vacancies = useLoaderData();
+export default function AdminEquipment() {
+  const equipments = useLoaderData();
   const location = useLocation();
 
   return (
     <>
-      <Box minH="72vh" pt={0}>
+      <Box minH="72vh" pt={{ base: "90px", md: "90px" }}>
         <Container
           maxW="container.xl"
           pt={{ base: 6, md: 12 }}
@@ -38,7 +37,6 @@ export default function AdminCareers() {
           pb={{ base: 4, md: 6 }}
           borderBottom="1px solid"
           borderColor="design.100"
-          mt={{ base: "70px", md: "90px" }}
         >
           <Heading
             borderLeft={{ base: "solid 10px", md: "solid 20px" }}
@@ -49,7 +47,7 @@ export default function AdminCareers() {
             color="brand.400"
             textAlign={{ base: "center", md: "left" }}
           >
-            Vacancies
+            Equipment
           </Heading>
         </Container>
 
@@ -75,19 +73,19 @@ export default function AdminCareers() {
             </NavLink>
           </Flex>
 
-          {vacancies.length === 0 ? (
+          {equipments.length === 0 ? (
             <Text
               color="brand.400"
               textAlign="center"
               fontSize={{ base: "xl", md: "2xl" }}
             >
-              No Vacancies
+              No Equipment Entries
             </Text>
           ) : (
             <Stack spacing={{ base: 3, md: 5 }}>
-              {vacancies.map((vacancy) => (
+              {equipments.map((equipment) => (
                 <Card
-                  key={vacancy.id}
+                  key={equipment.id}
                   variant="outline"
                   borderRadius={{ base: 15, md: 30 }}
                   boxShadow="sm"
@@ -113,11 +111,14 @@ export default function AdminCareers() {
                           fontWeight={500}
                           mb={{ base: 1, md: 2 }}
                         >
-                          {vacancy.positionName}
+                          {equipment.equipmentName}
                         </Heading>
-                        <Text fontSize={{ base: "sm", md: "md" }}>
-                          Posted On: {vacancy.created_at}
-                        </Text>
+                        {equipment.createdAt && (
+                          <Text fontSize={{ base: "sm", md: "md" }}>
+                            Created:{" "}
+                            {new Date(equipment.createdAt).toLocaleDateString()}
+                          </Text>
+                        )}
                       </Box>
 
                       <Flex
@@ -127,7 +128,7 @@ export default function AdminCareers() {
                         w={{ base: "100%", sm: "auto" }}
                       >
                         <NavLink
-                          to={`/Admin/Careers/Edit/${vacancy.id}`}
+                          to={`Edit/${equipment.id}`}
                           state={{
                             from: location.pathname + location.search,
                           }}
@@ -148,7 +149,7 @@ export default function AdminCareers() {
 
                         <Form
                           method="post"
-                          action={`${vacancy.id}/destroy`}
+                          action={`${equipment.id}/destroy`}
                           style={{ width: "100%" }}
                         >
                           <input
@@ -172,49 +173,33 @@ export default function AdminCareers() {
                   </CardHeader>
 
                   <CardBody px={{ base: 3, md: 6 }} py={{ base: 3, md: 4 }}>
-                    <Text
-                      fontSize={{ base: "sm", md: "md" }}
-                      noOfLines={{ base: 3, md: 4 }}
-                    >
-                      {vacancy.desc}
-                    </Text>
+                    <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
+                      <Stack spacing={2}>
+                        {equipment.brand && (
+                          <Text fontSize={{ base: "sm", md: "md" }}>
+                            <strong>Brand:</strong> {equipment.brand}
+                          </Text>
+                        )}
+                        {equipment.modelNo && (
+                          <Text fontSize={{ base: "sm", md: "md" }}>
+                            <strong>Model No:</strong> {equipment.modelNo}
+                          </Text>
+                        )}
+                      </Stack>
+                      <Stack spacing={2}>
+                        <Text fontSize={{ base: "sm", md: "md" }}>
+                          <strong>Quantity:</strong> {equipment.quantity}
+                        </Text>
+                        {equipment.charge !== null &&
+                          equipment.charge !== undefined && (
+                            <Text fontSize={{ base: "sm", md: "md" }}>
+                              <strong>Charge:</strong> $
+                              {equipment.charge.toFixed(2)}
+                            </Text>
+                          )}
+                      </Stack>
+                    </SimpleGrid>
                   </CardBody>
-
-                  <CardFooter
-                    justifyContent="space-between"
-                    px={{ base: 3, md: 6 }}
-                    py={{ base: 2, md: 4 }}
-                    bg="gray.50"
-                  >
-                    <Stack
-                      direction={{ base: "column", xs: "row" }}
-                      spacing={{ base: 2, md: 4 }}
-                      w="100%"
-                      justify={{ base: "center", sm: "flex-start" }}
-                    >
-                      <Badge
-                        borderRadius={20}
-                        px={3}
-                        py={1.5}
-                        bg="brand.400"
-                        color="white"
-                        fontSize={{ base: "xs", md: "sm" }}
-                      >
-                        {vacancy.positionStatus}
-                      </Badge>
-
-                      <Badge
-                        borderRadius={20}
-                        px={3}
-                        py={1.5}
-                        bg="brand.400"
-                        color="white"
-                        fontSize={{ base: "xs", md: "sm" }}
-                      >
-                        {vacancy.experience} Years
-                      </Badge>
-                    </Stack>
-                  </CardFooter>
                 </Card>
               ))}
             </Stack>
@@ -227,10 +212,15 @@ export default function AdminCareers() {
   );
 }
 
-export async function vacanciesLoader({ request }) {
+export async function equipmentAdminLoader({ request }) {
   const url = new URL(request.url);
+  const equipmentName = url.searchParams.get("equipmentName");
 
-  const response = await fetch("http://localhost:3000/vacancies" + url.search, {
+  const endpoint = equipmentName
+    ? `http://localhost:3000/equipment?equipmentName=${equipmentName}`
+    : "http://localhost:3000/equipment";
+
+  const response = await fetch(endpoint, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -240,16 +230,15 @@ export async function vacanciesLoader({ request }) {
     credentials: "include",
   });
 
-  const vacancies = await response.json();
-
-  return vacancies;
+  const equipments = await response.json();
+  return equipments;
 }
 
 export async function action({ request, params }) {
   const data = await request.formData();
   const form = Object.fromEntries(data);
 
-  const response = await fetch("http://localhost:3000/vacancies/" + params.id, {
+  const response = await fetch("http://localhost:3000/equipment/" + params.id, {
     method: "DELETE",
     headers: {
       "Access-Control-Allow-Credentials": true,
