@@ -11,6 +11,9 @@ import {
   CardHeader,
   CardBody,
   Image,
+  Center,
+  Icon,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { PROJ_CATEGORIES } from "../../..";
@@ -25,6 +28,7 @@ import {
   Form,
 } from "react-router-dom";
 import { ProjectCard } from "../../../components/ProjectCard";
+import { ImageOff } from "lucide-react";
 
 export default function AdminProjects() {
   const projects = useLoaderData();
@@ -34,6 +38,25 @@ export default function AdminProjects() {
   const [searchParamSave, setsearchParamSave] = useState("");
   const location = useLocation();
   const urlSearchString = window.location.search;
+
+  const iconBg = useColorModeValue("gray.100", "gray.600");
+  const iconColor = useColorModeValue("gray.400", "gray.500");
+
+  // Component for when no image is available
+  const NoImageFallback = () => (
+    <Center
+      width="100%"
+      height="100%"
+      bg={iconBg}
+      flexDirection="column"
+      gap={2}
+    >
+      <Icon as={ImageOff} w={8} h={8} color={iconColor} />
+      <Text fontSize="xs" color={iconColor} textAlign="center">
+        No Image
+      </Text>
+    </Center>
+  );
 
   useEffect(() => {
     if (searchParams.get("projectCategory")) {
@@ -193,14 +216,19 @@ export default function AdminProjects() {
                     height={{ base: "200px", md: "250px" }}
                     bg="gray.100"
                   >
-                    <Image
-                      src={project.images[0]}
-                      alt={project.title}
-                      objectFit="cover"
-                      width="100%"
-                      height="100%"
-                      fallbackSrc="../../../assets/logo.png"
-                    />
+                    {project.images &&
+                    project.images[0] &&
+                    project.images[0] !== "" ? (
+                      <Image
+                        src={project.images[0]}
+                        alt={project.title}
+                        objectFit="cover"
+                        width="100%"
+                        height="100%"
+                      />
+                    ) : (
+                      <NoImageFallback />
+                    )}
                   </Box>
 
                   <CardBody p={{ base: 3, md: 5 }}>

@@ -250,7 +250,24 @@ export default function ProjectView() {
 
             {/* Image Slider Section */}
             <Box>
-              <ProjectSlider images={project.images} />
+              {project.images &&
+              project.images.length > 0 &&
+              project.images[0] !== "" ? (
+                <ProjectSlider images={project.images} />
+              ) : (
+                <Box
+                  bg={sectionBg}
+                  borderRadius="xl"
+                  p={8}
+                  textAlign="center"
+                  border="2px dashed"
+                  borderColor={borderColor}
+                >
+                  <Text color={textColor} fontSize="lg" fontWeight="500">
+                    No images available for this project
+                  </Text>
+                </Box>
+              )}
             </Box>
           </SimpleGrid>
         </Box>

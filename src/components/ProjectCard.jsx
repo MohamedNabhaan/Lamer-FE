@@ -12,10 +12,10 @@ import {
   HStack,
   VStack,
   Icon,
+  Center,
 } from "@chakra-ui/react";
-import fallback from "../assets/logo.png";
 import { NavLink, useLocation, Form, Link } from "react-router-dom";
-import { Calendar, Building2, Tag } from "lucide-react";
+import { Calendar, Building2, Tag, ImageOff } from "lucide-react";
 import { SERVICES } from "../index.js";
 
 export function ProjectCard({
@@ -31,11 +31,29 @@ export function ProjectCard({
   const accentColor = useColorModeValue("brand.400", "brand.300");
   const hoverBg = useColorModeValue("gray.50", "gray.700");
   const imageBorderColor = useColorModeValue("gray.100", "gray.700");
+  const iconBg = useColorModeValue("gray.100", "gray.600");
+  const iconColor = useColorModeValue("gray.400", "gray.500");
 
   // Map category to service label
   const serviceLabel =
     SERVICES.find((service) => service.path === projectCategory)?.label ||
     projectCategory;
+
+  // Component for when no image is available
+  const NoImageFallback = () => (
+    <Center
+      width="100%"
+      height="100%"
+      bg={iconBg}
+      flexDirection="column"
+      gap={2}
+    >
+      <Icon as={ImageOff} w={8} h={8} color={iconColor} />
+      <Text fontSize="xs" color={iconColor} textAlign="center">
+        No Image
+      </Text>
+    </Center>
+  );
 
   return (
     <Card
@@ -59,28 +77,41 @@ export function ProjectCard({
         minW={{ md: "250px" }}
         minH={{ base: "200px", md: "auto" }}
       >
-        <Image
-          objectFit="cover"
-          width="100%"
-          height="100%"
-          position="absolute"
-          top="0"
-          left="0"
-          src={images[0]}
-          fallbackSrc={fallback}
-          alt={title}
-          borderRight={{ md: "1px solid" }}
-          borderBottom={{ base: "1px solid", md: "none" }}
-          borderColor={imageBorderColor}
-        />
-        <Box
-          position="absolute"
-          top="0"
-          left="0"
-          right="0"
-          bottom="0"
-          bg="linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0) 100%)"
-        />
+        {images && images[0] && images[0] !== "" ? (
+          <>
+            <Image
+              objectFit="cover"
+              width="100%"
+              height="100%"
+              position="absolute"
+              top="0"
+              left="0"
+              src={images[0]}
+              alt={title}
+              borderRight={{ md: "1px solid" }}
+              borderBottom={{ base: "1px solid", md: "none" }}
+              borderColor={imageBorderColor}
+            />
+            <Box
+              position="absolute"
+              top="0"
+              left="0"
+              right="0"
+              bottom="0"
+              bg="linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0) 100%)"
+            />
+          </>
+        ) : (
+          <Box
+            width="100%"
+            height="100%"
+            borderRight={{ md: "1px solid" }}
+            borderBottom={{ base: "1px solid", md: "none" }}
+            borderColor={imageBorderColor}
+          >
+            <NoImageFallback />
+          </Box>
+        )}
       </Box>
 
       <Flex
