@@ -5,115 +5,461 @@ import {
   Table,
   Thead,
   Tbody,
-  Tfoot,
   Tr,
   Th,
   Td,
-  TableCaption,
   TableContainer,
-  Flex
+  VStack,
+  HStack,
+  SimpleGrid,
+  Card,
+  CardBody,
+  CardHeader,
+  useColorModeValue,
+  Icon,
+  Badge,
+  Divider,
+  Grid,
+  GridItem,
 } from "@chakra-ui/react";
+import { motion } from "framer-motion";
+import {
+  Monitor,
+  Wifi,
+  GraduationCap,
+  Wrench,
+  DollarSign,
+  Package,
+  Home,
+  Microscope,
+  BookOpen,
+} from "lucide-react";
+
+const MotionCard = motion(Card);
 
 export default function FacilityTab(props) {
+  // Color scheme - standardized to match SIRC page
+  const cardBg = useColorModeValue("white", "gray.800");
+  const textColor = useColorModeValue("gray.700", "gray.300");
+  const headingColor = useColorModeValue("brand.400", "brand.300");
+  const borderColor = useColorModeValue("gray.200", "gray.600");
+  const accentColor = useColorModeValue("brand.500", "brand.400");
+  const badgeBg = useColorModeValue("brand.50", "brand.900");
+  const sectionBg = useColorModeValue("gray.50", "gray.700");
+  const tableBg = useColorModeValue("white", "gray.800");
+  const tableHeaderBg = useColorModeValue("brand.50", "brand.900");
+
+  const facilities = [
+    {
+      icon: Home,
+      title: "Accommodation",
+      features: ["Air-conditioned rooms", "Hot water", "Comfortable beds"],
+    },
+    {
+      icon: Wifi,
+      title: "High-Speed Internet",
+      features: ["24/7 connectivity", "Research access", "Video conferencing"],
+    },
+    {
+      icon: Microscope,
+      title: "Laboratory Facilities",
+      features: ["Modern equipment", "Analysis tools", "Storage facilities"],
+    },
+    {
+      icon: BookOpen,
+      title: "Classroom Spaces",
+      features: ["Meeting rooms", "Presentation areas", "Study spaces"],
+    },
+  ];
+
   return (
-    <>
-      <Box
-        paddingTop={5}
-        paddingBottom={2}
-        paddingInline={12}
-        bgColor={"design.200"}
-        borderInline={'solid'}
-        borderBottom={'solid'}
-        borderColor={'design.200'}
+    <VStack spacing={{ base: 6, md: 8 }} align="stretch">
+      {/* Facilities Overview */}
+      <SimpleGrid
+        columns={{ base: 1, sm: 2, lg: 4 }}
+        spacing={{ base: 4, md: 6 }}
       >
-        
-          <Heading>
-            
-          </Heading>
-          <Flex  flexDir={'column'} gap={2}>
-          <Heading  color={"brand.900"} size={'xl'}>
-            Classroom and Internet Services.
-          </Heading>
-          <Text
-        
-        paddingRight={{base:0,md:8}}
+        {facilities.map((facility, index) => (
+          <MotionCard
+            key={index}
+            bg={cardBg}
+            shadow="lg"
+            borderRadius="xl"
+            border="1px solid"
+            borderColor={borderColor}
+            overflow="hidden"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: index * 0.1 }}
           >
-            The Research Centre has one classroom where any classroom sessions
-            which need to be taken during the period of field study can be
-            conducted. The classroom has a capacity of 10 to 15 people. It is
-            also equiped with 4 computer stations where internet services are
-            also provided.
-          </Text>
-          </Flex>
+            <CardHeader bg={accentColor} color="white" py={{ base: 3, md: 4 }}>
+              <HStack justify="center">
+                <Icon
+                  as={facility.icon}
+                  w={{ base: 5, md: 6 }}
+                  h={{ base: 5, md: 6 }}
+                />
+              </HStack>
+            </CardHeader>
 
-          <Flex flexDir={'column'} paddingBlock={2} gap={2}
-          >
-            <Heading  color={"brand.900"}>
-            Lab Facility.
-          </Heading>
-          <Text
-            
-            paddingRight={{base:0,md:8}}
-          >
-            The lab facility at the Research Centre is a basic wet lab facility
-            with equipment such as microscope, spring balance, caliper etc..
-            which can be used by the researchers and students.
-          </Text>
-            </Flex>
+            <CardBody p={{ base: 4, md: 6 }}>
+              <VStack align="stretch" spacing={{ base: 3, md: 4 }}>
+                <Heading
+                  as="h3"
+                  size={{ base: "sm", md: "md" }}
+                  color={headingColor}
+                  textAlign="center"
+                  lineHeight="1.3"
+                >
+                  {facility.title}
+                </Heading>
 
-          <Flex  flexDir={'column'}  gap={2}  paddingBottom={4}>
-          <Heading color={"brand.900"}>
-            Equipment and Gear for Field Work
-          </Heading>
-          <Text
-           
-           paddingRight={{base:0,md:8}}
-          >
-            A dinghy is available for hire for researchers/students who wish to
-            travel to nearby islands/sites for their field work.Boats can also
-            be hired at reasonable prices for this purpose.
-          </Text>
-          <Text
-           
-           paddingRight={{base:0,md:16}}
-          
+                <Text
+                  fontSize={{ base: "xs", md: "sm" }}
+                  color={textColor}
+                  lineHeight="tall"
+                  textAlign="center"
+                >
+                  {facility.features.join(", ")}
+                </Text>
+              </VStack>
+            </CardBody>
+          </MotionCard>
+        ))}
+      </SimpleGrid>
 
+      {/* Equipment Section */}
+      <Grid
+        templateColumns={{ base: "1fr", lg: "1fr 2fr" }}
+        gap={{ base: 6, md: 8 }}
+      >
+        <GridItem>
+          <Card
+            bg={cardBg}
+            shadow="lg"
+            borderRadius="xl"
+            border="1px solid"
+            borderColor={borderColor}
+            overflow="hidden"
           >
-            Field equipment available at LAMER can be hired/lent to
-            researchers/students when needed, on an availability basis. The
-            following equipment are available and has to be requested for, prior
-            to arrival to check for their availability during the researcher’s
-            period of stay.
-          </Text>
-          </Flex>
-          
-        </Box>
-        <Box  bgColor={"design.200"}paddingInline={12} borderBottomRadius={24} paddingBottom={2}>
-          <TableContainer bgColor={'white'} borderRadius={12} paddingTop={2} marginBottom={4}  paddingInline={2}>
-            <Table the variant="simple" size={"sm"}>
-              <TableCaption>Available Equipment and Prices</TableCaption>
-              <Thead>
-                <Tr>
-                  <Th>Name</Th>
-                  <Th>Brand</Th>
-                  <Th>Model No.</Th>
-                  <Th>Qty</Th>
-                  <Th>Daily Charge(USD)</Th>
-                </Tr>
-              </Thead>
-              <Tbody>{props.equipment.map((equipment)=>{
-                return (<Tr>
-                  <Td>{equipment.equipmentName}</Td>
-                  <Td>{equipment.brand}</Td>
-                  <Td>{equipment.modelNo}</Td>
-                  <Td>{equipment.quantity}</Td>
-                  <Td>{equipment.charge}</Td>
-                  </Tr>)
-              })}</Tbody>
-            </Table>
-          </TableContainer>
-        
-      </Box>
-    </>
+            <CardHeader bg={accentColor} color="white" py={{ base: 3, md: 4 }}>
+              <HStack spacing={3}>
+                <Icon
+                  as={Wrench}
+                  w={{ base: 5, md: 6 }}
+                  h={{ base: 5, md: 6 }}
+                />
+                <Heading size={{ base: "sm", md: "md" }}>
+                  Equipment Rental
+                </Heading>
+              </HStack>
+            </CardHeader>
+            <CardBody p={{ base: 4, md: 6 }}>
+              <VStack spacing={{ base: 3, md: 4 }} align="stretch">
+                <Text
+                  fontSize={{ base: "sm", md: "md" }}
+                  color={textColor}
+                  lineHeight="tall"
+                >
+                  Professional field equipment available for rent to researchers
+                  and students based on availability.
+                </Text>
+                <Divider />
+                <VStack align="stretch" spacing={3}>
+                  <HStack spacing={2}>
+                    <Icon as={Package} w={4} h={4} color={accentColor} />
+                    <Text fontSize="sm" fontWeight="600" color={headingColor}>
+                      Advance Booking Required
+                    </Text>
+                  </HStack>
+                  <Text fontSize={{ base: "xs", md: "sm" }} color={textColor}>
+                    Equipment must be requested prior to arrival to ensure
+                    availability during your research period.
+                  </Text>
+                  <HStack spacing={2}>
+                    <Icon as={DollarSign} w={4} h={4} color={accentColor} />
+                    <Text fontSize="sm" fontWeight="600" color={headingColor}>
+                      Daily Rental Rates
+                    </Text>
+                  </HStack>
+                  <Text fontSize={{ base: "xs", md: "sm" }} color={textColor}>
+                    Fair pricing with flexible rental periods to suit
+                    your research timeline.
+                  </Text>
+                </VStack>
+              </VStack>
+            </CardBody>
+          </Card>
+        </GridItem>
+
+        <GridItem>
+          <Card
+            bg={cardBg}
+            shadow="lg"
+            borderRadius="xl"
+            border="1px solid"
+            borderColor={borderColor}
+            overflow="hidden"
+          >
+            <CardHeader bg={accentColor} color="white" py={{ base: 4, md: 6 }}>
+              <HStack
+                justify="space-between"
+                align="center"
+                flexWrap="wrap"
+                gap={2}
+              >
+                <HStack spacing={3} minW="0">
+                  <Icon
+                    as={Package}
+                    w={{ base: 5, md: 6 }}
+                    h={{ base: 5, md: 6 }}
+                  />
+                  <Heading size={{ base: "sm", md: "lg" }} minW="0">
+                    Available Equipment & Pricing
+                  </Heading>
+                </HStack>
+                <Badge
+                  bg="rgba(255, 255, 255, 0.2)"
+                  color="white"
+                  px={{ base: 3, md: 4 }}
+                  py={{ base: 1, md: 2 }}
+                  borderRadius="full"
+                  fontSize={{ base: "xs", md: "sm" }}
+                  fontWeight="600"
+                  flexShrink={0}
+                >
+                  USD Pricing
+                </Badge>
+              </HStack>
+            </CardHeader>
+            <CardBody p={0}>
+              {props.equipment && props.equipment.length > 0 ? (
+                <Box overflowX="auto">
+                  <TableContainer>
+                    <Table variant="simple" size={{ base: "sm", md: "md" }}>
+                      <Thead bg={useColorModeValue("gray.100", "gray.700")}>
+                        <Tr>
+                          <Th
+                            color={headingColor}
+                            fontWeight="700"
+                            fontSize={{ base: "xs", md: "sm" }}
+                            textTransform="uppercase"
+                            letterSpacing="wider"
+                            py={4}
+                            borderBottom="2px solid"
+                            borderColor={accentColor}
+                            minW="150px"
+                          >
+                            <HStack spacing={2}>
+                              <Icon as={Wrench} w={4} h={4} />
+                              <Text>Equipment</Text>
+                            </HStack>
+                          </Th>
+                          <Th
+                            color={headingColor}
+                            fontWeight="700"
+                            fontSize={{ base: "xs", md: "sm" }}
+                            textTransform="uppercase"
+                            letterSpacing="wider"
+                            py={4}
+                            borderBottom="2px solid"
+                            borderColor={accentColor}
+                            minW="120px"
+                            display={{ base: "none", md: "table-cell" }}
+                          >
+                            Brand & Model
+                          </Th>
+                          <Th
+                            color={headingColor}
+                            fontWeight="700"
+                            fontSize={{ base: "xs", md: "sm" }}
+                            textTransform="uppercase"
+                            letterSpacing="wider"
+                            textAlign="center"
+                            py={4}
+                            borderBottom="2px solid"
+                            borderColor={accentColor}
+                            minW="80px"
+                          >
+                            Qty
+                          </Th>
+                          <Th
+                            color={headingColor}
+                            fontWeight="700"
+                            fontSize={{ base: "xs", md: "sm" }}
+                            textTransform="uppercase"
+                            letterSpacing="wider"
+                            textAlign="right"
+                            py={4}
+                            borderBottom="2px solid"
+                            borderColor={accentColor}
+                            minW="100px"
+                          >
+                            <HStack justify="flex-end" spacing={2}>
+                              <Icon as={DollarSign} w={4} h={4} />
+                              <Text display={{ base: "none", sm: "block" }}>
+                                Daily Rate
+                              </Text>
+                              <Text display={{ base: "block", sm: "none" }}>
+                                Rate
+                              </Text>
+                            </HStack>
+                          </Th>
+                        </Tr>
+                      </Thead>
+                      <Tbody>
+                        {props.equipment.map((equipment, index) => (
+                          <Tr
+                            key={index}
+                            bg={
+                              index % 2 === 0
+                                ? useColorModeValue("white", "gray.800")
+                                : useColorModeValue("gray.50", "gray.750")
+                            }
+                            borderBottom="1px solid"
+                            borderColor={useColorModeValue(
+                              "gray.200",
+                              "gray.600"
+                            )}
+                          >
+                            <Td
+                              fontWeight="600"
+                              color={headingColor}
+                              py={{ base: 3, md: 5 }}
+                            >
+                              <VStack align="start" spacing={1}>
+                                <HStack spacing={3}>
+                                  <Box
+                                    w={3}
+                                    h={3}
+                                    bg={accentColor}
+                                    borderRadius="full"
+                                  />
+                                  <Text fontSize={{ base: "xs", md: "md" }}>
+                                    {equipment.equipmentName}
+                                  </Text>
+                                </HStack>
+                                <Box
+                                  display={{ base: "block", md: "none" }}
+                                  pl={6}
+                                >
+                                  <Text
+                                    fontSize="xs"
+                                    fontWeight="600"
+                                    color={headingColor}
+                                  >
+                                    {equipment.brand}
+                                  </Text>
+                                  <Text
+                                    fontSize="xs"
+                                    color={useColorModeValue(
+                                      "gray.600",
+                                      "gray.400"
+                                    )}
+                                    fontStyle="italic"
+                                  >
+                                    Model: {equipment.modelNo}
+                                  </Text>
+                                </Box>
+                              </VStack>
+                            </Td>
+                            <Td
+                              color={textColor}
+                              py={{ base: 3, md: 5 }}
+                              display={{ base: "none", md: "table-cell" }}
+                            >
+                              <VStack align="start" spacing={1}>
+                                <Text
+                                  fontSize="md"
+                                  fontWeight="600"
+                                  color={headingColor}
+                                >
+                                  {equipment.brand}
+                                </Text>
+                                <Text
+                                  fontSize="sm"
+                                  color={useColorModeValue(
+                                    "gray.600",
+                                    "gray.400"
+                                  )}
+                                  fontStyle="italic"
+                                >
+                                  Model: {equipment.modelNo}
+                                </Text>
+                              </VStack>
+                            </Td>
+                            <Td textAlign="center" py={{ base: 3, md: 5 }}>
+                              <Badge
+                                colorScheme="brand"
+                                variant="solid"
+                                borderRadius="lg"
+                                px={{ base: 2, md: 3 }}
+                                py={1}
+                                fontSize={{ base: "xs", md: "md" }}
+                                fontWeight="600"
+                              >
+                                {equipment.quantity}
+                              </Badge>
+                            </Td>
+                            <Td textAlign="right" py={{ base: 3, md: 5 }}>
+                              <VStack align="end" spacing={0}>
+                                <Text
+                                  fontWeight="700"
+                                  color={accentColor}
+                                  fontSize={{ base: "sm", md: "lg" }}
+                                >
+                                  ${equipment.charge}
+                                </Text>
+                                <Text
+                                  fontSize="xs"
+                                  color={useColorModeValue(
+                                    "gray.500",
+                                    "gray.400"
+                                  )}
+                                >
+                                  per day
+                                </Text>
+                              </VStack>
+                            </Td>
+                          </Tr>
+                        ))}
+                      </Tbody>
+                    </Table>
+                  </TableContainer>
+                </Box>
+              ) : (
+                <Box p={{ base: 8, md: 12 }} textAlign="center">
+                  <VStack spacing={4}>
+                    <Icon
+                      as={Package}
+                      w={{ base: 10, md: 12 }}
+                      h={{ base: 10, md: 12 }}
+                      color={accentColor}
+                      opacity={0.6}
+                    />
+                    <Heading
+                      size={{ base: "md", md: "lg" }}
+                      color={headingColor}
+                    >
+                      No Available Equipment at the moment
+                    </Heading>
+                    <Text
+                      fontSize={{ base: "md", md: "lg" }}
+                      color={textColor}
+                      maxW="400px"
+                    >
+                      We are currently updating our equipment inventory. Please
+                      check back later or contact us for more information.
+                    </Text>
+                  </VStack>
+                </Box>
+              )}
+            </CardBody>
+          </Card>
+        </GridItem>
+      </Grid>
+
+      
+    </VStack>
   );
 }
