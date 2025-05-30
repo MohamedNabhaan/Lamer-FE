@@ -267,7 +267,6 @@ export default function AboutUs() {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5, delay: 1.0 + index * 0.1 }}
-                      
                     >
                       <CardHeader bg={accentColor} color="white" py={4}>
                         <HStack justify="center">
@@ -341,7 +340,6 @@ export default function AboutUs() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 1.2 + index * 0.1 }}
-                    
                   >
                     <Box position="relative">
                       <AspectRatio ratio={4 / 3}>
@@ -355,7 +353,6 @@ export default function AboutUs() {
                           filter="brightness(1.1)"
                         />
                       </AspectRatio>
-                      
                     </Box>
 
                     <CardBody p={6}>
