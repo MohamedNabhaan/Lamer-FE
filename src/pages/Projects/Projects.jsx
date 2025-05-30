@@ -1,47 +1,44 @@
 import {
-  Image,
   Box,
   Heading,
   Container,
   Stack,
-  Card,
-  CardBody,
   Text,
-  CardHeader,
-  List,
-  ListItem,
   Select,
-  Input,
-  Modal,
-  ModalContent,
-  ModalOverlay,
-  ModalHeader,
-  Button,
-  Center,
+  useColorModeValue,
+  Icon,
+  InputGroup,
+  InputLeftElement,
+  VStack,
+  HStack,
+  Flex,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import fallback from "../../assets/logo.png";
 import { PROJ_CATEGORIES } from "../..";
-import ProjectModal from "../../components/ProjectModal";
-import { Link, Outlet, Route, Routes, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Pagination from "../../components/Pagination";
 import { ProjectCard } from "../../components/ProjectCard";
+import { Filter, Loader } from "lucide-react";
 
 export default function Projects() {
   const [isFetching, setIsFetching] = useState(false);
   let [projects, setProjects] = useState([]);
-  const [edited, setEdited] = useState(false);
   const [filtered, setFiltered] = useState(false);
   const [filterVal, setFilterVal] = useState("");
   const [projPerPage, setProjPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [currentPageProjs, setCurrentPageProjs] = useState([]);
 
+  const bgColor = useColorModeValue("white", "gray.800");
+  const borderColor = useColorModeValue("gray.200", "gray.600");
+  const textColor = useColorModeValue("gray.600", "gray.300");
+  const accentColor = useColorModeValue("brand.400", "brand.300");
+  const headerBg = useColorModeValue("gray.50", "gray.700");
+
   useEffect(() => {
     async function fetchProjects() {
       setIsFetching(true);
       const response = await fetch("http://localhost:3000/projects");
-
       const resData = await response.json();
 
       resData.map((data) => {
@@ -51,10 +48,11 @@ export default function Projects() {
           .replace(/["]/g, "")
           .split(",");
         const date = new Date(data.projectDate);
-
-        data.projectDate = `${date.getDate()}/${
+        data.projectDate = `${date.getDate().toString().padStart(2, "0")}-${(
           date.getMonth() + 1
-        }/${date.getFullYear()}`;
+        )
+          .toString()
+          .padStart(2, "0")}-${date.getFullYear()}`;
         data.images = vals;
       });
       setProjects(resData);
@@ -67,9 +65,8 @@ export default function Projects() {
     async function filteredFetchProjects() {
       setIsFetching(true);
       const response = await fetch(
-        `http://localhost:3000/projects?projectCategory=` + `${filterVal}`
+        `http://localhost:3000/projects?projectCategory=${filterVal}`
       );
-
       const resData = await response.json();
 
       resData.map((data) => {
@@ -79,10 +76,11 @@ export default function Projects() {
           .replace(/["]/g, "")
           .split(",");
         const date = new Date(data.projectDate);
-
-        data.projectDate = `${date.getDate()}/${
+        data.projectDate = `${date.getDate().toString().padStart(2, "0")}-${(
           date.getMonth() + 1
-        }/${date.getFullYear()}`;
+        )
+          .toString()
+          .padStart(2, "0")}-${date.getFullYear()}`;
         data.images = vals;
       });
 
@@ -114,10 +112,11 @@ export default function Projects() {
           .replace(/["]/g, "")
           .split(",");
         const date = new Date(data.projectDate);
-
-        data.projectDate = `${date.getDate()}/${
+        data.projectDate = `${date.getDate().toString().padStart(2, "0")}-${(
           date.getMonth() + 1
-        }/${date.getFullYear()}`;
+        )
+          .toString()
+          .padStart(2, "0")}-${date.getFullYear()}`;
         data.images = vals;
       });
       setProjects(resData);
@@ -129,7 +128,6 @@ export default function Projects() {
       setFiltered(true);
     } else {
       const response = await fetch("http://localhost:3000/projects");
-
       const resData = await response.json();
 
       resData.map((data) => {
@@ -139,10 +137,11 @@ export default function Projects() {
           .replace(/["]/g, "")
           .split(",");
         const date = new Date(data.projectDate);
-
-        data.projectDate = `${date.getDate()}/${
+        data.projectDate = `${date.getDate().toString().padStart(2, "0")}-${(
           date.getMonth() + 1
-        }/${date.getFullYear()}`;
+        )
+          .toString()
+          .padStart(2, "0")}-${date.getFullYear()}`;
         data.images = vals;
       });
       setProjects(resData);
@@ -167,66 +166,123 @@ export default function Projects() {
   }
 
   return (
-    <>
-      <Box minH={"72vh"}>
-        <Container
-          maxW={"container.xl"}
-          paddingTop={12}
-          paddingLeft={20}
-          borderBottom={"solid"}
-          borderColor={"design.100"}
-          justifyContent={"center"}
-        >
-          <Heading
-            borderLeft={"solid 20px"}
-            paddingLeft={2}
-            as="h1"
-            size={"3xl"}
-            fontWeight={500}
-            color={"brand.400"}
-            display={"block"}
-            textAlign={{ base: "center", md: "left" }}
-          >
-            Our Projects
-          </Heading>
-          <Box paddingTop={12} paddingBottom={8}>
-            <Select placeholder="All" onChange={onFilterValueChanged}>
-              {PROJ_CATEGORIES.map((category) => {
-                return <option value={category.value}>{category.label}</option>;
-              })}
-            </Select>
-          </Box>
+    <Box minH="72vh" bg={bgColor} pt={0}>
+      {/* Header Section */}
+      <Box
+        bg={headerBg}
+        py={{ base: 8, md: 12 }}
+        borderBottom="1px"
+        borderColor={borderColor}
+        mt={{ base: "70px", md: "90px" }}
+      >
+        <Container maxW="container.xl" px={{ base: 4, md: 8 }}>
+          <VStack spacing={4} align="stretch">
+            <Heading
+              as="h1"
+              size={{ base: "2xl", md: "3xl" }}
+              color={accentColor}
+              borderLeft="6px solid"
+              pl={4}
+              lineHeight="1.2"
+            >
+              Our Projects
+            </Heading>
+            <Text
+              fontSize={{ base: "lg", md: "xl" }}
+              color={textColor}
+              maxW="container.md"
+            >
+              Explore our diverse portfolio of successful projects across
+              various domains
+            </Text>
+          </VStack>
         </Container>
-        <Box paddingInline={16} paddingBlock={8}>
-          {projects.length === 0 ? <Text>No Projects at the moment</Text> : ""}
-          {isFetching ? (
-            <Text>Loading</Text>
-          ) : (
-            <Stack>
-              {currentPageProjs.map((project) => {
-                return (
-                  <Link to={`${project.id}`}>
-                    <ProjectCard
-                      images={project.images}
-                      title={project.title}
-                      clientName={project.clientName}
-                      projectDate={project.projectDate}
-                      projectCategory={project.projectCategory}
-                    ></ProjectCard>
-                  </Link>
-                );
-              })}
-            </Stack>
-          )}
-          <Pagination
-            projPerPage={projPerPage}
-            totalProj={projects.length}
-            paginate={paginate}
-            currentPage={currentPage}
-          ></Pagination>
-        </Box>
       </Box>
-      <Outlet context={[edited, setEdited]}></Outlet>
-    </>
+
+      {/* Filter Section */}
+      <Container maxW="container.xl" px={{ base: 4, md: 8 }} py={6}>
+        <Box mb={8}>
+          <HStack spacing={3} mb={2}>
+            <Icon as={Filter} color={accentColor} />
+            <Text fontSize="lg" fontWeight="600" color={accentColor}>
+              Filter Projects
+            </Text>
+          </HStack>
+          <Select
+            size="lg"
+            placeholder="All Categories"
+            onChange={onFilterValueChanged}
+            borderColor={borderColor}
+            _hover={{ borderColor: accentColor }}
+            maxW="md"
+          >
+            {PROJ_CATEGORIES.map((category) => (
+              <option key={category.value} value={category.value}>
+                {category.label}
+              </option>
+            ))}
+          </Select>
+        </Box>
+
+        {/* Projects List */}
+        {projects.length === 0 ? (
+          <Flex
+            direction="column"
+            align="center"
+            justify="center"
+            py={12}
+            color={textColor}
+          >
+            <Text fontSize="xl" mb={2}>
+              No Projects Available
+            </Text>
+            <Text>Check back later for updates</Text>
+          </Flex>
+        ) : null}
+
+        {isFetching ? (
+          <Flex
+            direction="column"
+            align="center"
+            justify="center"
+            py={12}
+            color={accentColor}
+          >
+            <Icon as={Loader} size={40} mb={4} />
+            <Text fontSize="xl">Loading Projects...</Text>
+          </Flex>
+        ) : (
+          <VStack spacing={6}>
+            {currentPageProjs.map((project) => (
+              <Link
+                key={project.id}
+                to={`${project.id}`}
+                style={{ width: "100%" }}
+              >
+                <ProjectCard
+                  images={project.images}
+                  title={project.title}
+                  clientName={project.clientName}
+                  projectDate={project.projectDate}
+                  projectCategory={project.projectCategory}
+                />
+              </Link>
+            ))}
+          </VStack>
+        )}
+
+        {/* Pagination */}
+        {projects.length > 0 && !isFetching && (
+          <Box py={8}>
+            <Pagination
+              projPerPage={projPerPage}
+              totalProj={projects.length}
+              paginate={paginate}
+              currentPage={currentPage}
+            />
+          </Box>
+        )}
+      </Container>
+    </Box>
   );
 }
