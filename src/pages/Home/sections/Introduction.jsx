@@ -12,6 +12,7 @@ import {
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import bg from "../../../assets/introduction/Intro4.png";
+import { useLoaderData, Link } from "react-router-dom";
 
 const MotionBox = motion(Box);
 const MotionHeading = motion(Heading);
@@ -87,6 +88,7 @@ export default function Introduction() {
             25 Years of Continued Excellence in Engineering Innovation
           </MotionHeading>
 
+          <Link to="/Projects">
           <MotionButton
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -106,6 +108,7 @@ export default function Introduction() {
           >
             Explore Our Projects
           </MotionButton>
+          </Link>
         </Flex>
 
         {/* Scroll Indicator */}
