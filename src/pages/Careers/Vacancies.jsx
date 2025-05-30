@@ -18,6 +18,7 @@ import {
   Grid,
   GridItem,
   Link as ChakraLink,
+  Select,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import {
@@ -30,14 +31,29 @@ import {
   FileText,
   Send,
   AlertCircle,
+  Filter,
+  X,
 } from "lucide-react";
 import { useLoaderData, Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import Pagination from "../../components/Pagination";
 
 const MotionBox = motion(Box);
 const MotionCard = motion(Card);
 
 export default function Vacancies() {
   const vacancies = useLoaderData();
+
+  // Pagination state
+  const [vacanciesPerPage] = useState(6);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPageVacancies, setCurrentPageVacancies] = useState([]);
+
+  // Filter state
+  const [selectedExperience, setSelectedExperience] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState("");
+  const [showFilters, setShowFilters] = useState(false);
+  const [filteredVacancies, setFilteredVacancies] = useState([]);
 
   // Color scheme matching the rest of the application
   const bgColor = useColorModeValue("white", "gray.800");
@@ -49,6 +65,92 @@ export default function Vacancies() {
   const accentColor = useColorModeValue("brand.500", "brand.400");
   const badgeBg = useColorModeValue("brand.50", "brand.900");
   const mutedTextColor = useColorModeValue("gray.500", "gray.400");
+
+  // Filter options
+  const experienceOptions = [
+    { value: "", label: "All Experience Levels" },
+    { value: "0", label: "Entry Level (0 years)" },
+    { value: "1", label: "1+ years" },
+    { value: "2", label: "2+ years" },
+    { value: "3", label: "3+ years" },
+    { value: "5", label: "5+ years" },
+    { value: "10", label: "10+ years" },
+  ];
+
+  const statusOptions = [
+    { value: "", label: "All Position Types" },
+    { value: "full-time", label: "Full-time" },
+    { value: "part-time", label: "Part-time" },
+    { value: "contract", label: "Contract" },
+    { value: "internship", label: "Internship" },
+  ];
+
+  // Auto-show filters when they become active
+  useEffect(() => {
+    if (selectedExperience || selectedStatus) {
+      setShowFilters(true);
+    }
+  }, [selectedExperience, selectedStatus]);
+
+  // Apply filters to vacancies
+  useEffect(() => {
+    let filtered = [...vacancies];
+
+    // Filter by experience
+    if (selectedExperience && selectedExperience !== "") {
+      const expValue = parseInt(selectedExperience);
+      filtered = filtered.filter((vacancy) => {
+        const vacancyExp = parseInt(vacancy.experience) || 0;
+        return vacancyExp >= expValue;
+      });
+    }
+
+    // Filter by status
+    if (selectedStatus && selectedStatus !== "") {
+      filtered = filtered.filter(
+        (vacancy) =>
+          vacancy.positionStatus?.toLowerCase() === selectedStatus.toLowerCase()
+      );
+    }
+
+    setFilteredVacancies(filtered);
+    setCurrentPage(1); // Reset to first page when filters change
+  }, [vacancies, selectedExperience, selectedStatus]);
+
+  // Initialize pagination when filtered vacancies change
+  useEffect(() => {
+    const indexOfLastVacancy = currentPage * vacanciesPerPage;
+    const indexOfFirstVacancy = indexOfLastVacancy - vacanciesPerPage;
+    setCurrentPageVacancies(
+      filteredVacancies.slice(indexOfFirstVacancy, indexOfLastVacancy)
+    );
+  }, [filteredVacancies, currentPage, vacanciesPerPage]);
+
+  // Pagination function
+  function paginate(pageNumber) {
+    if (
+      pageNumber >= 1 &&
+      pageNumber <= Math.ceil(filteredVacancies.length / vacanciesPerPage)
+    ) {
+      setCurrentPage(pageNumber);
+      window.scrollTo(0, 0);
+    }
+  }
+
+  // Filter handlers
+  const handleExperienceChange = (e) => {
+    setSelectedExperience(e.target.value);
+  };
+
+  const handleStatusChange = (e) => {
+    setSelectedStatus(e.target.value);
+  };
+
+  const clearFilters = () => {
+    setSelectedExperience("");
+    setSelectedStatus("");
+    setShowFilters(false);
+  };
 
   // Helper function to format date
   const formatDate = (dateString) => {
@@ -110,6 +212,180 @@ export default function Vacancies() {
         </Container>
       </Box>
 
+      {/* Filter Section */}
+      <Container maxW="container.xl" px={{ base: 4, md: 8 }} py={6}>
+        <Box mb={8}>
+          {/* Filter Toggle Button */}
+          <Flex justify="space-between" align="center" mb={4}>
+            <HStack spacing={3}>
+              <Icon as={Filter} color={headingColor} />
+              <Text fontSize="lg" fontWeight="600" color={headingColor}>
+                Filter Vacancies
+              </Text>
+              {(selectedExperience || selectedStatus) && (
+                <Badge colorScheme="blue" fontSize="sm">
+                  {[selectedExperience, selectedStatus].filter(Boolean).length}{" "}
+                  active
+                </Badge>
+              )}
+            </HStack>
+            <Button
+              leftIcon={<Filter />}
+              onClick={() => setShowFilters(!showFilters)}
+              variant={showFilters ? "solid" : "outline"}
+              colorScheme="brand"
+              size="md"
+            >
+              {showFilters ? "Hide Filters" : "Show Filters"}
+            </Button>
+          </Flex>
+
+          {/* Filter Controls - Collapsible */}
+          {showFilters && (
+            <Box
+              bg={cardBg}
+              p={6}
+              borderRadius="xl"
+              border="1px solid"
+              borderColor={borderColor}
+              shadow="sm"
+              transition="all 0.3s ease"
+            >
+              <VStack spacing={4} align="stretch">
+                <HStack spacing={4} flexWrap="wrap">
+                  {/* Experience Filter */}
+                  <Box flex="1" minW="250px">
+                    <Text
+                      fontSize="sm"
+                      fontWeight="600"
+                      color={textColor}
+                      mb={2}
+                    >
+                      Filter by Experience
+                    </Text>
+                    <Select
+                      size="lg"
+                      value={selectedExperience}
+                      onChange={handleExperienceChange}
+                      borderColor={borderColor}
+                      _hover={{ borderColor: headingColor }}
+                      bg={bgColor}
+                    >
+                      {experienceOptions.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </Select>
+                  </Box>
+
+                  {/* Status Filter */}
+                  <Box flex="1" minW="250px">
+                    <Text
+                      fontSize="sm"
+                      fontWeight="600"
+                      color={textColor}
+                      mb={2}
+                    >
+                      Filter by Position Type
+                    </Text>
+                    <Select
+                      size="lg"
+                      value={selectedStatus}
+                      onChange={handleStatusChange}
+                      borderColor={borderColor}
+                      _hover={{ borderColor: headingColor }}
+                      bg={bgColor}
+                    >
+                      {statusOptions.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </Select>
+                  </Box>
+
+                  {/* Clear Filters Button */}
+                  {(selectedExperience || selectedStatus) && (
+                    <Box>
+                      <Text
+                        fontSize="sm"
+                        fontWeight="600"
+                        color="transparent"
+                        mb={2}
+                      >
+                        Clear
+                      </Text>
+                      <Button
+                        size="lg"
+                        variant="outline"
+                        colorScheme="red"
+                        leftIcon={<X />}
+                        onClick={clearFilters}
+                      >
+                        Clear Filters
+                      </Button>
+                    </Box>
+                  )}
+                </HStack>
+
+                {/* Active Filters Display */}
+                {(selectedExperience || selectedStatus) && (
+                  <Box>
+                    <Text
+                      fontSize="sm"
+                      fontWeight="600"
+                      color={textColor}
+                      mb={2}
+                    >
+                      Active Filters:
+                    </Text>
+                    <HStack spacing={2} flexWrap="wrap">
+                      {selectedExperience && (
+                        <Box
+                          bg={headingColor}
+                          color="white"
+                          px={3}
+                          py={1}
+                          borderRadius="full"
+                          fontSize="sm"
+                          fontWeight="500"
+                        >
+                          Experience:{" "}
+                          {
+                            experienceOptions.find(
+                              (opt) => opt.value === selectedExperience
+                            )?.label
+                          }
+                        </Box>
+                      )}
+                      {selectedStatus && (
+                        <Box
+                          bg={headingColor}
+                          color="white"
+                          px={3}
+                          py={1}
+                          borderRadius="full"
+                          fontSize="sm"
+                          fontWeight="500"
+                        >
+                          Type:{" "}
+                          {
+                            statusOptions.find(
+                              (opt) => opt.value === selectedStatus
+                            )?.label
+                          }
+                        </Box>
+                      )}
+                    </HStack>
+                  </Box>
+                )}
+              </VStack>
+            </Box>
+          )}
+        </Box>
+      </Container>
+
       {/* Vacancies Content */}
       <Container
         maxW="container.xl"
@@ -117,7 +393,7 @@ export default function Vacancies() {
         py={{ base: 8, md: 12 }}
       >
         {vacancies.length === 0 ? (
-          // Empty State
+          // Empty State - No vacancies at all
           <MotionBox
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -178,6 +454,55 @@ export default function Vacancies() {
               </CardBody>
             </Card>
           </MotionBox>
+        ) : filteredVacancies.length === 0 ? (
+          // Empty State - No vacancies match filters
+          <MotionBox
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <Card
+              bg={cardBg}
+              shadow="lg"
+              borderRadius="2xl"
+              border="1px solid"
+              borderColor={borderColor}
+              overflow="hidden"
+              maxW="container.md"
+              mx="auto"
+            >
+              <CardBody p={{ base: 8, md: 12 }}>
+                <VStack spacing={6} textAlign="center">
+                  <Icon as={AlertCircle} w={16} h={16} color={mutedTextColor} />
+                  <VStack spacing={4}>
+                    <Heading size="xl" color={headingColor}>
+                      No Matching Positions
+                    </Heading>
+                    <Text
+                      fontSize={{ base: "md", md: "lg" }}
+                      color={textColor}
+                      lineHeight="tall"
+                    >
+                      No positions match your current filter criteria. Try
+                      adjusting your filters or check back later for new
+                      opportunities.
+                    </Text>
+                  </VStack>
+
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    borderColor={accentColor}
+                    color={accentColor}
+                    onClick={clearFilters}
+                    _hover={{ bg: badgeBg }}
+                  >
+                    Clear All Filters
+                  </Button>
+                </VStack>
+              </CardBody>
+            </Card>
+          </MotionBox>
         ) : (
           // Vacancies List
           <VStack spacing={{ base: 6, md: 8 }}>
@@ -216,7 +541,7 @@ export default function Vacancies() {
               gap={{ base: 6, md: 8 }}
               w="100%"
             >
-              {vacancies.map((vacancy, index) => (
+              {currentPageVacancies.map((vacancy, index) => (
                 <MotionCard
                   key={vacancy.id}
                   bg={cardBg}
@@ -325,6 +650,18 @@ export default function Vacancies() {
                 </MotionCard>
               ))}
             </Grid>
+
+            {/* Pagination */}
+            {filteredVacancies.length > vacanciesPerPage && (
+              <Box w="100%">
+                <Pagination
+                  projPerPage={vacanciesPerPage}
+                  totalProj={filteredVacancies.length}
+                  paginate={paginate}
+                  currentPage={currentPage}
+                />
+              </Box>
+            )}
 
             {/* Bottom CTA */}
             <MotionBox
