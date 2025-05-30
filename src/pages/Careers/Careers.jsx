@@ -299,9 +299,7 @@ export default function Careers() {
               overflow="hidden"
               maxW="container.md"
               mx="auto"
-            >
-              
-            </Card>
+            ></Card>
           </MotionBox>
         </Container>
       </Box>
