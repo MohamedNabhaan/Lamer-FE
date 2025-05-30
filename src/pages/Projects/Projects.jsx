@@ -7,24 +7,33 @@ import {
   Select,
   useColorModeValue,
   Icon,
+  Input,
   InputGroup,
   InputLeftElement,
   VStack,
   HStack,
   Flex,
+  Button,
+  Badge,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { PROJ_CATEGORIES } from "../..";
+import { PROJ_CATEGORIES, SERVICE_CATEGORIES } from "../..";
 import { Link } from "react-router-dom";
 import Pagination from "../../components/Pagination";
 import { ProjectCard } from "../../components/ProjectCard";
-import { Filter, Loader } from "lucide-react";
+import { Filter, Loader, X, Search } from "lucide-react";
 
 export default function Projects() {
   const [isFetching, setIsFetching] = useState(false);
   let [projects, setProjects] = useState([]);
   const [filtered, setFiltered] = useState(false);
   const [filterVal, setFilterVal] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedService, setSelectedService] = useState("");
+  const [availableServices, setAvailableServices] = useState([]);
+  const [searchTitle, setSearchTitle] = useState("");
+  const [debouncedSearchTitle, setDebouncedSearchTitle] = useState("");
+  const [showFilters, setShowFilters] = useState(false);
   const [projPerPage, setProjPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [currentPageProjs, setCurrentPageProjs] = useState([]);
@@ -34,12 +43,74 @@ export default function Projects() {
   const textColor = useColorModeValue("gray.600", "gray.300");
   const accentColor = useColorModeValue("brand.400", "brand.300");
   const headerBg = useColorModeValue("gray.50", "gray.700");
+  const cardBg = useColorModeValue("white", "gray.800");
+
+  // Debounce search title
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchTitle(searchTitle);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [searchTitle]);
+
+  // Fetch services for selected category
+  useEffect(() => {
+    if (selectedCategory) {
+      fetchServicesForCategory(selectedCategory);
+    } else {
+      setAvailableServices([]);
+      setSelectedService("");
+    }
+  }, [selectedCategory]);
+
+  // Auto-show filters when they become active
+  useEffect(() => {
+    if (selectedCategory || selectedService) {
+      setShowFilters(true);
+    }
+  }, [selectedCategory, selectedService]);
+
+  const fetchServicesForCategory = async (category) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/services?serviceCategory=${category}`
+      );
+      const services = await response.json();
+      setAvailableServices(services);
+    } catch (error) {
+      console.error("Error fetching services:", error);
+      setAvailableServices([]);
+    }
+  };
 
   useEffect(() => {
     async function fetchProjects() {
       setIsFetching(true);
-      const response = await fetch("http://localhost:3000/projects");
+      let url = "http://localhost:3000/projects";
+      const params = new URLSearchParams();
+
+      if (selectedCategory && selectedCategory !== "") {
+        params.append("projectCategory", selectedCategory);
+      }
+      if (selectedService && selectedService !== "") {
+        params.append("projectService", selectedService);
+      }
+      if (debouncedSearchTitle && debouncedSearchTitle !== "") {
+        params.append("title", debouncedSearchTitle);
+      }
+
+      if (params.toString()) {
+        url += `?${params.toString()}`;
+      }
+
+      console.log("Fetching projects with URL:", url);
+      console.log("Search title:", debouncedSearchTitle);
+
+      const response = await fetch(url);
       const resData = await response.json();
+
+      console.log("Received projects:", resData.length);
 
       resData.map((data) => {
         const vals = data.images
@@ -55,105 +126,43 @@ export default function Projects() {
           .padStart(2, "0")}-${date.getFullYear()}`;
         data.images = vals;
       });
-      setProjects(resData);
-      const indexOfLastProj = currentPage * projPerPage;
-      const indexOfFirstProj = indexOfLastProj - projPerPage;
-      setCurrentPageProjs(resData.slice(indexOfFirstProj, indexOfLastProj));
-      setIsFetching(false);
-    }
 
-    async function filteredFetchProjects() {
-      setIsFetching(true);
-      const response = await fetch(
-        `http://localhost:3000/projects?projectCategory=${filterVal}`
-      );
-      const resData = await response.json();
-
-      resData.map((data) => {
-        const vals = data.images
-          .replace("[", "")
-          .replace("]", "")
-          .replace(/["]/g, "")
-          .split(",");
-        const date = new Date(data.projectDate);
-        data.projectDate = `${date.getDate().toString().padStart(2, "0")}-${(
-          date.getMonth() + 1
-        )
-          .toString()
-          .padStart(2, "0")}-${date.getFullYear()}`;
-        data.images = vals;
-      });
-
-      setProjects(resData);
-      const indexOfLastProj = currentPage * projPerPage;
-      const indexOfFirstProj = indexOfLastProj - projPerPage;
-      setCurrentPageProjs(resData.slice(indexOfFirstProj, indexOfLastProj));
-      setIsFetching(false);
-    }
-
-    if (filtered) {
-      filteredFetchProjects();
-    } else {
-      fetchProjects();
-    }
-  }, []);
-
-  async function onFilterValueChanged(e) {
-    if (e.target.value !== "") {
-      const response = await fetch(
-        "http://localhost:3000/projects?projectCategory=" + `${e.target.value}`
-      );
-      const resData = await response.json();
-
-      resData.map((data) => {
-        const vals = data.images
-          .replace("[", "")
-          .replace("]", "")
-          .replace(/["]/g, "")
-          .split(",");
-        const date = new Date(data.projectDate);
-        data.projectDate = `${date.getDate().toString().padStart(2, "0")}-${(
-          date.getMonth() + 1
-        )
-          .toString()
-          .padStart(2, "0")}-${date.getFullYear()}`;
-        data.images = vals;
-      });
-      setProjects(resData);
-      const indexOfLastProj = 1 * projPerPage;
-      const indexOfFirstProj = indexOfLastProj - projPerPage;
-      setCurrentPageProjs(resData.slice(indexOfFirstProj, indexOfLastProj));
-      setCurrentPage(1);
-      setFilterVal(e.target.value);
-      setFiltered(true);
-    } else {
-      const response = await fetch("http://localhost:3000/projects");
-      const resData = await response.json();
-
-      resData.map((data) => {
-        const vals = data.images
-          .replace("[", "")
-          .replace("]", "")
-          .replace(/["]/g, "")
-          .split(",");
-        const date = new Date(data.projectDate);
-        data.projectDate = `${date.getDate().toString().padStart(2, "0")}-${(
-          date.getMonth() + 1
-        )
-          .toString()
-          .padStart(2, "0")}-${date.getFullYear()}`;
-        data.images = vals;
-      });
       setProjects(resData);
       setCurrentPage(1);
       const indexOfLastProj = 1 * projPerPage;
       const indexOfFirstProj = indexOfLastProj - projPerPage;
       setCurrentPageProjs(resData.slice(indexOfFirstProj, indexOfLastProj));
-
-      setFilterVal(e.target.value);
-      setFiltered(false);
+      setIsFetching(false);
     }
-  }
+
+    fetchProjects();
+  }, [selectedCategory, selectedService, debouncedSearchTitle, projPerPage]);
+
+  const handleCategoryChange = (e) => {
+    const category = e.target.value;
+    setSelectedCategory(category);
+    setSelectedService(""); // Reset service when category changes
+    setFiltered(category !== "");
+  };
+
+  const handleServiceChange = (e) => {
+    const service = e.target.value;
+    setSelectedService(service);
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchTitle(e.target.value);
+  };
+
+  const clearFilters = () => {
+    setSelectedCategory("");
+    setSelectedService("");
+    setSearchTitle("");
+    setDebouncedSearchTitle("");
+    setAvailableServices([]);
+    setFiltered(false);
+    setShowFilters(false);
+  };
 
   function paginate(number) {
     setCurrentPage(number);
@@ -202,26 +211,210 @@ export default function Projects() {
       {/* Filter Section */}
       <Container maxW="container.xl" px={{ base: 4, md: 8 }} py={6}>
         <Box mb={8}>
-          <HStack spacing={3} mb={2}>
-            <Icon as={Filter} color={accentColor} />
-            <Text fontSize="lg" fontWeight="600" color={accentColor}>
-              Filter Projects
-            </Text>
-          </HStack>
-          <Select
-            size="lg"
-            placeholder="All Categories"
-            onChange={onFilterValueChanged}
-            borderColor={borderColor}
-            _hover={{ borderColor: accentColor }}
-            maxW="md"
-          >
-            {PROJ_CATEGORIES.map((category) => (
-              <option key={category.value} value={category.value}>
-                {category.label}
-              </option>
-            ))}
-          </Select>
+          {/* Filter Toggle Button */}
+          <Flex justify="space-between" align="center" mb={4}>
+            <Box flex="1" maxW="400px">
+              <InputGroup size="lg">
+                <InputLeftElement>
+                  <Icon as={Search} color={accentColor} />
+                </InputLeftElement>
+                <Input
+                  placeholder="Search projects by title..."
+                  value={searchTitle}
+                  onChange={handleSearchChange}
+                  borderColor={borderColor}
+                  _hover={{ borderColor: accentColor }}
+                  _focus={{
+                    borderColor: accentColor,
+                    boxShadow: `0 0 0 1px ${accentColor}`,
+                  }}
+                  bg={bgColor}
+                />
+              </InputGroup>
+            </Box>
+            <HStack spacing={3}>
+              {(selectedCategory || selectedService || searchTitle) && (
+                <Badge colorScheme="blue" fontSize="sm">
+                  {
+                    [selectedCategory, selectedService, searchTitle].filter(
+                      Boolean
+                    ).length
+                  }{" "}
+                  active
+                </Badge>
+              )}
+              <Button
+                leftIcon={<Filter />}
+                onClick={() => setShowFilters(!showFilters)}
+                variant={showFilters ? "solid" : "outline"}
+                colorScheme="brand"
+                size="md"
+              >
+                {showFilters ? "Hide Filters" : "Show Filters"}
+              </Button>
+            </HStack>
+          </Flex>
+
+          {/* Filter Controls - Collapsible */}
+          {showFilters && (
+            <Box
+              bg={cardBg}
+              p={6}
+              borderRadius="xl"
+              border="1px solid"
+              borderColor={borderColor}
+              shadow="sm"
+              transition="all 0.3s ease"
+            >
+              <VStack spacing={4} align="stretch">
+                <HStack spacing={4} flexWrap="wrap">
+                  {/* Category Filter */}
+                  <Box flex="1" minW="250px">
+                    <Text
+                      fontSize="sm"
+                      fontWeight="600"
+                      color={textColor}
+                      mb={2}
+                    >
+                      Filter by Category
+                    </Text>
+                    <Select
+                      size="lg"
+                      placeholder="All Categories"
+                      value={selectedCategory}
+                      onChange={handleCategoryChange}
+                      borderColor={borderColor}
+                      _hover={{ borderColor: accentColor }}
+                      bg={bgColor}
+                    >
+                      {SERVICE_CATEGORIES.map((category) => (
+                        <option key={category.value} value={category.value}>
+                          {category.label}
+                        </option>
+                      ))}
+                    </Select>
+                  </Box>
+
+                  {/* Service Filter - Only show when category is selected */}
+                  {selectedCategory && (
+                    <Box flex="1" minW="250px">
+                      <Text
+                        fontSize="sm"
+                        fontWeight="600"
+                        color={textColor}
+                        mb={2}
+                      >
+                        Filter by Service
+                      </Text>
+                      <Select
+                        size="lg"
+                        placeholder="All Services"
+                        value={selectedService}
+                        onChange={handleServiceChange}
+                        borderColor={borderColor}
+                        _hover={{ borderColor: accentColor }}
+                        bg={bgColor}
+                        isDisabled={availableServices.length === 0}
+                      >
+                        {availableServices.map((service) => (
+                          <option key={service.id} value={service.id}>
+                            {service.serviceName}
+                          </option>
+                        ))}
+                      </Select>
+                    </Box>
+                  )}
+
+                  {/* Clear Filters Button */}
+                  {(selectedCategory || selectedService || searchTitle) && (
+                    <Box>
+                      <Text
+                        fontSize="sm"
+                        fontWeight="600"
+                        color="transparent"
+                        mb={2}
+                      >
+                        Clear
+                      </Text>
+                      <Button
+                        size="lg"
+                        variant="outline"
+                        colorScheme="red"
+                        leftIcon={<X />}
+                        onClick={clearFilters}
+                      >
+                        Clear Filters
+                      </Button>
+                    </Box>
+                  )}
+                </HStack>
+
+                {/* Active Filters Display */}
+                {(selectedCategory || selectedService || searchTitle) && (
+                  <Box>
+                    <Text
+                      fontSize="sm"
+                      fontWeight="600"
+                      color={textColor}
+                      mb={2}
+                    >
+                      Active Filters:
+                    </Text>
+                    <HStack spacing={2} flexWrap="wrap">
+                      {searchTitle && (
+                        <Box
+                          bg={accentColor}
+                          color="white"
+                          px={3}
+                          py={1}
+                          borderRadius="full"
+                          fontSize="sm"
+                          fontWeight="500"
+                        >
+                          Search: "{searchTitle}"
+                        </Box>
+                      )}
+                      {selectedCategory && (
+                        <Box
+                          bg={accentColor}
+                          color="white"
+                          px={3}
+                          py={1}
+                          borderRadius="full"
+                          fontSize="sm"
+                          fontWeight="500"
+                        >
+                          Category:{" "}
+                          {
+                            SERVICE_CATEGORIES.find(
+                              (cat) => cat.value === selectedCategory
+                            )?.label
+                          }
+                        </Box>
+                      )}
+                      {selectedService && (
+                        <Box
+                          bg={accentColor}
+                          color="white"
+                          px={3}
+                          py={1}
+                          borderRadius="full"
+                          fontSize="sm"
+                          fontWeight="500"
+                        >
+                          Service:{" "}
+                          {availableServices.find(
+                            (service) =>
+                              service.id === parseInt(selectedService)
+                          )?.serviceName || selectedService}
+                        </Box>
+                      )}
+                    </HStack>
+                  </Box>
+                )}
+              </VStack>
+            </Box>
+          )}
         </Box>
 
         {/* Projects List */}
