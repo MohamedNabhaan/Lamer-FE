@@ -1,0 +1,60 @@
+# Additional security for admin routes
+<Files ~ "^.(env|gitignore|htaccess)">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Prevent direct access to sensitive files
+<FilesMatch "\.(json|log|txt)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Hide server information
+ServerTokens Prod
+ServerSignature Off
+
+# Prevent clickjacking
+Header always append X-Frame-Options SAMEORIGIN
+
+# Prevent MIME type sniffing
+Header always set X-Content-Type-Options nosniff
+
+# Enable XSS protection
+Header always set X-XSS-Protection "1; mode=block"
+
+# Force HTTPS (uncomment if using HTTPS)
+# RewriteEngine On
+# RewriteCond %{HTTPS} off
+# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Rate limiting for login attempts (basic)
+<Location "/management-portal-auth">
+    # Limit to 5 requests per minute per IP
+    SetEnvIf Remote_Addr "^(.*)$" RATE_LIMIT=$1
+    RewriteEngine On
+    RewriteMap limits "txt:/path/to/limits.txt"
+    RewriteCond ${limits:%{REMOTE_ADDR}|0} >5
+    RewriteRule .* - [F,L]
+</Location>
+
+# Block common attack patterns
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Block SQL injection attempts
+    RewriteCond %{QUERY_STRING} (union.*select|insert.*into|delete.*from) [NC,OR]
+    RewriteCond %{QUERY_STRING} (script.*tag|javascript:|vbscript:) [NC,OR]
+    RewriteCond %{QUERY_STRING} (base64_encode|base64_decode) [NC]
+    RewriteRule .* - [F,L]
+    
+    # Block admin discovery attempts
+    RewriteCond %{REQUEST_URI} ^.*(admin|administrator|wp-admin|phpmyadmin).*$ [NC]
+    RewriteCond %{REQUEST_URI} !^.*/(management-portal-auth|secure-dashboard-panel).*$ [NC]
+    RewriteRule .* - [F,L]
+</IfModule>
+
+# Custom error pages to hide information
+ErrorDocument 403 /
+ErrorDocument 404 /
+ErrorDocument 500 / 

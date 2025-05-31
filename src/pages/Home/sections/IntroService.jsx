@@ -3,91 +3,160 @@ import {
   Image,
   Box,
   Heading,
-  Center,
   Container,
-  Stack,
   SimpleGrid,
   Text,
-  textDecoration,
+  useColorModeValue,
+  Icon,
+  VStack,
 } from "@chakra-ui/react";
-
+import { motion } from "framer-motion";
 import { SERVICES } from "../../../index.js";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
+const MotionBox = motion(Box);
+const MotionHeading = motion(Heading);
+const MotionFlex = motion(Flex);
 
 export default function IntroServices() {
+  const bgColor = useColorModeValue("white", "gray.800");
+  const cardBg = useColorModeValue("gray.50", "gray.700");
+  const textColor = useColorModeValue("gray.600", "gray.300");
+  const headingColor = useColorModeValue("brand.400", "brand.300");
+  const borderColor = useColorModeValue("gray.200", "gray.600");
+  const hoverBg = useColorModeValue("white", "gray.600");
+  const navigate = useNavigate();
+
+  const handleServiceClick = (servicePath) => {
+    navigate("/Services", { state: { defaultExpanded: servicePath } });
+  };
+
   return (
     <Box
-      minH={"28rem"}
-      paddingBlock={{ base: 0, md: 12 }}
-      paddingInline={16}
-      bgColor={"design.500"}
+      bg={bgColor}
+      py={{ base: 16, md: 24 }}
+      position="relative"
+      overflow="hidden"
     >
-      <SimpleGrid columns={{ base: 1, md: 1 }} spacing={8}>
-        <Box>
-          <Heading
-            textColor={"brand.400"}
-            size={"3xl"}
-            paddingBottom={4}
-            paddingLeft={{ base: 0, md: 4 }}
+      <Container maxW="container.xl" position="relative" zIndex={1}>
+        <VStack
+          spacing={4}
+          mb={16}
+          align={{ base: "center", md: "flex-start" }}
+        >
+          <MotionHeading
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            size={{ base: "2xl", md: "3xl" }}
+            color={headingColor}
+            textAlign={{ base: "center", md: "left" }}
           >
             Core Services
-          </Heading>
-          <Heading
-            color={"blackAlpha.600"}
-            paddingLeft={{ base: 0, md: 6 }}
+          </MotionHeading>
+          <MotionHeading
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            viewport={{ once: true }}
             fontWeight={400}
-            size={"lg"}
+            size={{ base: "md", md: "lg" }}
+            color={textColor}
+            textAlign={{ base: "center", md: "left" }}
           >
-            We provide an array of services under these categories
-          </Heading>
-        </Box>
+            Comprehensive engineering solutions tailored to your needs
+          </MotionHeading>
+        </VStack>
 
-        <SimpleGrid columns={{ base: 1, md: 4 }} h={"100%"} spacing={2}>
-          {SERVICES.map((service) => (
-            <Link to={`/Services#${service.path}`}>
-              <Flex
+        <SimpleGrid
+          columns={{ base: 1, md: 2, lg: 4 }}
+          spacing={{ base: 6, md: 8 }}
+        >
+          {SERVICES.map((service, index) => (
+            <Box
+              key={service.path}
+              onClick={() => handleServiceClick(service.path)}
+              cursor="pointer"
+            >
+              <MotionFlex
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.1 * (index + 1) }}
+                viewport={{ once: true }}
+                direction="column"
+                align="center"
+                justify="center"
+                p={6}
+                bg={cardBg}
+                borderRadius="xl"
+                border="1px solid"
+                borderColor={borderColor}
+                h="full"
                 role="group"
-                border={"solid"}
-                h={"20rem"}
-                flexDirection={"column"}
-                justifyContent={"center"}
-                alignItems={"center"}
-                paddingBlockStart={12}
-                borderColor={"design.100"}
-                borderRadius={"1rem"}
-                transitionDuration={"600ms"}
+                style={{ transition: "all 0.3s ease" }}
                 _hover={{
-                  bgColor: "blackAlpha.200",
+                  bg: hoverBg,
+                  transform: "translateY(-4px)",
+                  boxShadow: "xl",
                 }}
               >
-                <Image
-                  h={"50%"}
-                  border={"solid"}
-                  borderColor={"design.100"}
-                  borderRadius={"50%"}
-                  objectFit={"cover"}
-                  src={service.img}
-                />
-
                 <Box
-                  fontSize={"xl"}
-                  paddingTop={8}
-                  color={"blackAlpha.700"}
-                  textAlign={"center"}
+                  mb={6}
+                  p={4}
+                  borderRadius="full"
+                  bg={bgColor}
+                  border="1px solid"
+                  borderColor={borderColor}
+                  style={{ transition: "all 0.3s ease" }}
+                  _groupHover={{
+                    transform: "scale(1.1)",
+                    boxShadow: "lg",
+                  }}
                 >
-                  <Text paddingInline={8} paddingBottom={8}>
-                    {service.label}
-                  </Text>
+                  <Image
+                    src={service.img}
+                    alt="Service"
+                    objectFit="cover"
+                    w="100%"
+                    h="100%"
+                    transition="transform 0.3s ease"
+                    fallbackSrc="https://via.placeholder.com/400x300?text=Service"
+                    _groupHover={{
+                      transform: "scale(1.05)",
+                    }}
+                  />
                 </Box>
 
-                <Text _groupHover={{ textDecoration: "underline" }}>
-                  Learn More...
-                </Text>
-              </Flex>
-            </Link>
+                <VStack spacing={3} flex={1}>
+                  <Text
+                    fontSize={{ base: "lg", md: "xl" }}
+                    fontWeight="600"
+                    color={headingColor}
+                    textAlign="center"
+                    style={{ transition: "all 0.3s ease" }}
+                    _groupHover={{ transform: "translateY(-2px)" }}
+                  >
+                    {service.label}
+                  </Text>
+                </VStack>
+              </MotionFlex>
+            </Box>
           ))}
         </SimpleGrid>
-      </SimpleGrid>
+      </Container>
+
+      {/* Background decoration */}
+      <Box
+        position="absolute"
+        top={0}
+        left={0}
+        w="50%"
+        h="100%"
+        bgGradient={`linear(to-r, ${bgColor}, transparent)`}
+        opacity={0.8}
+        zIndex={0}
+      />
     </Box>
   );
 }

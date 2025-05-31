@@ -4,10 +4,54 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React</title>
+
+    <!-- Prevent admin pages from being indexed -->
+    <meta name="robots" content="noindex, nofollow" id="admin-meta" />
+
+    <!-- Remove any admin-related meta descriptions -->
+    <meta
+      name="description"
+      content="Environmental consulting and marine research services"
+    />
+
+    <title>Lamer Environmental</title>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+
+    <!-- Script to dynamically manage meta tags based on route -->
+    <script>
+      // Remove admin meta tag if not on admin pages
+      function updateMetaTags() {
+        const adminMeta = document.getElementById("admin-meta");
+        const isAdminRoute =
+          window.location.pathname.includes("secure-dashboard-panel") ||
+          window.location.pathname.includes("management-portal-auth");
+
+        if (!isAdminRoute && adminMeta) {
+          adminMeta.remove();
+        } else if (isAdminRoute && !adminMeta) {
+          const meta = document.createElement("meta");
+          meta.name = "robots";
+          meta.content = "noindex, nofollow, noarchive, nosnippet";
+          meta.id = "admin-meta";
+          document.head.appendChild(meta);
+        }
+      }
+
+      // Update meta tags on initial load and route changes
+      updateMetaTags();
+
+      // Listen for route changes (if using React Router)
+      let lastUrl = location.href;
+      new MutationObserver(() => {
+        const url = location.href;
+        if (url !== lastUrl) {
+          lastUrl = url;
+          updateMetaTags();
+        }
+      }).observe(document, { subtree: true, childList: true });
+    </script>
   </body>
 </html>

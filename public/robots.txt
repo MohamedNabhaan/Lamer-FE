@@ -1,0 +1,16 @@
+User-agent: *
+Allow: /
+Disallow: /management-portal-auth
+Disallow: /secure-dashboard-panel/
+Disallow: /secure-dashboard-panel/*
+Disallow: /admin/
+Disallow: /admin/*
+Disallow: /administration/
+Disallow: /administration/*
+
+# Prevent crawling of sensitive areas
+Disallow: /api/
+Disallow: /*.json$
+Disallow: /*.xml$
+
+Sitemap: https://yourdomain.com/sitemap.xml 

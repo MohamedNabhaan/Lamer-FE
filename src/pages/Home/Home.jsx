@@ -8,13 +8,13 @@ import IntroSirc from "./sections/IntroSirc";
 
 export default function Home() {
   return (
-    <Box>
+    <Box pt={0} mt={{ base: "70px", md: "90px" }}>
       <Introduction></Introduction>
+      <IntroClients></IntroClients>
       <WhoAreWe></WhoAreWe>
       <IntroServices></IntroServices>
       <IntroTechnology></IntroTechnology>
       <IntroSirc></IntroSirc>
-      <IntroClients></IntroClients>
     </Box>
   );
 }

@@ -1,124 +1,180 @@
 import {
   Box,
   Heading,
-  SimpleGrid,
   Image,
   Flex,
   Text,
-  Stack,
+  Container,
+  VStack,
+  useColorModeValue,
+  Grid,
+  Badge,
+  HStack,
 } from "@chakra-ui/react";
+import { motion } from "framer-motion";
 import { FOUNDERS } from "../../..";
+import { Award, GraduationCap } from "lucide-react";
+
+const MotionBox = motion(Box);
+const MotionHeading = motion(Heading);
 
 export default function WhoAreWe() {
-  return (
-    <>
-      <Box
-        minH={{ base: "110rem", md: "40rem" }}
-        marginBottom={10}
-        paddingTop={4}
-        paddingBottom={8}
-      >
-        {/* <Heading
-          as="h1"
-          size={"4xl"}
-          textAlign={"center"}
-          paddingInline={16}
-          paddingTop={8}
-          paddingBottom={4}
-        >
-          Who Are We?
-        </Heading> */}
-        <Heading
-          as="h2"
-          size={"3xl"}
-          fontWeight={600}
-          paddingLeft={{ base: 8, md: 20 }}
-          paddingTop={4}
-          paddingBottom={4}
-          color={"brand.400"}
-        >
-          {" "}
-          The Faces of LaMEr Group.
-        </Heading>
-        <Heading
-          as={"h3"}
-          paddingLeft={{ base: 8, md: 24 }}
-          fontWeight={400}
-          size={"lg"}
-          color={"blackAlpha.600"}
-          paddingBottom={6}
-        >
-          The people who will provide you with most optimal solution.
-        </Heading>
-        <SimpleGrid
-          columns={{ base: 1, md: 3 }}
-          spacing={{ base: 12, md: 8 }}
-          paddingInline={12}
-          paddingTop={8}
-        >
-          {FOUNDERS.map((founder) => {
-            return (
-              <Flex
-                justifyContent={"center"}
-                position={"relative"}
-                marginBottom={16}
-              >
-                <Box w={"20rem"} h={"full"} spacing={4} position={"relative"}>
-                  <Image
-                    borderRadius={"1rem"}
-                    w={"20rem"}
-                    h={"24rem"}
-                    objectFit={"cover"}
-                    src={founder.picture}
-                    position={"relative"}
-                  ></Image>
+  const bgColor = useColorModeValue("white", "gray.800");
+  const cardBg = useColorModeValue("white", "gray.700");
+  const textColor = useColorModeValue("gray.600", "gray.300");
+  const headingColor = useColorModeValue("brand.400", "brand.300");
+  const borderColor = useColorModeValue("gray.200", "gray.600");
+  const badgeBg = useColorModeValue("brand.50", "brand.900");
 
+  return (
+    <Box
+      bg={bgColor}
+      py={{ base: 12, md: 16 }}
+      position="relative"
+      overflow="hidden"
+    >
+      <Container maxW="container.xl" position="relative" zIndex={1}>
+        {/* Header Section */}
+        <VStack
+          spacing={4}
+          mb={12}
+          align={{ base: "center", md: "flex-start" }}
+        >
+          <MotionHeading
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            size={{ base: "2xl", md: "3xl" }}
+            color={headingColor}
+            textAlign={{ base: "center", md: "left" }}
+          >
+            Leadership Team
+          </MotionHeading>
+          <Text
+            fontSize={{ base: "lg", md: "xl" }}
+            color={textColor}
+            maxW="800px"
+            textAlign={{ base: "center", md: "left" }}
+          >
+            With decades of combined experience, our leadership team brings deep
+            expertise in engineering and a commitment to delivering excellence
+            in every project.
+          </Text>
+        </VStack>
+
+        {/* Team Grid */}
+        <Grid
+          templateColumns={{
+            base: "1fr",
+            md: "repeat(2, 1fr)",
+            lg: "repeat(3, 1fr)",
+          }}
+          gap={8}
+        >
+          {FOUNDERS.map((founder, index) => (
+            <MotionBox
+              key={founder.name}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: index * 0.1 }}
+              viewport={{ once: true }}
+              height="full"
+            >
+              <Box
+                bg={cardBg}
+                borderRadius="xl"
+                overflow="hidden"
+                boxShadow="md"
+                border="1px solid"
+                borderColor={borderColor}
+                height="full"
+                display="flex"
+                flexDirection="column"
+              >
+                {/* Image Container with Overlay */}
+                <Box position="relative" h="300px" flexShrink={0}>
+                  <Image
+                    w="100%"
+                    h="100%"
+                    objectFit="cover"
+                    src={founder.picture}
+                    alt={founder.name}
+                    fallbackSrc="https://via.placeholder.com/600x400?text=About+Us"
+                  />
                   <Box
-                    w={"16rem"}
-                    bgColor={"white"}
-                    paddingInline={1}
-                    paddingBlock={2}
-                    boxShadow={"0px 8px 24px grey"}
-                    borderRadius={"1rem"}
-                    position={"absolute"}
-                    bottom={-16}
-                    marginInline={"auto"}
+                    position="absolute"
+                    bottom={0}
                     left={0}
                     right={0}
+                    bg="linear-gradient(to top, rgba(0,0,0,0.8), transparent)"
+                    pt={20}
+                    pb={6}
+                    px={6}
                   >
-                    <Text textAlign={"center"} fontWeight={600} fontSize={"xl"}>
+                    <Heading
+                      as="h3"
+                      size="lg"
+                      color="white"
+                      mb={2}
+                      textShadow="0 2px 4px rgba(0,0,0,0.3)"
+                    >
                       {founder.name}
-                    </Text>
+                    </Heading>
                     <Text
-                      textAlign={"center"}
-                      color={"brand.400"}
-                      fontWeight={500}
-                      paddingBottom={2}
+                      fontSize="md"
+                      color="gray.100"
+                      fontWeight="500"
+                      textShadow="0 1px 2px rgba(0,0,0,0.3)"
                     >
                       {founder.title}
                     </Text>
-                    <Text textAlign={"center"} color={"grey"} fontSize={"sm"}>
-                      {founder.experience} Years of Experience
-                    </Text>
-                    {founder.credentials.map((credential) => {
-                      return (
-                        <Text
-                          textAlign={"center"}
-                          color={"grey"}
-                          fontSize={"xs"}
-                          paddingInline={2}
-                        >
-                          {credential}
-                        </Text>
-                      );
-                    })}
                   </Box>
                 </Box>
-              </Flex>
-            );
-          })}
-        </SimpleGrid>
-      </Box>
-    </>
+
+                {/* Content Section */}
+                <Box p={6} flex="1" display="flex" flexDirection="column">
+                  {/* Experience */}
+                  <HStack spacing={3} mb={4} align="center">
+                    <Box color={headingColor} flexShrink={0}>
+                      <Award size={16} />
+                    </Box>
+                    <Text fontSize="sm" color={textColor}>
+                      {founder.experience} Years Experience
+                    </Text>
+                  </HStack>
+
+                  {/* Credentials */}
+                  <VStack align="start" spacing={3} flex="1">
+                    {founder.credentials.map((credential, idx) => (
+                      <HStack key={idx} spacing={3} align="flex-start" w="full">
+                        <Box color={headingColor} mt={1} flexShrink={0}>
+                          <GraduationCap size={16} />
+                        </Box>
+                        <Text fontSize="sm" color={textColor} lineHeight="1.5">
+                          {credential}
+                        </Text>
+                      </HStack>
+                    ))}
+                  </VStack>
+                </Box>
+              </Box>
+            </MotionBox>
+          ))}
+        </Grid>
+      </Container>
+
+      {/* Background decoration */}
+      <Box
+        position="absolute"
+        top={0}
+        right={0}
+        w="50%"
+        h="100%"
+        bgGradient={`linear(to-l, ${bgColor}, transparent)`}
+        opacity={0.8}
+        zIndex={0}
+      />
+    </Box>
   );
 }

@@ -1,160 +1,181 @@
 import {
   Card,
   Image,
-  CardBody,
   Box,
   Heading,
   Text,
   Button,
   Input,
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-  PopoverHeader,
-  PopoverBody,
-  PopoverFooter,
-  PopoverArrow,
-  PopoverCloseButton,
-  PopoverAnchor,
-  useDisclosure,
   Flex,
+  Badge,
+  useColorModeValue,
+  HStack,
+  VStack,
+  Icon,
+  Center,
 } from "@chakra-ui/react";
-import fallback from "../assets/logo.png";
-import { NavLink, useLocation, Form, useSubmit, Link } from "react-router-dom";
-
-import {
-  Trash2Icon as DeleteIcon,
-  FilePenLine as EditIcon,
-} from "lucide-react";
+import { NavLink, useLocation, Form, Link } from "react-router-dom";
+import { Calendar, Building2, Tag, ImageOff } from "lucide-react";
+import { SERVICES } from "../index.js";
 
 export function ProjectCard({
-  project,
-  projId,
-  projIndex,
   images,
   title,
   clientName,
   projectDate,
   projectCategory,
-  delProject,
-  editProject,
-  searchParams,
 }) {
-  const location = useLocation();
-  const { onOpen, onClose, isOpen } = useDisclosure();
+  const cardBg = useColorModeValue("white", "gray.800");
+  const borderColor = useColorModeValue("gray.200", "gray.600");
+  const textColor = useColorModeValue("gray.700", "gray.300");
+  const accentColor = useColorModeValue("brand.400", "brand.300");
+  const hoverBg = useColorModeValue("gray.50", "gray.700");
+  const imageBorderColor = useColorModeValue("gray.100", "gray.700");
+  const iconBg = useColorModeValue("gray.100", "gray.600");
+  const iconColor = useColorModeValue("gray.400", "gray.500");
 
-  const pathname = location.pathname;
-  const search = location.search;
+  // Map category to service label
+  const serviceLabel =
+    SERVICES.find((service) => service.path === projectCategory)?.label ||
+    projectCategory;
+
+  // Component for when no image is available
+  const NoImageFallback = () => (
+    <Center
+      width="100%"
+      height="100%"
+      bg={iconBg}
+      flexDirection="column"
+      gap={2}
+    >
+      <Icon as={ImageOff} w={8} h={8} color={iconColor} />
+      <Text fontSize="xs" color={iconColor} textAlign="center">
+        No Image
+      </Text>
+    </Center>
+  );
 
   return (
     <Card
       direction={{ base: "column", md: "row" }}
-      overflow={"hidden"}
-      variant={"outline"}
-      align={"center"}
+      overflow="hidden"
+      variant="outline"
+      borderColor={borderColor}
+      bg={cardBg}
+      _hover={{
+        transform: "translateY(-2px)",
+        boxShadow: "lg",
+        borderColor: accentColor,
+      }}
+      transition="all 0.2s"
+      minH={{ md: "220px" }}
+      maxH={{ md: "220px" }}
     >
-      <Image
-        w={"250px"}
-        h={"250px"}
-        src={images[0]}
-        fallbackSrc={fallback}
-      ></Image>
-      <CardBody
-        borderLeft={"solid"}
-        borderColor={"design.100"}
-        padding={0}
-        paddingBottom={6}
+      <Box
+        position="relative"
+        width={{ base: "100%", md: "35%" }}
+        minW={{ md: "250px" }}
+        minH={{ base: "200px", md: "auto" }}
+      >
+        {images && images[0] && images[0] !== "" ? (
+          <>
+            <Image
+              objectFit="cover"
+              width="100%"
+              height="100%"
+              position="absolute"
+              top="0"
+              left="0"
+              src={images[0]}
+              alt={title}
+              borderRight={{ md: "1px solid" }}
+              borderBottom={{ base: "1px solid", md: "none" }}
+              borderColor={imageBorderColor}
+            />
+            <Box
+              position="absolute"
+              top="0"
+              left="0"
+              right="0"
+              bottom="0"
+              bg="linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0) 100%)"
+            />
+          </>
+        ) : (
+          <Box
+            width="100%"
+            height="100%"
+            borderRight={{ md: "1px solid" }}
+            borderBottom={{ base: "1px solid", md: "none" }}
+            borderColor={imageBorderColor}
+          >
+            <NoImageFallback />
+          </Box>
+        )}
+      </Box>
+
+      <Flex
+        direction="column"
+        p={{ base: 4, md: 4 }}
+        width="100%"
+        justify="space-between"
       >
         <Box>
-          {location.pathname.toLowerCase() === "/admin/projects" ? (
-            <Box position={"absolute"} top={0} right={0} zIndex={1}>
-              <NavLink to={`${projId}`} state={{ from: [pathname + search] }}>
-                <Button variant={"ghost"} rounded={false} zIndex={1}>
-                  <EditIcon></EditIcon>
-                </Button>
-              </NavLink>
-
-              <Input name="id" value={`${projId}`} type="hidden"></Input>
-
-              <Popover
-                isOpen={isOpen}
-                onOpen={onOpen}
-                onClose={onClose}
-                isLazy
-                closeOnBlur={true}
-              >
-                <PopoverTrigger>
-                  <Button variant={"ghost"} rounded={false} zIndex={9999999}>
-                    <DeleteIcon></DeleteIcon>
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent>
-                  <PopoverBody>
-                    <Text paddingBlock={2} paddingLeft={1}>
-                      Are you sure?
-                    </Text>
-                    <Form method="post" action={`${projId}/destroy`}>
-                      <Input
-                        type="hidden"
-                        defaultValue={`${pathname + search}`}
-                        name="redirect"
-                      ></Input>
-                      <Flex gap={1}>
-                        <Button
-                          bgColor={"design.100"}
-                          color={"blackAlpha.700"}
-                          w={"100%"}
-                          type="submit"
-                          onClick={onClose}
-                          _hover={{
-                            bgColor: "red.500",
-                            color: "white",
-                            transitionDuration: "500ms",
-                          }}
-                        >
-                          Delete
-                        </Button>
-                        <Button
-                          w={"100%"}
-                          color={"blackAlpha.700"}
-                          bgColor={"design.100"}
-                          onClick={onClose}
-                          _hover={{
-                            bgColor: "blue.200",
-                            color: "white",
-                            transitionDuration: "500ms",
-                          }}
-                        >
-                          Cancel
-                        </Button>
-                      </Flex>
-                    </Form>
-                  </PopoverBody>
-                </PopoverContent>
-              </Popover>
-            </Box>
-          ) : (
-            ""
-          )}
           <Heading
-            w="100%"
-            as={"h2"}
-            size={"2xl"}
-            paddingBottom={4}
-            paddingLeft={8}
-            borderBottom={"solid 2px"}
-            borderColor="design.100"
+            as="h3"
+            size={{ base: "md", md: "lg" }}
+            mb={3}
+            color={accentColor}
+            noOfLines={2}
           >
             {title}
           </Heading>
 
-          <Box paddingLeft={8} paddingTop={4}>
-            <Text fontSize={"xl"}>Client : {clientName}</Text>
-            <Text fontSize={"xl"}>Date : {projectDate}</Text>
-            <Text fontSize={"xl"}>Project Category : {projectCategory}</Text>
-          </Box>
+          <VStack spacing={2} align="stretch" mb={3}>
+            <HStack spacing={2}>
+              <Icon as={Building2} color={accentColor} size={16} />
+              <Text fontSize="sm" color={textColor}>
+                <Text as="span" fontWeight="semibold" color={accentColor}>
+                  Client:
+                </Text>{" "}
+                {clientName}
+              </Text>
+            </HStack>
+
+            <HStack spacing={2}>
+              <Icon as={Calendar} color={accentColor} size={16} />
+              <Text fontSize="sm" color={textColor}>
+                <Text as="span" fontWeight="semibold" color={accentColor}>
+                  Date:
+                </Text>{" "}
+                {projectDate}
+              </Text>
+            </HStack>
+
+            <HStack spacing={2}>
+              <Icon as={Tag} color={accentColor} size={16} />
+              <Text fontSize="sm" color={textColor}>
+                <Text as="span" fontWeight="semibold" color={accentColor}>
+                  Category:
+                </Text>{" "}
+                {serviceLabel}
+              </Text>
+            </HStack>
+          </VStack>
         </Box>
-      </CardBody>
+
+        {/* <Box>
+          <Badge
+            colorScheme="blue"
+            fontSize="sm"
+            px={3}
+            py={1}
+            borderRadius="full"
+          >
+            View Details
+          </Badge>
+        </Box> */}
+      </Flex>
     </Card>
   );
 }

@@ -1,5 +1,7 @@
 import { Outlet, redirect } from "react-router-dom";
 import Navbar from "./components/AdminNav";
+import { logout } from "./utils/auth";
+
 export default function AdminDash() {
   return (
     <>
@@ -10,18 +12,5 @@ export default function AdminDash() {
 }
 
 export async function action() {
-  const response = await fetch("http://localhost:3000/auth/signout", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Credentials": true,
-      "Access-Control-Allow-Origin": null,
-    },
-    credentials: "include",
-  });
-
-  if (response.status === 201) {
-    return redirect("/AdminLogin");
-  }
-  return null;
+  return await logout();
 }
