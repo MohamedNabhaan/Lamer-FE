@@ -117,6 +117,7 @@ export default function IntroClients() {
                   src={image}
                   opacity={0.7}
                   transition="opacity 0.4s"
+                  fallbackSrc="https://via.placeholder.com/200x80?text=Client"
                   _hover={{
                     opacity: 1,
                   }}

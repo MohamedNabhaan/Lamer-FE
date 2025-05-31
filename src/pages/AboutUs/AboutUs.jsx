@@ -37,6 +37,7 @@ import aboutus from "../../assets/aboutus/aboutus.png";
 import { ABOUT_US } from "../../index.js";
 import { useLoaderData } from "react-router-dom";
 import pfp from "../../assets/pfp.png";
+import { API_ENDPOINTS } from "../../config/api.js";
 
 const MotionBox = motion(Box);
 const MotionCard = motion(Card);
@@ -146,6 +147,7 @@ export default function AboutUs() {
                           h="100%"
                           filter="brightness(1.1)"
                           borderRadius="lg"
+                          fallbackSrc="https://via.placeholder.com/600x400?text=About+Us"
                         />
                       </AspectRatio>
                     </Box>
@@ -395,7 +397,7 @@ export default function AboutUs() {
 export async function loader({ request, params }) {
   const url = new URL(request.url);
 
-  const response = await fetch("http://localhost:3000/employee", {
+  const response = await fetch(API_ENDPOINTS.EMPLOYEE, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

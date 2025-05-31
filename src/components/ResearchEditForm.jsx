@@ -9,8 +9,17 @@ import {
   useToast,
   Container,
   FormErrorMessage,
+  VStack,
+  HStack,
+  IconButton,
+  Text,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Form,
   redirect,
@@ -19,15 +28,60 @@ import {
   useNavigate,
   useSubmit,
 } from "react-router-dom";
+import { getApiUrlWithId } from "../config/api.js";
+import { Plus, X } from "lucide-react";
 
 export default function ResearchEditForm() {
   const research = useLoaderData();
   const location = useLocation();
   const navigate = useNavigate();
   const submit = useSubmit();
-  const redirectTo = location.state?.from || "/Admin/Research";
+  const redirectTo =
+    location.state?.from ||
+    "/l4m3r-secure-dashboard-panel/research-publications";
   const toast = useToast();
   const [errors, setErrors] = useState({});
+  const [authors, setAuthors] = useState([""]);
+  const [year, setYear] = useState(new Date().getFullYear()); // Default to current year
+
+  // Parse existing authors on component mount
+  useEffect(() => {
+    if (research.authors) {
+      // Split existing authors by comma and trim whitespace
+      const authorList = research.authors
+        .split(",")
+        .map((author) => author.trim())
+        .filter((author) => author !== "");
+
+      if (authorList.length > 0) {
+        setAuthors(authorList);
+      }
+    }
+
+    // Set existing year or default to current year
+    if (research.year) {
+      setYear(parseInt(research.year, 10) || new Date().getFullYear());
+    }
+  }, [research.authors, research.year]);
+
+  // Author management functions
+  const addAuthor = () => {
+    setAuthors([...authors, ""]);
+  };
+
+  const removeAuthor = (index) => {
+    if (authors.length > 1) {
+      const newAuthors = authors.filter((_, i) => i !== index);
+      setAuthors(newAuthors);
+    }
+  };
+
+  const updateAuthor = (index, value) => {
+    const newAuthors = [...authors];
+    newAuthors[index] = value;
+    setAuthors(newAuthors);
+    setErrors((prev) => ({ ...prev, authors: "" }));
+  };
 
   function validateForm(formData) {
     const newErrors = {};
@@ -42,8 +96,10 @@ export default function ResearchEditForm() {
       newErrors.link = "Please enter a valid URL";
     }
 
-    if (!formData.authors) {
-      newErrors.authors = "Authors are required";
+    // Validate authors - check if at least one non-empty author exists
+    const nonEmptyAuthors = authors.filter((author) => author.trim() !== "");
+    if (nonEmptyAuthors.length === 0) {
+      newErrors.authors = "At least one author is required";
     }
 
     setErrors(newErrors);
@@ -62,7 +118,18 @@ export default function ResearchEditForm() {
   function handleSubmit(e) {
     e.preventDefault();
 
-    const formData = new FormData(e.target);
+    // Combine all non-empty authors into a comma-separated string
+    const authorsString = authors
+      .filter((author) => author.trim() !== "")
+      .join(", ");
+
+    const formData = new FormData();
+    formData.append("title", e.target.title.value);
+    formData.append("link", e.target.link.value);
+    formData.append("authors", authorsString);
+    formData.append("year", year.toString()); // Convert year to string
+    formData.append("redirect", redirectTo);
+
     const formObject = Object.fromEntries(formData);
 
     if (!validateForm(formObject)) {
@@ -76,10 +143,7 @@ export default function ResearchEditForm() {
       return;
     }
 
-    submit(formData, {
-      method: "post",
-      action: `/Admin/Research/Edit/${research.id}`,
-    });
+    submit(formData, { method: "post" });
   }
 
   function handleCancel() {
@@ -141,13 +205,44 @@ export default function ResearchEditForm() {
 
           <FormControl isRequired mb={4} isInvalid={errors.authors}>
             <FormLabel fontSize={{ base: "md", md: "lg" }}>Authors</FormLabel>
-            <Input
-              name="authors"
-              defaultValue={research.authors}
-              placeholder="e.g. John Doe, Jane Smith"
-              size="lg"
-              fontSize={{ base: "md", md: "md" }}
-            />
+            <VStack spacing={2} align="stretch">
+              {authors.map((author, index) => (
+                <HStack key={index} spacing={2}>
+                  <Input
+                    placeholder={`Author ${index + 1} name`}
+                    size="lg"
+                    fontSize={{ base: "md", md: "md" }}
+                    value={author}
+                    onChange={(e) => updateAuthor(index, e.target.value)}
+                    flex="1"
+                  />
+                  {authors.length > 1 && (
+                    <IconButton
+                      icon={<X />}
+                      aria-label={`Remove author ${index + 1}`}
+                      onClick={() => removeAuthor(index)}
+                      size="lg"
+                      colorScheme="red"
+                      variant="outline"
+                    />
+                  )}
+                </HStack>
+              ))}
+              <Button
+                leftIcon={<Plus />}
+                onClick={addAuthor}
+                variant="outline"
+                colorScheme="brand"
+                size="sm"
+                alignSelf="flex-start"
+              >
+                Add Author
+              </Button>
+            </VStack>
+            <Text fontSize="xs" color="gray.500" mt={1}>
+              Add multiple authors. They will be saved as comma-separated
+              values.
+            </Text>
             {errors.authors && (
               <FormErrorMessage>{errors.authors}</FormErrorMessage>
             )}
@@ -155,16 +250,22 @@ export default function ResearchEditForm() {
 
           <FormControl mb={4}>
             <FormLabel fontSize={{ base: "md", md: "lg" }}>Year</FormLabel>
-            <Input
-              name="year"
-              defaultValue={research.year}
-              placeholder="e.g. 2023"
+            <NumberInput
+              value={year}
+              onChange={(value) => setYear(value)}
+              min={1900}
+              max={2100}
               size="lg"
-              fontSize={{ base: "md", md: "md" }}
-              type="number"
-              min="1900"
-              max="2100"
-            />
+            >
+              <NumberInputField
+                fontSize={{ base: "md", md: "md" }}
+                placeholder="e.g. 2023"
+              />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
           </FormControl>
 
           <Input type="hidden" name="redirect" defaultValue={redirectTo} />
@@ -202,7 +303,7 @@ export default function ResearchEditForm() {
 }
 
 export async function researchItemLoader({ params }) {
-  const response = await fetch(`http://localhost:3000/research/${params.id}`, {
+  const response = await fetch(getApiUrlWithId("research", params.id), {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -223,27 +324,26 @@ export async function researchItemLoader({ params }) {
 export async function action({ request, params }) {
   const formData = await request.formData();
   const formObject = Object.fromEntries(formData);
-  const redirectPath = formObject.redirect || "/Admin/Research";
+  const redirectPath =
+    formObject.redirect ||
+    "/l4m3r-secure-dashboard-panel/research-publications";
 
   try {
-    const response = await fetch(
-      `http://localhost:3000/research/${params.id}`,
-      {
-        method: "PATCH",
-        body: JSON.stringify({
-          title: formObject.title,
-          link: formObject.link,
-          authors: formObject.authors,
-          year: formObject.year || undefined,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Credentials": true,
-          "Access-Control-Allow-Origin": null,
-        },
-        credentials: "include",
-      }
-    );
+    const response = await fetch(getApiUrlWithId("research", params.id), {
+      method: "PATCH",
+      body: JSON.stringify({
+        title: formObject.title,
+        link: formObject.link,
+        authors: formObject.authors,
+        year: formObject.year || undefined,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Credentials": true,
+        "Access-Control-Allow-Origin": null,
+      },
+      credentials: "include",
+    });
 
     if (!response.ok) {
       throw new Error("Failed to update research");

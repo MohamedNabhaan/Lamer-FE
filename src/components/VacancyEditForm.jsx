@@ -33,13 +33,15 @@ import {
   X,
   ExternalLink as ExternalLinkIcon,
 } from "lucide-react";
+import { getApiUrlWithId } from "../config/api.js";
 
 export default function VacancyEditForm() {
   const { vacancy } = useLoaderData();
   const location = useLocation();
   const navigate = useNavigate();
   const submit = useSubmit();
-  const redirectTo = location.state?.from || "/Admin/Careers";
+  const redirectTo =
+    location.state?.from || "/l4m3r-secure-dashboard-panel/position-listings";
   const toast = useToast();
   const [pdfFile, setPdfFile] = useState(null);
   const [currentPdfUrl, setCurrentPdfUrl] = useState(
@@ -71,7 +73,6 @@ export default function VacancyEditForm() {
     // Submit the form using the react-router-dom's submit function
     submit(formData, {
       method: "post",
-      action: `/Admin/Careers/Edit/${vacancy.id}`,
       encType: "multipart/form-data",
     });
   }
@@ -153,7 +154,7 @@ export default function VacancyEditForm() {
 
           <FormControl isRequired mb={{ base: 3, md: 4 }}>
             <FormLabel fontSize={{ base: "md", md: "lg" }}>
-              Position Status
+              Position Type
             </FormLabel>
             <Select
               defaultValue={vacancy.positionStatus}
@@ -333,10 +334,7 @@ export async function action({ request, params }) {
   );
 
   try {
-    console.log(
-      "Sending request to:",
-      `http://localhost:3000/vacancies/${params.id}`
-    );
+    console.log("Sending request to:", getApiUrlWithId("vacancies", params.id));
 
     // Check if a new file was provided
     const hasNewFile =
@@ -352,18 +350,15 @@ export async function action({ request, params }) {
       formData.append("experience", data.get("experience"));
       formData.append("file", data.get("file"));
 
-      const response = await fetch(
-        `http://localhost:3000/vacancies/${params.id}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Access-Control-Allow-Credentials": true,
-            "Access-Control-Allow-Origin": null,
-          },
-          credentials: "include",
-          body: formData,
-        }
-      );
+      const response = await fetch(getApiUrlWithId("vacancies", params.id), {
+        method: "PATCH",
+        headers: {
+          "Access-Control-Allow-Credentials": true,
+          "Access-Control-Allow-Origin": null,
+        },
+        credentials: "include",
+        body: formData,
+      });
 
       console.log("Response status:", response.status);
 
@@ -389,19 +384,16 @@ export async function action({ request, params }) {
         experience: data.get("experience"),
       };
 
-      const response = await fetch(
-        `http://localhost:3000/vacancies/${params.id}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Credentials": true,
-            "Access-Control-Allow-Origin": null,
-          },
-          credentials: "include",
-          body: JSON.stringify(jsonData),
-        }
-      );
+      const response = await fetch(getApiUrlWithId("vacancies", params.id), {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Credentials": true,
+          "Access-Control-Allow-Origin": null,
+        },
+        credentials: "include",
+        body: JSON.stringify(jsonData),
+      });
 
       console.log("Response status:", response.status);
 
@@ -420,7 +412,8 @@ export async function action({ request, params }) {
       console.log("API response data:", responseData);
     }
 
-    const redirect_path = data.get("redirect") || "/Admin/Careers";
+    const redirect_path =
+      data.get("redirect") || "/l4m3r-secure-dashboard-panel/position-listings";
     console.log("Redirecting to:", redirect_path);
     return redirect(redirect_path);
   } catch (error) {
@@ -430,7 +423,7 @@ export async function action({ request, params }) {
 }
 
 export async function vacancyLoader({ request, params }) {
-  const response = await fetch("http://localhost:3000/vacancies/" + params.id, {
+  const response = await fetch(getApiUrlWithId("vacancies", params.id), {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

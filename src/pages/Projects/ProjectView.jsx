@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import { PROJ_CATEGORIES, SERVICES } from "../..";
 import { useEffect, useState } from "react";
+import { getApiUrlWithId } from "../../config/api.js";
 
 export default function ProjectView() {
   const { project } = useLoaderData();
@@ -62,7 +63,7 @@ export default function ProjectView() {
   useEffect(() => {
     // Fetch service details if we have a service ID
     if (project.projectService) {
-      fetch(`http://localhost:3000/services/${project.projectService}`, {
+      fetch(getApiUrlWithId("services", project.projectService), {
         credentials: "include",
       })
         .then((response) => response.json())

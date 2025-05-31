@@ -21,6 +21,7 @@ import {
   useSubmit,
   redirect,
 } from "react-router-dom";
+import { getApiUrlWithId } from "../../config/api.js";
 
 export default function Services() {
   const services = useLoaderData();
@@ -103,7 +104,7 @@ export default function Services() {
 export async function loader({ request, params }) {
   const url = new URL(request.url);
 
-  const response = await fetch("http://localhost:3000/services/" + url.search, {
+  const response = await fetch(getApiUrlWithId("services", url.search), {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

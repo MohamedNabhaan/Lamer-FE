@@ -47,10 +47,54 @@ import SiteTab from "../../components/SiteTab";
 import FacilityTab from "../../components/FacilityTab";
 import ResearchersTab from "../../components/ResearchersTab";
 import { useLoaderData } from "react-router-dom";
+import { API_ENDPOINTS } from "../../config/api.js";
 
 const MotionBox = motion(Box);
 const MotionCard = motion(Card);
 const MotionGrid = motion(Grid);
+
+// Move fetch functions outside component
+const fetchPrograms = async () => {
+  const response = await fetch(API_ENDPOINTS.PROGRAMS, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Credentials": true,
+      "Access-Control-Allow-Origin": null,
+    },
+    credentials: "include",
+  });
+  const programs = await response.json();
+  return programs;
+};
+
+const fetchResearch = async () => {
+  const response2 = await fetch(API_ENDPOINTS.RESEARCH, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Credentials": true,
+      "Access-Control-Allow-Origin": null,
+    },
+    credentials: "include",
+  });
+  const research = await response2.json();
+  return research;
+};
+
+const fetchEquipment = async () => {
+  const response3 = await fetch(API_ENDPOINTS.EQUIPMENT, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Credentials": true,
+      "Access-Control-Allow-Origin": null,
+    },
+    credentials: "include",
+  });
+  const equipment = await response3.json();
+  return equipment;
+};
 
 export default function SIRC() {
   const data = useLoaderData();
@@ -204,7 +248,6 @@ export default function SIRC() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.3 + index * 0.1 }}
-                
                 gridColumn={{
                   base: "span 1",
                   sm: index === 2 ? "span 2" : "span 1",
@@ -806,39 +849,11 @@ export default function SIRC() {
 export async function loader({ request, params }) {
   const url = new URL(request.url);
 
-  const response = await fetch("http://localhost:3000/programs", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Credentials": true,
-      "Access-Control-Allow-Origin": null,
-    },
-    credentials: "include",
-  });
+  const programs = await fetchPrograms();
 
-  const programs = await response.json();
+  const research = await fetchResearch();
 
-  const response2 = await fetch("http://localhost:3000/research", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Credentials": true,
-      "Access-Control-Allow-Origin": null,
-    },
-    credentials: "include",
-  });
-  const research = await response2.json();
-
-  const response3 = await fetch("http://localhost:3000/equipment", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Credentials": true,
-      "Access-Control-Allow-Origin": null,
-    },
-    credentials: "include",
-  });
-  const equipment = await response3.json();
+  const equipment = await fetchEquipment();
 
   return { programs, research, equipment };
 }

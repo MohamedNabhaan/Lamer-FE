@@ -100,6 +100,7 @@ export default function WhoAreWe() {
                     objectFit="cover"
                     src={founder.picture}
                     alt={founder.name}
+                    fallbackSrc="https://via.placeholder.com/600x400?text=About+Us"
                   />
                   <Box
                     position="absolute"

@@ -33,11 +33,15 @@ export default function Introduction() {
       {/* Background Image with Overlay */}
       <Box position="absolute" inset={0}>
         <Image
+          src={bg}
+          alt="Lamer Technologies"
           w="100%"
           h="100%"
           objectFit="cover"
-          src={bg}
-          alt="Hero background"
+          position="absolute"
+          top={0}
+          left={0}
+          fallbackSrc="https://via.placeholder.com/1200x600?text=Hero+Image"
         />
         <Box
           position="absolute"
@@ -89,25 +93,25 @@ export default function Introduction() {
           </MotionHeading>
 
           <Link to="/Projects">
-          <MotionButton
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            size={{ base: "lg", md: "lg" }}
-            px={8}
-            variant="outline"
-            color="white"
-            borderColor="white"
-            _hover={{
-              transform: "translateY(-2px)",
-              bg: "whiteAlpha.200",
-              boxShadow: "xl",
-            }}
-            rightIcon={<ArrowRight />}
-            w={{ base: "100%", sm: "auto" }}
-          >
-            Explore Our Projects
-          </MotionButton>
+            <MotionButton
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              size={{ base: "lg", md: "lg" }}
+              px={8}
+              variant="outline"
+              color="white"
+              borderColor="white"
+              _hover={{
+                transform: "translateY(-2px)",
+                bg: "whiteAlpha.200",
+                boxShadow: "xl",
+              }}
+              rightIcon={<ArrowRight />}
+              w={{ base: "100%", sm: "auto" }}
+            >
+              Explore Our Projects
+            </MotionButton>
           </Link>
         </Flex>
 

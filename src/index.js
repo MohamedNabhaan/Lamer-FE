@@ -159,49 +159,57 @@ export const ABOUT_US = {
 export const ADMIN_NAV_ITEMS = [
   {
     label: "Projects",
-    path: "Projects",
-    subRoutes: [],
+    path: "",
+    subRoutes: [
+      "/l4m3r-secure-dashboard-panel/content-management",
+      "/l4m3r-secure-dashboard-panel/client-registry",
+    ],
+    children: [
+      {
+        label: "Projects",
+        path: "content-management",
+      },
+      {
+        label: "Clients",
+        path: "client-registry",
+      },
+    ],
   },
   {
-    label: "Clients",
-    path: "Clients",
+    label: "Services",
+    path: "service-offerings",
     subRoutes: [],
   },
   {
     label: "Team",
-    path: "Team",
+    path: "personnel-management",
     subRoutes: [],
   },
   {
     label: "Careers",
-    path: "Careers",
+    path: "position-listings",
     subRoutes: [],
   },
   {
     label: "SIRC",
     path: "",
     subRoutes: [
-      "/Admin/Programs",
-      "/Admin/Services",
-      "/Admin/Research",
-      "/Admin/Equipment",
+      "/l4m3r-secure-dashboard-panel/academic-programs",
+      "/l4m3r-secure-dashboard-panel/research-publications",
+      "/l4m3r-secure-dashboard-panel/laboratory-assets",
     ],
     children: [
       {
         label: "Programs",
-        path: "Programs",
-      },
-      {
-        label: "Services",
-        path: "Services",
+        path: "academic-programs",
       },
       {
         label: "Research",
-        path: "Research",
+        path: "research-publications",
       },
       {
         label: "Equipment",
-        path: "Equipment",
+        path: "laboratory-assets",
       },
     ],
   },

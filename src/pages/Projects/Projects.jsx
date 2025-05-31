@@ -22,6 +22,7 @@ import { Link } from "react-router-dom";
 import Pagination from "../../components/Pagination";
 import { ProjectCard } from "../../components/ProjectCard";
 import { Filter, Loader, X, Search } from "lucide-react";
+import { getApiUrl, API_ENDPOINTS } from "../../config/api.js";
 
 export default function Projects() {
   const [isFetching, setIsFetching] = useState(false);
@@ -74,7 +75,7 @@ export default function Projects() {
   const fetchServicesForCategory = async (category) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/services?serviceCategory=${category}`
+        getApiUrl("services", { serviceCategory: category })
       );
       const services = await response.json();
       setAvailableServices(services);
@@ -87,22 +88,19 @@ export default function Projects() {
   useEffect(() => {
     async function fetchProjects() {
       setIsFetching(true);
-      let url = "http://localhost:3000/projects";
-      const params = new URLSearchParams();
+      const params = {};
 
       if (selectedCategory && selectedCategory !== "") {
-        params.append("projectCategory", selectedCategory);
+        params.projectCategory = selectedCategory;
       }
       if (selectedService && selectedService !== "") {
-        params.append("projectService", selectedService);
+        params.projectService = selectedService;
       }
       if (debouncedSearchTitle && debouncedSearchTitle !== "") {
-        params.append("title", debouncedSearchTitle);
+        params.title = debouncedSearchTitle;
       }
 
-      if (params.toString()) {
-        url += `?${params.toString()}`;
-      }
+      const url = getApiUrl("projects", params);
 
       console.log("Fetching projects with URL:", url);
       console.log("Search title:", debouncedSearchTitle);

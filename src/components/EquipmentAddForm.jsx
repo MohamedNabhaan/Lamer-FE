@@ -14,15 +14,119 @@ import {
   NumberInputStepper,
   NumberIncrementStepper,
   NumberDecrementStepper,
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
+  Text,
 } from "@chakra-ui/react";
-import { useState } from "react";
-import { Form, redirect, useNavigate, useSubmit } from "react-router-dom";
+import { useState, useEffect } from "react";
+import {
+  Form,
+  redirect,
+  useNavigate,
+  useSubmit,
+  useActionData,
+} from "react-router-dom";
+import { API_ENDPOINTS } from "../config/api.js";
 
 export default function EquipmentAddForm() {
   const navigate = useNavigate();
   const submit = useSubmit();
   const toast = useToast();
+  const actionData = useActionData();
   const [errors, setErrors] = useState({});
+  const [fieldErrors, setFieldErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Reset submitting state when action data changes
+  useEffect(() => {
+    if (actionData) {
+      setIsSubmitting(false);
+
+      // Parse field-specific errors from the action data
+      if (actionData && actionData.error && actionData.details) {
+        const errors = {};
+
+        // Handle different error response formats
+        if (actionData.details.message) {
+          // If there's a validation message array
+          if (Array.isArray(actionData.details.message)) {
+            actionData.details.message.forEach((msg) => {
+              // Parse messages like "equipmentName must be longer than or equal to 1 characters"
+              const fieldMatch = msg.match(/^(\w+)\s/);
+              if (fieldMatch) {
+                const fieldName = fieldMatch[1];
+                errors[fieldName] = msg;
+              }
+            });
+          }
+          // If there's a single validation message
+          else if (typeof actionData.details.message === "string") {
+            const fieldMatch = actionData.details.message.match(/^(\w+)\s/);
+            if (fieldMatch) {
+              const fieldName = fieldMatch[1];
+              errors[fieldName] = actionData.details.message;
+            }
+          }
+        }
+
+        // Handle direct field error mapping
+        if (actionData.details.errors) {
+          Object.assign(errors, actionData.details.errors);
+        }
+
+        // Handle specific field validations
+        if (actionData.details.statusCode === 400) {
+          // Common field validation patterns
+          Object.keys(actionData.details).forEach((key) => {
+            if (key !== "statusCode" && key !== "message" && key !== "error") {
+              errors[key] = actionData.details[key];
+            }
+          });
+        }
+
+        setFieldErrors(errors);
+      } else {
+        setFieldErrors({});
+      }
+    }
+  }, [actionData]);
+
+  // Show toast for action errors
+  useEffect(() => {
+    if (actionData && actionData.error) {
+      // Only show general toast if no specific field errors
+      if (Object.keys(fieldErrors).length === 0) {
+        toast({
+          title: "Error creating equipment",
+          description: actionData.message || "An unexpected error occurred",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+      } else {
+        toast({
+          title: "Validation Error",
+          description: "Please check the highlighted fields below",
+          status: "error",
+          duration: 4000,
+          isClosable: true,
+        });
+      }
+    }
+  }, [actionData, fieldErrors, toast]);
+
+  // Clear field errors when user starts typing
+  const clearFieldError = (fieldName) => {
+    if (fieldErrors[fieldName]) {
+      setFieldErrors((prev) => {
+        const newErrors = { ...prev };
+        delete newErrors[fieldName];
+        return newErrors;
+      });
+    }
+  };
 
   function validateForm(formData) {
     const newErrors = {};
@@ -53,7 +157,7 @@ export default function EquipmentAddForm() {
 
     if (!validateForm(formObject)) {
       toast({
-        title: "Error",
+        title: "Validation Error",
         description: "Please check the form for errors",
         status: "error",
         duration: 3000,
@@ -62,9 +166,11 @@ export default function EquipmentAddForm() {
       return;
     }
 
-    submit(formData, {
-      method: "post",
-    });
+    setIsSubmitting(true);
+    // Clear previous field errors
+    setFieldErrors({});
+
+    submit(formData, { method: "post" });
   }
 
   return (
@@ -93,8 +199,93 @@ export default function EquipmentAddForm() {
           Add Equipment
         </Heading>
 
+        {/* General Error Message Display - only show if no specific field errors */}
+        {actionData &&
+          actionData.error &&
+          Object.keys(fieldErrors).length === 0 && (
+            <Alert status="error" mb={6} borderRadius="md">
+              <AlertIcon />
+              <Box>
+                <AlertTitle>Error creating equipment!</AlertTitle>
+                <AlertDescription>
+                  {actionData.message ||
+                    "An unexpected error occurred. Please try again."}
+                </AlertDescription>
+              </Box>
+            </Alert>
+          )}
+
+        {/* Field-specific Error Message Display with API Response */}
+        {actionData &&
+          actionData.error &&
+          Object.keys(fieldErrors).length > 0 && (
+            <Alert status="error" mb={6} borderRadius="md">
+              <AlertIcon />
+              <Box>
+                <AlertTitle>Validation Error!</AlertTitle>
+                <AlertDescription>
+                  <Text mb={2}>Please check the highlighted fields below.</Text>
+                  {actionData.message && (
+                    <Box
+                      mt={2}
+                      p={3}
+                      bg="red.50"
+                      borderRadius="md"
+                      border="1px solid"
+                      borderColor="red.200"
+                    >
+                      <Text
+                        fontSize="sm"
+                        fontWeight="bold"
+                        color="red.700"
+                        mb={1}
+                      >
+                        Server Response:
+                      </Text>
+                      <Text fontSize="sm" color="red.600">
+                        {typeof actionData.message === "string"
+                          ? actionData.message
+                          : JSON.stringify(actionData.message, null, 2)}
+                      </Text>
+                    </Box>
+                  )}
+                  {actionData.details && actionData.details.message && (
+                    <Box
+                      mt={2}
+                      p={3}
+                      bg="red.50"
+                      borderRadius="md"
+                      border="1px solid"
+                      borderColor="red.200"
+                    >
+                      <Text
+                        fontSize="sm"
+                        fontWeight="bold"
+                        color="red.700"
+                        mb={1}
+                      >
+                        Details:
+                      </Text>
+                      <Text fontSize="sm" color="red.600">
+                        {Array.isArray(actionData.details.message)
+                          ? actionData.details.message.join(", ")
+                          : typeof actionData.details.message === "string"
+                          ? actionData.details.message
+                          : JSON.stringify(actionData.details.message, null, 2)}
+                      </Text>
+                    </Box>
+                  )}
+                </AlertDescription>
+              </Box>
+            </Alert>
+          )}
+
         <Form method="post" onSubmit={handleSubmit}>
-          <FormControl isRequired mb={4} isInvalid={errors.equipmentName}>
+          <FormControl
+            isRequired
+            mb={4}
+            isInvalid={!!errors.equipmentName || !!fieldErrors.equipmentName}
+          >
             <FormLabel fontSize={{ base: "md", md: "lg" }}>
               Equipment Name
             </FormLabel>
@@ -103,23 +294,29 @@ export default function EquipmentAddForm() {
               placeholder="e.g. Drone"
               size="lg"
               fontSize={{ base: "md", md: "md" }}
+              onChange={() => {
+                clearFieldError("equipmentName");
+                setErrors((prev) => ({ ...prev, equipmentName: "" }));
+              }}
             />
-            {errors.equipmentName && (
-              <FormErrorMessage>{errors.equipmentName}</FormErrorMessage>
-            )}
+            <FormErrorMessage>
+              {errors.equipmentName || fieldErrors.equipmentName}
+            </FormErrorMessage>
           </FormControl>
 
-          <FormControl mb={4}>
+          <FormControl mb={4} isInvalid={!!fieldErrors.brand}>
             <FormLabel fontSize={{ base: "md", md: "lg" }}>Brand</FormLabel>
             <Input
               name="brand"
               placeholder="e.g. DJI"
               size="lg"
               fontSize={{ base: "md", md: "md" }}
+              onChange={() => clearFieldError("brand")}
             />
+            <FormErrorMessage>{fieldErrors.brand}</FormErrorMessage>
           </FormControl>
 
-          <FormControl mb={4}>
+          <FormControl mb={4} isInvalid={!!fieldErrors.modelNo}>
             <FormLabel fontSize={{ base: "md", md: "lg" }}>
               Model Number
             </FormLabel>
@@ -128,28 +325,41 @@ export default function EquipmentAddForm() {
               placeholder="e.g. Phantom 4 Pro"
               size="lg"
               fontSize={{ base: "md", md: "md" }}
+              onChange={() => clearFieldError("modelNo")}
             />
+            <FormErrorMessage>{fieldErrors.modelNo}</FormErrorMessage>
           </FormControl>
 
-          <FormControl isRequired mb={4} isInvalid={errors.quantity}>
+          <FormControl
+            isRequired
+            mb={4}
+            isInvalid={!!errors.quantity || !!fieldErrors.quantity}
+          >
             <FormLabel fontSize={{ base: "md", md: "lg" }}>Quantity</FormLabel>
             <NumberInput min={1} defaultValue={1} size="lg">
               <NumberInputField
                 name="quantity"
                 placeholder="Enter quantity"
                 fontSize={{ base: "md", md: "md" }}
+                onChange={() => {
+                  clearFieldError("quantity");
+                  setErrors((prev) => ({ ...prev, quantity: "" }));
+                }}
               />
               <NumberInputStepper>
                 <NumberIncrementStepper />
                 <NumberDecrementStepper />
               </NumberInputStepper>
             </NumberInput>
-            {errors.quantity && (
-              <FormErrorMessage>{errors.quantity}</FormErrorMessage>
-            )}
+            <FormErrorMessage>
+              {errors.quantity || fieldErrors.quantity}
+            </FormErrorMessage>
           </FormControl>
 
-          <FormControl mb={4} isInvalid={errors.charge}>
+          <FormControl
+            mb={4}
+            isInvalid={!!errors.charge || !!fieldErrors.charge}
+          >
             <FormLabel fontSize={{ base: "md", md: "lg" }}>
               Charge (USD)
             </FormLabel>
@@ -158,15 +368,19 @@ export default function EquipmentAddForm() {
                 name="charge"
                 placeholder="Enter charge amount"
                 fontSize={{ base: "md", md: "md" }}
+                onChange={() => {
+                  clearFieldError("charge");
+                  setErrors((prev) => ({ ...prev, charge: "" }));
+                }}
               />
               <NumberInputStepper>
                 <NumberIncrementStepper />
                 <NumberDecrementStepper />
               </NumberInputStepper>
             </NumberInput>
-            {errors.charge && (
-              <FormErrorMessage>{errors.charge}</FormErrorMessage>
-            )}
+            <FormErrorMessage>
+              {errors.charge || fieldErrors.charge}
+            </FormErrorMessage>
           </FormControl>
 
           <Flex
@@ -183,14 +397,20 @@ export default function EquipmentAddForm() {
               size="lg"
               width={{ base: "100%", sm: "auto" }}
               _hover={{ bg: "brand.500" }}
+              isLoading={isSubmitting}
+              loadingText="Creating..."
+              isDisabled={isSubmitting}
             >
-              Create
+              Create Equipment
             </Button>
             <Button
-              onClick={() => navigate("/Admin/Equipment")}
+              onClick={() =>
+                navigate("/l4m3r-secure-dashboard-panel/laboratory-assets")
+              }
               size="lg"
               width={{ base: "100%", sm: "auto" }}
               variant="outline"
+              isDisabled={isSubmitting}
             >
               Cancel
             </Button>
@@ -206,13 +426,18 @@ export async function action({ request }) {
   const formObject = Object.fromEntries(formData);
 
   try {
-    const response = await fetch("http://localhost:3000/equipment/create", {
+    console.log("Creating new equipment...");
+    console.log("Form data:", formObject);
+
+    const response = await fetch(API_ENDPOINTS.EQUIPMENT_CREATE, {
       method: "POST",
       body: JSON.stringify({
         equipmentName: formObject.equipmentName,
         brand: formObject.brand || undefined,
         modelNo: formObject.modelNo || undefined,
-        quantity: parseInt(formObject.quantity),
+        quantity: formObject.quantity
+          ? parseInt(formObject.quantity, 10)
+          : undefined,
         charge: formObject.charge ? parseFloat(formObject.charge) : undefined,
       }),
       headers: {
@@ -223,13 +448,56 @@ export async function action({ request }) {
       credentials: "include",
     });
 
-    if (!response.ok) {
-      throw new Error("Failed to create equipment entry");
+    console.log("Response status:", response.status);
+
+    // Handle specific error status codes
+    if (response.status === 400) {
+      const errorData = await response.json();
+      console.error("Validation Error:", errorData);
+      return {
+        error: true,
+        message: "Validation failed. Please check your input.",
+        details: errorData,
+      };
     }
 
-    return redirect("/Admin/Equipment");
+    if (response.status === 404) {
+      return {
+        error: true,
+        message: "Equipment endpoint not found. Please contact support.",
+      };
+    }
+
+    if (response.status === 500) {
+      const errorData = await response.json().catch(() => ({}));
+      console.error("Server Error:", errorData);
+      return {
+        error: true,
+        message: "Server error occurred. Please try again later.",
+        details: errorData,
+      };
+    }
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      console.error("Unexpected API error:", response.statusText, errorData);
+      return {
+        error: true,
+        message: `Failed to create equipment: ${response.statusText}`,
+        details: errorData,
+      };
+    }
+
+    const responseData = await response.json();
+    console.log("Equipment created successfully:", responseData);
+
+    return redirect("/l4m3r-secure-dashboard-panel/laboratory-assets");
   } catch (error) {
-    console.error("Error creating equipment entry:", error);
-    return { error: error.message };
+    console.error("Exception during equipment creation:", error);
+    return {
+      error: true,
+      message: "Network error or unexpected issue occurred. Please try again.",
+      details: error.message,
+    };
   }
 }

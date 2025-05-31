@@ -9,7 +9,7 @@ import Careers from "./pages/Careers/Careers";
 import Projects from "./pages/Projects/Projects";
 import ProjectView from "./pages/Projects/ProjectView";
 import AdminProjects, {
-  projectsLoader,
+  loader as projectsLoader,
   action as deleteProject,
 } from "./pages/AdminPages/AdminProjects/AdminProjects";
 import { checkAuthLoader } from "./utils/auth";
@@ -22,19 +22,19 @@ import AdminClients, {
   action as deleteClient,
 } from "./pages/AdminPages/AdminClients/AdminClients";
 import AdminTeam, {
-  employeesLoader,
+  loader as employeesLoader,
   action as deleteEmployee,
 } from "./pages/AdminPages/AdminTeam/AdminTeam";
 import AdminPrograms, {
-  programsLoader,
+  loader as programsLoader,
   action as deleteProgram,
 } from "./pages/AdminPages/AdminPrograms/AdminPrograms";
 import AdminServices, {
-  servicesLoader as serviceAdminLoader,
+  loader as serviceAdminLoader,
   action as deleteService,
 } from "./pages/AdminPages/AdminServices/AdminServices";
 import AdminResearch, {
-  researchAdminLoader,
+  loader as researchAdminLoader,
   action as deleteResearch,
 } from "./pages/AdminPages/AdminResearch/AdminResearch";
 import AdminEquipment, {
@@ -98,8 +98,14 @@ import { serviceLoader } from "./utils/service";
 import Vacancies, {
   loader as vacanciesLoaderPage,
 } from "./pages/Careers/Vacancies";
+import NotFound from "./pages/NotFound/NotFound";
 
 const router = createBrowserRouter([
+  {
+    path: "l4m3r-management-portal-auth",
+    element: <LoginPage />,
+    action: authAction,
+  },
   {
     path: "/",
     element: <RootPage />,
@@ -126,15 +132,14 @@ const router = createBrowserRouter([
       },
       { path: "ContactUs", element: <ContactUs /> },
       { path: "SIRC", element: <SIRC />, loader: SIRCLoader },
-      { path: "AdminLogin", element: <LoginPage />, action: authAction },
       {
-        path: "Admin",
+        path: "l4m3r-secure-dashboard-panel",
         element: <AdminDash />,
         loader: checkAuthLoader,
         action: logOutAction,
         children: [
           {
-            path: "Projects",
+            path: "content-management",
             element: <AdminProjects />,
             loader: projectsLoader,
             children: [
@@ -145,125 +150,125 @@ const router = createBrowserRouter([
             ],
           },
           {
-            path: "Projects/Edit/:id",
+            path: "content-management/modify/:id",
             element: <EditForm />,
             loader: projectLoader,
             action: editAction,
           },
           {
-            path: "Projects/Create",
+            path: "content-management/new",
             element: <AddForm />,
             action: AddAction,
           },
           {
-            path: "Careers",
+            path: "position-listings",
             element: <AdminCareers />,
             loader: vacanciesLoader,
             children: [{ path: ":id/destroy", action: deleteVacancy }],
           },
           {
-            path: "Careers/Edit/:id",
+            path: "position-listings/modify/:id",
             element: <VacancyEditForm />,
             loader: vacancyLoader,
             action: editVacancyAction,
           },
           {
-            path: "Careers/Create",
+            path: "position-listings/new",
             element: <VacancyAddForm />,
             action: addVacancyAction,
           },
           {
-            path: "Clients",
+            path: "client-registry",
             element: <AdminClients />,
             loader: clientsLoader,
             children: [{ path: ":id/destroy", action: deleteClient }],
           },
           {
-            path: "Clients/Create",
+            path: "client-registry/new",
             element: <ClientAddForm />,
             action: addClientAction,
           },
           {
-            path: "Team",
+            path: "personnel-management",
             element: <AdminTeam />,
             loader: employeesLoader,
             children: [{ path: ":id/destroy", action: deleteEmployee }],
           },
           {
-            path: "Team/Create",
+            path: "personnel-management/new",
             element: <EmployeeAddForm />,
             action: addEmployeeAction,
           },
           {
-            path: "Team/Edit/:id",
+            path: "personnel-management/modify/:id",
             element: <EmployeeEditForm />,
             loader: employeeLoader,
             action: editEmployeeAction,
           },
           {
-            path: "Programs",
+            path: "academic-programs",
             element: <AdminPrograms />,
             loader: programsLoader,
             children: [{ path: ":id/destroy", action: deleteProgram }],
           },
           {
-            path: "Programs/Create",
+            path: "academic-programs/new",
             element: <ProgramAddForm />,
             action: addProgramAction,
           },
           {
-            path: "Programs/Edit/:id",
+            path: "academic-programs/modify/:id",
             element: <ProgramEditForm />,
             loader: programLoader,
             action: editProgramAction,
           },
           {
-            path: "Services",
+            path: "service-offerings",
             element: <AdminServices />,
             loader: serviceAdminLoader,
             children: [{ path: ":id/destroy", action: deleteService }],
           },
           {
-            path: "Services/Create",
+            path: "service-offerings/new",
             element: <ServiceAddForm />,
             action: addServiceAction,
           },
           {
-            path: "Services/Edit/:id",
+            path: "service-offerings/modify/:id",
             element: <ServiceEditForm />,
             loader: adminServiceLoader,
             action: editServiceAction,
           },
           {
-            path: "Research",
+            path: "research-publications",
             element: <AdminResearch />,
             loader: researchAdminLoader,
             children: [{ path: ":id/destroy", action: deleteResearch }],
           },
           {
-            path: "Research/Create",
+            path: "research-publications/new",
             element: <ResearchAddForm />,
             action: addResearchAction,
           },
           {
-            path: "Research/Edit/:id",
+            path: "research-publications/modify/:id",
             element: <ResearchEditForm />,
             loader: researchItemLoader,
             action: editResearchAction,
           },
           {
-            path: "Equipment",
+            path: "laboratory-assets",
             element: <AdminEquipment />,
             loader: equipmentAdminLoader,
             children: [{ path: ":id/destroy", action: deleteEquipment }],
           },
           {
-            path: "Equipment/Create",
+            path: "laboratory-assets/new",
             element: <EquipmentAddForm />,
             action: addEquipmentAction,
           },
           {
-            path: "Equipment/Edit/:id",
+            path: "laboratory-assets/modify/:id",
             element: <EquipmentEditForm />,
             loader: equipmentItemLoader,
             action: editEquipmentAction,
@@ -271,6 +276,10 @@ const router = createBrowserRouter([
         ],
       },
     ],
+  },
+  {
+    path: "*",
+    element: <NotFound />,
   },
 ]);
 

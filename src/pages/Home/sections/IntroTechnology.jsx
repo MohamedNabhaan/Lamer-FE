@@ -92,11 +92,12 @@ export default function IntroTechnology() {
                   >
                     <Image
                       src={tech.image}
-                      alt={tech.label}
-                      w="full"
-                      h="auto"
-                      objectFit="contain"
-                      maxH="60px"
+                      alt={tech.title}
+                      h={{ base: "60px", md: "80px" }}
+                      w={{ base: "60px", md: "80px" }}
+                      objectFit="cover"
+                      borderRadius="full"
+                      fallbackSrc="https://via.placeholder.com/80x80?text=Tech"
                     />
                   </Box>
                 </GridItem>

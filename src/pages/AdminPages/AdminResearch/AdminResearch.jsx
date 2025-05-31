@@ -12,6 +12,15 @@ import {
   CardFooter,
   Badge,
   Link as ChakraLink,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  VStack,
+  HStack,
+  Icon,
+  useColorModeValue,
+  Select,
+  Collapse,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import {
@@ -22,208 +31,551 @@ import {
   redirect,
   Form,
 } from "react-router-dom";
-import { ExternalLink as ExternalLinkIcon } from "lucide-react";
+import {
+  ExternalLink as ExternalLinkIcon,
+  Search,
+  Filter,
+  X,
+  ChevronDown,
+  ChevronUp,
+} from "lucide-react";
+import {
+  getApiUrl,
+  getApiUrlWithId,
+  API_ENDPOINTS,
+} from "../../../config/api.js";
+import Pagination from "../../../components/Pagination";
 
 export default function AdminResearch() {
-  const researches = useLoaderData();
+  const initialResearchData = useLoaderData();
+  const [researchData, setResearchData] = useState(initialResearchData);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [isFetching, setIsFetching] = useState(false);
+  const [searchTitle, setSearchTitle] = useState("");
+  const [debouncedSearchTitle, setDebouncedSearchTitle] = useState("");
+  const [selectedYear, setSelectedYear] = useState("");
+  const [showFilters, setShowFilters] = useState(false);
+  const [researchPerPage, setResearchPerPage] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPageResearch, setCurrentPageResearch] = useState([]);
   const location = useLocation();
+
+  const bgColor = useColorModeValue("white", "gray.800");
+  const borderColor = useColorModeValue("gray.200", "gray.600");
+  const textColor = useColorModeValue("gray.600", "gray.300");
+  const accentColor = useColorModeValue("brand.400", "brand.300");
+  const headerBg = useColorModeValue("gray.50", "gray.700");
+
+  // Debounce search title
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchTitle(searchTitle);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [searchTitle]);
+
+  // Auto-show filters when they become active
+  useEffect(() => {
+    if (selectedYear) {
+      setShowFilters(true);
+    }
+  }, [selectedYear]);
+
+  // Trigger refresh when returning from deletion
+  useEffect(() => {
+    setRefreshTrigger((prev) => prev + 1);
+  }, [location.key]);
+
+  // Initialize pagination on first load
+  useEffect(() => {
+    const indexOfLastResearch = currentPage * researchPerPage;
+    const indexOfFirstResearch = indexOfLastResearch - researchPerPage;
+    setCurrentPageResearch(
+      researchData.slice(indexOfFirstResearch, indexOfLastResearch)
+    );
+  }, [researchData, currentPage, researchPerPage]);
+
+  // Refresh data when search or filters change
+  useEffect(() => {
+    async function fetchResearch() {
+      setIsFetching(true);
+      const params = {};
+
+      if (debouncedSearchTitle && debouncedSearchTitle !== "") {
+        params.title = debouncedSearchTitle;
+      }
+
+      if (selectedYear && selectedYear !== "") {
+        params.year = selectedYear;
+      }
+
+      const url =
+        params.title || params.year
+          ? getApiUrl("research", params)
+          : API_ENDPOINTS.RESEARCH;
+
+      console.log("Fetching research with URL:", url);
+
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Credentials": true,
+          "Access-Control-Allow-Origin": null,
+        },
+        credentials: "include",
+      });
+      const resData = await response.json();
+
+      console.log("Received research:", resData.length);
+
+      setResearchData(resData);
+      setCurrentPage(1);
+      const indexOfLastResearch = 1 * researchPerPage;
+      const indexOfFirstResearch = indexOfLastResearch - researchPerPage;
+      setCurrentPageResearch(
+        resData.slice(indexOfFirstResearch, indexOfLastResearch)
+      );
+      setIsFetching(false);
+    }
+
+    fetchResearch();
+  }, [debouncedSearchTitle, selectedYear, refreshTrigger, researchPerPage]);
+
+  // Get unique years from the data for filter dropdown
+  const getAvailableYears = () => {
+    const years = new Set();
+    researchData.forEach((research) => {
+      if (research.year) {
+        years.add(research.year);
+      }
+    });
+    return Array.from(years).sort((a, b) => b - a); // Sort descending
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchTitle(e.target.value);
+  };
+
+  const handleYearChange = (e) => {
+    setSelectedYear(e.target.value);
+  };
+
+  const clearFilters = () => {
+    setSearchTitle("");
+    setDebouncedSearchTitle("");
+    setSelectedYear("");
+    setShowFilters(false);
+  };
+
+  const getActiveFilterCount = () => {
+    let count = 0;
+    if (searchTitle) count++;
+    if (selectedYear) count++;
+    return count;
+  };
+
+  function paginate(number) {
+    setCurrentPage(number);
+    if (
+      number < Math.ceil(researchData.length / researchPerPage + 1) &&
+      number > 0
+    ) {
+      const indexOfLastResearch = number * researchPerPage;
+      const indexOfFirstResearch = indexOfLastResearch - researchPerPage;
+      setCurrentPageResearch(
+        researchData.slice(indexOfFirstResearch, indexOfLastResearch)
+      );
+      window.scrollTo(0, 0);
+    }
+  }
 
   return (
     <>
-      <Box minH="72vh" pt={0}>
-        <Container
-          maxW="container.xl"
-          pt={{ base: 6, md: 12 }}
-          px={{ base: 4, md: 8, lg: 20 }}
-          pb={{ base: 4, md: 6 }}
-          borderBottom="1px solid"
-          borderColor="design.100"
+      <Box minH="72vh" bg={bgColor} pt={0}>
+        {/* Header Section */}
+        <Box
+          bg={headerBg}
+          py={{ base: 8, md: 12 }}
+          borderBottom="1px"
+          borderColor={borderColor}
           mt={{ base: "70px", md: "90px" }}
         >
-          <Heading
-            borderLeft={{ base: "solid 10px", md: "solid 20px" }}
-            pl={{ base: 2, md: 4 }}
-            as="h1"
-            size={{ base: "2xl", md: "3xl" }}
-            fontWeight={500}
-            color="brand.400"
-            textAlign={{ base: "center", md: "left" }}
-          >
-            Research
-          </Heading>
-        </Container>
-
-        <Container
-          maxW="container.xl"
-          px={{ base: 4, md: 8, lg: 16 }}
-          py={{ base: 4, md: 8 }}
-        >
-          <Flex
-            pb={{ base: 3, md: 5 }}
-            justify={{ base: "center", md: "flex-end" }}
-            mb={{ base: 2, md: 4 }}
-          >
-            <NavLink to={`Create`}>
-              <Button
-                bg="brand.400"
-                color="white"
-                size={{ base: "md", md: "lg" }}
-                _hover={{ bg: "brand.500" }}
+          <Container maxW="container.xl" px={{ base: 4, md: 8 }}>
+            <VStack spacing={4} align="stretch">
+              <Heading
+                as="h1"
+                size={{ base: "2xl", md: "3xl" }}
+                color={accentColor}
+                borderLeft="6px solid"
+                pl={4}
+                lineHeight="1.2"
               >
-                Create
-              </Button>
-            </NavLink>
-          </Flex>
+                Research
+              </Heading>
+              <Text
+                fontSize={{ base: "lg", md: "xl" }}
+                color={textColor}
+                maxW="container.md"
+              >
+                Manage research papers and publications
+              </Text>
+            </VStack>
+          </Container>
+        </Box>
 
-          {researches.length === 0 ? (
-            <Text
-              color="brand.400"
-              textAlign="center"
-              fontSize={{ base: "xl", md: "2xl" }}
-            >
-              No Research Entries
-            </Text>
-          ) : (
-            <Stack spacing={{ base: 3, md: 5 }}>
-              {researches.map((research) => (
-                <Card
-                  key={research.id}
+        {/* Search and Controls Section */}
+        <Container maxW="container.xl" px={{ base: 4, md: 8 }} py={6}>
+          <Box mb={8}>
+            {/* Search Bar and Filter Toggle */}
+            <Flex justify="space-between" align="center" mb={4}>
+              <Box flex="1" maxW="400px">
+                <InputGroup size="lg">
+                  <InputLeftElement>
+                    <Icon as={Search} color={accentColor} />
+                  </InputLeftElement>
+                  <Input
+                    placeholder="Search research by title..."
+                    value={searchTitle}
+                    onChange={handleSearchChange}
+                    borderColor={borderColor}
+                    _hover={{ borderColor: accentColor }}
+                    _focus={{
+                      borderColor: accentColor,
+                      boxShadow: `0 0 0 1px ${accentColor}`,
+                    }}
+                    bg={bgColor}
+                  />
+                </InputGroup>
+              </Box>
+
+              <HStack spacing={4}>
+                {/* Filter Toggle Button */}
+                <Button
+                  leftIcon={<Filter />}
+                  rightIcon={showFilters ? <ChevronUp /> : <ChevronDown />}
                   variant="outline"
-                  borderRadius={{ base: 15, md: 30 }}
-                  boxShadow="sm"
-                  overflow="hidden"
+                  size="md"
+                  onClick={() => setShowFilters(!showFilters)}
+                  borderColor={borderColor}
+                  _hover={{ borderColor: accentColor }}
+                  bg={bgColor}
                 >
-                  <CardHeader
-                    borderBottom="1px solid"
-                    borderColor="design.100"
-                    pb={{ base: 2, md: 4 }}
-                    pt={{ base: 3, md: 5 }}
-                    px={{ base: 3, md: 6 }}
+                  Filters{" "}
+                  {getActiveFilterCount() > 0 && `(${getActiveFilterCount()})`}
+                </Button>
+
+                {/* Create Button */}
+                <NavLink to={`new`}>
+                  <Button
+                    color={"white"}
+                    bg={"brand.400"}
+                    size={"md"}
+                    _hover={{ bg: "brand.300" }}
                   >
-                    <Flex
-                      justifyContent="space-between"
-                      alignItems={{ base: "flex-start", md: "center" }}
-                      flexDirection={{ base: "column", sm: "row" }}
-                      gap={{ base: 3, sm: 0 }}
-                    >
+                    Create
+                  </Button>
+                </NavLink>
+              </HStack>
+            </Flex>
+
+            {/* Filter Controls - Collapsible */}
+            <Collapse in={showFilters} animateOpacity>
+              <Box
+                p={4}
+                border="1px solid"
+                borderColor={borderColor}
+                borderRadius="md"
+                bg={bgColor}
+                mb={4}
+              >
+                <VStack spacing={4} align="stretch">
+                  <HStack spacing={4} align="end">
+                    {/* Year Filter */}
+                    <Box>
+                      <Text
+                        fontSize="sm"
+                        fontWeight="600"
+                        color={textColor}
+                        mb={2}
+                      >
+                        Filter by Year
+                      </Text>
+                      <Select
+                        placeholder="All Years"
+                        value={selectedYear}
+                        onChange={handleYearChange}
+                        size="lg"
+                        borderColor={borderColor}
+                        _hover={{ borderColor: accentColor }}
+                        _focus={{
+                          borderColor: accentColor,
+                          boxShadow: `0 0 0 1px ${accentColor}`,
+                        }}
+                        bg={bgColor}
+                        minW="150px"
+                      >
+                        {getAvailableYears().map((year) => (
+                          <option key={year} value={year}>
+                            {year}
+                          </option>
+                        ))}
+                      </Select>
+                    </Box>
+
+                    {/* Clear Filters Button */}
+                    {(selectedYear || searchTitle) && (
                       <Box>
-                        <Heading
-                          as="h2"
-                          size={{ base: "lg", md: "xl" }}
-                          fontWeight={500}
-                          mb={{ base: 1, md: 2 }}
+                        <Text
+                          fontSize="sm"
+                          fontWeight="600"
+                          color="transparent"
+                          mb={2}
                         >
-                          {research.title}
-                        </Heading>
-                        {research.createdAt && (
-                          <Text fontSize={{ base: "sm", md: "md" }}>
-                            Created:{" "}
-                            {new Date(research.createdAt).toLocaleDateString()}
-                          </Text>
-                        )}
+                          Clear
+                        </Text>
+                        <Button
+                          size="lg"
+                          variant="outline"
+                          colorScheme="red"
+                          leftIcon={<X />}
+                          onClick={clearFilters}
+                        >
+                          Clear Filters
+                        </Button>
                       </Box>
+                    )}
+                  </HStack>
 
-                      <Flex
-                        mt={{ base: 2, sm: 0 }}
-                        gap={2}
-                        flexDirection={{ base: "column", xs: "row" }}
-                        w={{ base: "100%", sm: "auto" }}
+                  {/* Active Filters Display */}
+                  {(selectedYear || searchTitle) && (
+                    <Box>
+                      <Text
+                        fontSize="sm"
+                        fontWeight="600"
+                        color={textColor}
+                        mb={2}
                       >
-                        <NavLink
-                          to={`Edit/${research.id}`}
-                          state={{
-                            from: location.pathname + location.search,
-                          }}
-                          style={{ width: "100%" }}
-                        >
-                          <Button
-                            bg="brand.400"
+                        Active Filters:
+                      </Text>
+                      <HStack spacing={2} flexWrap="wrap">
+                        {searchTitle && (
+                          <Box
+                            bg={accentColor}
                             color="white"
-                            mr={{ base: 0, xs: 2 }}
-                            w={{ base: "100%", sm: "auto" }}
-                            mb={{ base: 2, xs: 0 }}
-                            size={{ base: "sm", md: "md" }}
-                            _hover={{ bg: "brand.500" }}
+                            px={3}
+                            py={1}
+                            borderRadius="full"
+                            fontSize="sm"
+                            fontWeight="500"
                           >
-                            Edit
-                          </Button>
-                        </NavLink>
-
-                        <Form
-                          method="post"
-                          action={`${research.id}/destroy`}
-                          style={{ width: "100%" }}
-                        >
-                          <input
-                            type="hidden"
-                            name="redirect"
-                            value={location.pathname + location.search}
-                          />
-                          <Button
-                            type="submit"
-                            bg="red.500"
+                            Search: "{searchTitle}"
+                          </Box>
+                        )}
+                        {selectedYear && (
+                          <Box
+                            bg={accentColor}
                             color="white"
-                            w={{ base: "100%", sm: "auto" }}
-                            size={{ base: "sm", md: "md" }}
-                            _hover={{ bg: "red.600" }}
+                            px={3}
+                            py={1}
+                            borderRadius="full"
+                            fontSize="sm"
+                            fontWeight="500"
                           >
-                            Delete
-                          </Button>
-                        </Form>
-                      </Flex>
-                    </Flex>
-                  </CardHeader>
-
-                  <CardBody px={{ base: 3, md: 6 }} py={{ base: 3, md: 4 }}>
-                    <Text
-                      fontSize={{ base: "sm", md: "md" }}
-                      fontWeight="bold"
-                      mb={2}
-                    >
-                      Authors: {research.authors}
-                    </Text>
-                    <ChakraLink
-                      href={research.link}
-                      isExternal
-                      color="blue.500"
-                      fontWeight="medium"
-                      fontSize={{ base: "sm", md: "md" }}
-                      display="inline-flex"
-                      alignItems="center"
-                    >
-                      View Research <ExternalLinkIcon mx="2px" />
-                    </ChakraLink>
-                  </CardBody>
-
-                  {research.year && (
-                    <CardFooter
-                      justifyContent="space-between"
-                      px={{ base: 3, md: 6 }}
-                      py={{ base: 2, md: 4 }}
-                      bg="gray.50"
-                    >
-                      <Stack
-                        direction={{ base: "column", xs: "row" }}
-                        spacing={{ base: 2, md: 4 }}
-                        w="100%"
-                        justify={{ base: "center", sm: "flex-start" }}
-                      >
-                        <Badge
-                          borderRadius={20}
-                          px={3}
-                          py={1.5}
-                          bg="brand.400"
-                          color="white"
-                          fontSize={{ base: "xs", md: "sm" }}
-                        >
-                          Year: {research.year}
-                        </Badge>
-                      </Stack>
-                    </CardFooter>
+                            Year: {selectedYear}
+                          </Box>
+                        )}
+                      </HStack>
+                    </Box>
                   )}
-                </Card>
-              ))}
-            </Stack>
+                </VStack>
+              </Box>
+            </Collapse>
+          </Box>
+
+          {/* Loading State */}
+          {isFetching && (
+            <Text textAlign="center" color={accentColor} fontSize="lg" py={8}>
+              Loading research...
+            </Text>
+          )}
+
+          {/* Results */}
+          {!isFetching && (
+            <>
+              {researchData.length === 0 ? (
+                <Text
+                  color="brand.400"
+                  textAlign="center"
+                  fontSize={{ base: "xl", md: "2xl" }}
+                >
+                  {searchTitle || selectedYear
+                    ? "No research found matching your criteria"
+                    : "No Research Entries"}
+                </Text>
+              ) : (
+                <Stack spacing={{ base: 3, md: 5 }}>
+                  {(currentPageResearch.length > 0
+                    ? currentPageResearch
+                    : researchData
+                  ).map((research) => (
+                    <Card
+                      key={research.id}
+                      variant="outline"
+                      borderRadius={{ base: 15, md: 30 }}
+                      boxShadow="sm"
+                      overflow="hidden"
+                    >
+                      <CardHeader
+                        borderBottom="1px solid"
+                        borderColor="design.100"
+                        pb={{ base: 2, md: 4 }}
+                        pt={{ base: 3, md: 5 }}
+                        px={{ base: 3, md: 6 }}
+                      >
+                        <Flex
+                          justifyContent="space-between"
+                          alignItems={{ base: "flex-start", md: "center" }}
+                          flexDirection={{ base: "column", sm: "row" }}
+                          gap={{ base: 3, sm: 0 }}
+                        >
+                          <Box>
+                            <Heading
+                              as="h2"
+                              size={{ base: "lg", md: "xl" }}
+                              fontWeight={500}
+                              mb={{ base: 1, md: 2 }}
+                            >
+                              {research.title}
+                            </Heading>
+                            {research.createdAt && (
+                              <Text fontSize={{ base: "sm", md: "md" }}>
+                                Created:{" "}
+                                {new Date(
+                                  research.createdAt
+                                ).toLocaleDateString()}
+                              </Text>
+                            )}
+                          </Box>
+
+                          <Flex
+                            mt={{ base: 2, sm: 0 }}
+                            gap={2}
+                            flexDirection={{ base: "column", xs: "row" }}
+                            w={{ base: "100%", sm: "auto" }}
+                          >
+                            <NavLink
+                              to={`modify/${research.id}`}
+                              state={{
+                                from: location.pathname + location.search,
+                              }}
+                              style={{ width: "100%" }}
+                            >
+                              <Button
+                                bg="brand.400"
+                                color="white"
+                                mr={{ base: 0, xs: 2 }}
+                                w={{ base: "100%", sm: "auto" }}
+                                mb={{ base: 2, xs: 0 }}
+                                size={{ base: "sm", md: "md" }}
+                                _hover={{ bg: "brand.500" }}
+                              >
+                                Edit
+                              </Button>
+                            </NavLink>
+
+                            <Form
+                              method="post"
+                              action={`${research.id}/destroy`}
+                              style={{ width: "100%" }}
+                            >
+                              <input
+                                type="hidden"
+                                name="redirect"
+                                value={location.pathname + location.search}
+                              />
+                              <Button
+                                type="submit"
+                                bg="red.500"
+                                color="white"
+                                w={{ base: "100%", sm: "auto" }}
+                                size={{ base: "sm", md: "md" }}
+                                _hover={{ bg: "red.600" }}
+                              >
+                                Delete
+                              </Button>
+                            </Form>
+                          </Flex>
+                        </Flex>
+                      </CardHeader>
+
+                      <CardBody px={{ base: 3, md: 6 }} py={{ base: 3, md: 4 }}>
+                        <Text
+                          fontSize={{ base: "sm", md: "md" }}
+                          fontWeight="bold"
+                          mb={2}
+                        >
+                          Authors: {research.authors}
+                        </Text>
+                        <ChakraLink
+                          href={research.link}
+                          isExternal
+                          color="blue.500"
+                          fontWeight="medium"
+                          fontSize={{ base: "sm", md: "md" }}
+                          display="inline-flex"
+                          alignItems="center"
+                        >
+                          View Research <ExternalLinkIcon mx="2px" />
+                        </ChakraLink>
+                      </CardBody>
+
+                      {research.year && (
+                        <CardFooter
+                          justifyContent="space-between"
+                          px={{ base: 3, md: 6 }}
+                          py={{ base: 2, md: 4 }}
+                          bg="gray.50"
+                        >
+                          <Stack
+                            direction={{ base: "column", xs: "row" }}
+                            spacing={{ base: 2, md: 4 }}
+                            w="100%"
+                            justify={{ base: "center", sm: "flex-start" }}
+                          >
+                            <Badge
+                              borderRadius={20}
+                              px={3}
+                              py={1.5}
+                              bg="brand.400"
+                              color="white"
+                              fontSize={{ base: "xs", md: "sm" }}
+                            >
+                              Year: {research.year}
+                            </Badge>
+                          </Stack>
+                        </CardFooter>
+                      )}
+                    </Card>
+                  ))}
+                </Stack>
+              )}
+
+              {/* Pagination */}
+              {researchData.length > researchPerPage && !isFetching && (
+                <Box mt={8}>
+                  <Pagination
+                    currentPage={currentPage}
+                    projPerPage={researchPerPage}
+                    totalProj={researchData.length}
+                    paginate={paginate}
+                    setCurrentPage={setCurrentPage}
+                    setProjPerPage={setResearchPerPage}
+                  />
+                </Box>
+              )}
+            </>
           )}
         </Container>
       </Box>
@@ -233,13 +585,19 @@ export default function AdminResearch() {
   );
 }
 
-export async function researchAdminLoader({ request }) {
+export async function loader({ request }) {
   const url = new URL(request.url);
   const title = url.searchParams.get("title");
+  const year = url.searchParams.get("year");
 
-  const endpoint = title
-    ? `http://localhost:3000/research?title=${title}`
-    : "http://localhost:3000/research";
+  const params = {};
+  if (title) params.title = title;
+  if (year) params.year = year;
+
+  const endpoint =
+    Object.keys(params).length > 0
+      ? getApiUrl("research", params)
+      : API_ENDPOINTS.RESEARCH;
 
   const response = await fetch(endpoint, {
     method: "GET",
@@ -259,7 +617,7 @@ export async function action({ request, params }) {
   const data = await request.formData();
   const form = Object.fromEntries(data);
 
-  const response = await fetch("http://localhost:3000/research/" + params.id, {
+  const response = await fetch(getApiUrlWithId("research", params.id), {
     method: "DELETE",
     headers: {
       "Access-Control-Allow-Credentials": true,
@@ -269,4 +627,11 @@ export async function action({ request, params }) {
   });
 
   return redirect(`${form.redirect}`);
+}
+
+export async function researchDetailLoader({ params }) {
+  const response = await fetch(getApiUrlWithId("research", params.id), {
+    // ... existing code ...
+  });
+  // ... existing code ...
 }

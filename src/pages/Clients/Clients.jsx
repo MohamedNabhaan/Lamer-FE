@@ -11,6 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { useLoaderData } from "react-router-dom";
 import { motion } from "framer-motion";
+import { API_ENDPOINTS } from "../../config/api.js";
 
 const MotionBox = motion(Box);
 
@@ -102,6 +103,7 @@ export default function Clients() {
                           maxH="85%"
                           objectFit="contain"
                           filter={useColorModeValue("none", "brightness(0.9)")}
+                          fallbackSrc="https://via.placeholder.com/200x150?text=Logo"
                         />
                       </Box>
                     </AspectRatio>
@@ -137,7 +139,7 @@ export default function Clients() {
 }
 
 export async function publicClientsLoader() {
-  const response = await fetch("http://localhost:3000/clients", {
+  const response = await fetch(API_ENDPOINTS.CLIENTS, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

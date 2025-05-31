@@ -24,13 +24,15 @@ import {
   useNavigate,
   useSubmit,
 } from "react-router-dom";
+import { getApiUrlWithId } from "../config/api.js";
 
 export default function EquipmentEditForm() {
   const equipment = useLoaderData();
   const location = useLocation();
   const navigate = useNavigate();
   const submit = useSubmit();
-  const redirectTo = location.state?.from || "/Admin/Equipment";
+  const redirectTo =
+    location.state?.from || "/l4m3r-secure-dashboard-panel/laboratory-assets";
   const toast = useToast();
   const [errors, setErrors] = useState({});
 
@@ -72,10 +74,7 @@ export default function EquipmentEditForm() {
       return;
     }
 
-    submit(formData, {
-      method: "post",
-      action: `/Admin/Equipment/Edit/${equipment.id}`,
-    });
+    submit(formData, { method: "post" });
   }
 
   function handleCancel() {
@@ -231,7 +230,7 @@ export default function EquipmentEditForm() {
 }
 
 export async function equipmentItemLoader({ params }) {
-  const response = await fetch(`http://localhost:3000/equipment/${params.id}`, {
+  const response = await fetch(getApiUrlWithId("equipment", params.id), {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -252,28 +251,26 @@ export async function equipmentItemLoader({ params }) {
 export async function action({ request, params }) {
   const formData = await request.formData();
   const formObject = Object.fromEntries(formData);
-  const redirectPath = formObject.redirect || "/Admin/Equipment";
+  const redirectPath =
+    formObject.redirect || "/l4m3r-secure-dashboard-panel/laboratory-assets";
 
   try {
-    const response = await fetch(
-      `http://localhost:3000/equipment/${params.id}`,
-      {
-        method: "PATCH",
-        body: JSON.stringify({
-          equipmentName: formObject.equipmentName,
-          brand: formObject.brand || undefined,
-          modelNo: formObject.modelNo || undefined,
-          quantity: parseInt(formObject.quantity),
-          charge: formObject.charge ? parseFloat(formObject.charge) : undefined,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Credentials": true,
-          "Access-Control-Allow-Origin": null,
-        },
-        credentials: "include",
-      }
-    );
+    const response = await fetch(getApiUrlWithId("equipment", params.id), {
+      method: "PATCH",
+      body: JSON.stringify({
+        equipmentName: formObject.equipmentName,
+        brand: formObject.brand || undefined,
+        modelNo: formObject.modelNo || undefined,
+        quantity: parseInt(formObject.quantity),
+        charge: formObject.charge ? parseFloat(formObject.charge) : undefined,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Credentials": true,
+        "Access-Control-Allow-Origin": null,
+      },
+      credentials: "include",
+    });
 
     if (!response.ok) {
       throw new Error("Failed to update equipment");

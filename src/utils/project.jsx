@@ -1,6 +1,8 @@
+import { getApiUrlWithId } from "../config/api.js";
+
 export async function projectLoader({ params }) {
   params;
-  const response = await fetch("http://localhost:3000/projects/" + params.id, {
+  const response = await fetch(getApiUrlWithId("projects", params.id), {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

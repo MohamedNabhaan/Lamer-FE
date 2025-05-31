@@ -23,13 +23,15 @@ import {
   useSubmit,
 } from "react-router-dom";
 import { ArchiveRestore, X } from "lucide-react";
+import { getApiUrlWithId } from "../config/api.js";
 
 export default function ClientEditForm() {
   const { client } = useLoaderData();
   const location = useLocation();
   const navigate = useNavigate();
   const submit = useSubmit();
-  const redirectTo = location.state?.from || "/Admin/Clients";
+  const redirectTo =
+    location.state?.from || "/l4m3r-secure-dashboard-panel/client-registry";
   const toast = useToast();
   const [logoFile, setLogoFile] = useState(null);
   const [logoPreview, setLogoPreview] = useState(
@@ -69,7 +71,7 @@ export default function ClientEditForm() {
     // Submit the form using the react-router-dom's submit function
     submit(formData, {
       method: "post",
-      action: `/Admin/Clients/Edit/${client.id}`,
+      action: getApiUrlWithId("clients", client.id),
       encType: "multipart/form-data",
     });
   }
@@ -214,17 +216,14 @@ export async function action({ request, params }) {
   );
 
   try {
-    console.log(
-      "Sending request to:",
-      `http://localhost:3000/clients/${params.id}`
-    );
+    console.log("Sending request to:", getApiUrlWithId("clients", params.id));
 
     // The update DTO doesn't include logo field, so we only send text data
     const clientData = {
       clientName: data.get("clientName"),
     };
 
-    const response = await fetch(`http://localhost:3000/clients/${params.id}`, {
+    const response = await fetch(getApiUrlWithId("clients", params.id), {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -251,7 +250,8 @@ export async function action({ request, params }) {
     const responseData = await response.json();
     console.log("API response data:", responseData);
 
-    const redirect_path = data.get("redirect") || "/Admin/Clients";
+    const redirect_path =
+      data.get("redirect") || "/l4m3r-secure-dashboard-panel/client-registry";
     console.log("Redirecting to:", redirect_path);
     return redirect(redirect_path);
   } catch (error) {
@@ -261,7 +261,7 @@ export async function action({ request, params }) {
 }
 
 export async function clientLoader({ request, params }) {
-  const response = await fetch("http://localhost:3000/clients/" + params.id, {
+  const response = await fetch(getApiUrlWithId("clients", params.id), {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

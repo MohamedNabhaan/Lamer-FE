@@ -11,6 +11,9 @@ import {
   Image,
   Textarea,
   useToast,
+  VStack,
+  HStack,
+  IconButton,
 } from "@chakra-ui/react";
 import {
   Form,
@@ -22,15 +25,114 @@ import {
   useSubmit,
 } from "react-router-dom";
 import { useState } from "react";
+import { X, Upload, Plus } from "lucide-react";
+import { getApiUrlWithId } from "../config/api.js";
 
 export default function EmployeeEditForm() {
   const { employee } = useLoaderData();
   const location = useLocation();
   const navigate = useNavigate();
   const submit = useSubmit();
-  const redirectTo = location.state?.from || "/Admin/Team";
+  const redirectTo =
+    location.state?.from ||
+    "/l4m3r-secure-dashboard-panel/personnel-management";
   const toast = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState("");
+  const [imageError, setImageError] = useState("");
+  const [currentImage, setCurrentImage] = useState(
+    employee.displayPic && employee.displayPic[0]
+      ? employee.displayPic[0]
+      : null
+  );
+
+  // Parse existing qualifications from comma-separated string
+  const [qualifications, setQualifications] = useState(() => {
+    if (employee.qualifications && employee.qualifications.trim()) {
+      return employee.qualifications
+        .split(",")
+        .map((item) => item.trim())
+        .filter((item) => item !== "");
+    }
+    return [""];
+  });
+
+  // Maximum file size: 5MB
+  const MAX_FILE_SIZE = 5 * 1024 * 1024;
+  const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png"];
+
+  // Qualification management functions
+  const addQualification = () => {
+    setQualifications([...qualifications, ""]);
+  };
+
+  const removeQualification = (index) => {
+    if (qualifications.length > 1) {
+      const newQualifications = qualifications.filter((_, i) => i !== index);
+      setQualifications(newQualifications);
+    }
+  };
+
+  const updateQualification = (index, value) => {
+    const newQualifications = [...qualifications];
+    newQualifications[index] = value;
+    setQualifications(newQualifications);
+  };
+
+  const validateImageFile = (file) => {
+    // Check file type
+    if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+      return "Only JPEG and PNG images are allowed";
+    }
+
+    // Check file size
+    if (file.size > MAX_FILE_SIZE) {
+      return "File size must be less than 5MB";
+    }
+
+    return null;
+  };
+
+  function handleImageChange(e) {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+
+      // Validate the file
+      const validationError = validateImageFile(file);
+      if (validationError) {
+        setImageError(validationError);
+        toast({
+          title: "Invalid File",
+          description: validationError,
+          status: "error",
+          duration: 4000,
+          isClosable: true,
+        });
+        return;
+      }
+
+      setImageFile(file);
+      setImageError(""); // Clear any previous errors
+      setCurrentImage(null); // Hide current image when new one is selected
+
+      // Create preview URL for image
+      const previewUrl = URL.createObjectURL(file);
+      setImagePreview(previewUrl);
+    }
+  }
+
+  function removeImage() {
+    setImageFile(null);
+    setImagePreview("");
+    setImageError("");
+    // Show the original image again if available
+    setCurrentImage(
+      employee.displayPic && employee.displayPic[0]
+        ? employee.displayPic[0]
+        : null
+    );
+  }
 
   const handleCancel = () => {
     navigate(redirectTo);
@@ -40,18 +142,27 @@ export default function EmployeeEditForm() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Create FormData for text-only updates
+    // Combine all non-empty qualifications into a comma-separated string
+    const qualificationsString = qualifications
+      .filter((qualification) => qualification.trim() !== "")
+      .join(", ");
+
+    // Create FormData for submission
     const formData = new FormData();
     formData.append("name", e.target.name.value);
     formData.append("position", e.target.position.value);
-    formData.append("qualifications", e.target.qualifications.value);
+    formData.append("qualifications", qualificationsString);
     formData.append("description", e.target.description.value);
     formData.append("redirect", e.target.redirect.value);
+
+    // Add the image file if selected
+    if (imageFile) {
+      formData.append("file", imageFile, imageFile.name);
+    }
 
     // Submit the form using the react-router-dom's submit function
     submit(formData, {
       method: "post",
-      action: `/Admin/Team/Edit/${employee.id}`,
       encType: "multipart/form-data",
     });
   }
@@ -114,14 +225,46 @@ export default function EmployeeEditForm() {
             <FormLabel fontSize={{ base: "md", md: "lg" }}>
               Qualifications
             </FormLabel>
-            <Textarea
-              defaultValue={employee.qualifications}
-              name="qualifications"
-              rows={3}
-              size="lg"
-              fontSize={{ base: "md", md: "md" }}
-              resize="vertical"
-            />
+            <VStack spacing={2} align="stretch">
+              {qualifications.map((qualification, index) => (
+                <HStack key={index} spacing={2}>
+                  <Input
+                    placeholder={`Qualification ${
+                      index + 1
+                    } (e.g. PhD in Engineering)`}
+                    size="lg"
+                    fontSize={{ base: "md", md: "md" }}
+                    value={qualification}
+                    onChange={(e) => updateQualification(index, e.target.value)}
+                    flex="1"
+                  />
+                  {qualifications.length > 1 && (
+                    <IconButton
+                      icon={<X />}
+                      aria-label={`Remove qualification ${index + 1}`}
+                      onClick={() => removeQualification(index)}
+                      size="lg"
+                      colorScheme="red"
+                      variant="outline"
+                    />
+                  )}
+                </HStack>
+              ))}
+              <Button
+                leftIcon={<Plus />}
+                onClick={addQualification}
+                variant="outline"
+                colorScheme="brand"
+                size="sm"
+                alignSelf="flex-start"
+              >
+                Add Qualification
+              </Button>
+            </VStack>
+            <Text fontSize="xs" color="gray.500" mt={1}>
+              Add multiple qualifications, degrees, certifications, etc. They
+              will be saved as comma-separated values.
+            </Text>
           </FormControl>
 
           <FormControl isRequired mb={{ base: 3, md: 4 }}>
@@ -138,20 +281,26 @@ export default function EmployeeEditForm() {
             />
           </FormControl>
 
-          <FormControl mb={{ base: 3, md: 4 }}>
+          <FormControl mb={{ base: 3, md: 4 }} isInvalid={!!imageError}>
             <FormLabel fontSize={{ base: "md", md: "lg" }}>
-              Display Photo
+              Display Photo (Optional)
             </FormLabel>
-            {employee.displayPic && employee.displayPic[0] && (
+
+            {/* Current Image Display */}
+            {currentImage && (
               <Box
                 mb={4}
                 p={4}
                 borderWidth="1px"
                 borderRadius="md"
                 borderColor="gray.200"
+                bg="gray.50"
               >
+                <Text fontSize="sm" fontWeight="medium" mb={2} color="gray.600">
+                  Current Photo:
+                </Text>
                 <Image
-                  src={employee.displayPic[0]}
+                  src={currentImage}
                   alt={employee.name}
                   maxH="200px"
                   mx="auto"
@@ -160,9 +309,118 @@ export default function EmployeeEditForm() {
                 />
               </Box>
             )}
-            <Text fontSize={{ base: "xs", md: "sm" }} color="orange.500" mt={1}>
-              Note: Photo updates require creating a new team member entry
-            </Text>
+
+            {/* New Image Preview */}
+            {imagePreview && (
+              <Box
+                mb={4}
+                p={4}
+                borderWidth="1px"
+                borderRadius="md"
+                borderColor="green.200"
+                bg="green.50"
+              >
+                <Text
+                  fontSize="sm"
+                  fontWeight="medium"
+                  mb={2}
+                  color="green.700"
+                >
+                  New Photo Preview:
+                </Text>
+                <Image
+                  src={imagePreview}
+                  alt="New photo preview"
+                  maxH="200px"
+                  mx="auto"
+                  objectFit="contain"
+                  borderRadius="md"
+                />
+                <Flex justify="center" mt={2}>
+                  <Button
+                    onClick={removeImage}
+                    size="sm"
+                    colorScheme="red"
+                    variant="outline"
+                    leftIcon={<X size={16} />}
+                  >
+                    Remove New Photo
+                  </Button>
+                </Flex>
+              </Box>
+            )}
+
+            {/* Upload Interface */}
+            {!imagePreview && (
+              <Box
+                border="2px dashed"
+                borderColor={imageError ? "red.300" : "gray.300"}
+                borderRadius="md"
+                p={6}
+                textAlign="center"
+                bg="gray.50"
+                transition="all 0.2s"
+                _hover={{
+                  borderColor: imageError ? "red.400" : "brand.400",
+                  bg: "brand.50",
+                }}
+              >
+                <input
+                  type="file"
+                  accept=".jpg,.jpeg,.png"
+                  id="imageUpload"
+                  onChange={handleImageChange}
+                  style={{ display: "none" }}
+                />
+                <Upload size={24} />
+                <Text
+                  textAlign="center"
+                  mt={2}
+                  fontSize={{ base: "sm", md: "md" }}
+                  fontWeight="500"
+                >
+                  Click to select new photo
+                </Text>
+                <Text fontSize="sm" color="gray.500" mt={1}>
+                  JPEG, PNG only • Max 5MB
+                </Text>
+                <Button
+                  mt={2}
+                  onClick={() => document.getElementById("imageUpload").click()}
+                  bg="gray.100"
+                  size={{ base: "md", md: "lg" }}
+                >
+                  Browse Files
+                </Button>
+              </Box>
+            )}
+
+            {/* Display validation errors */}
+            {imageError && (
+              <Text fontSize={{ base: "xs", md: "sm" }} color="red.500" mt={1}>
+                {imageError}
+              </Text>
+            )}
+
+            {/* Display success message when file is selected and valid */}
+            {!imageError && imageFile && (
+              <Text
+                fontSize={{ base: "xs", md: "sm" }}
+                color="green.500"
+                mt={1}
+              >
+                New photo selected successfully
+              </Text>
+            )}
+
+            {/* Display help text */}
+            {!imageError && !imageFile && (
+              <Text fontSize={{ base: "xs", md: "sm" }} color="gray.500" mt={1}>
+                {currentImage
+                  ? "Upload a new photo to replace the current one (optional)"
+                  : "Upload a photo for the team member (optional)"}
+              </Text>
+            )}
           </FormControl>
 
           <FormControl>
@@ -213,22 +471,56 @@ export async function action({ request, params }) {
   );
 
   try {
-    console.log(
-      "Sending request to:",
-      `http://localhost:3000/employee/${params.id}`
-    );
+    console.log("Sending request to:", getApiUrlWithId("employee", params.id));
 
-    // Create JSON data from form fields for PATCH request
-    const employeeData = {
-      name: data.get("name"),
-      position: data.get("position"),
-      qualifications: data.get("qualifications"),
-      description: data.get("description"),
-    };
+    // Check if a new file was provided
+    const hasNewFile =
+      data.get("file") instanceof File && data.get("file").size > 0;
 
-    const response = await fetch(
-      `http://localhost:3000/employee/${params.id}`,
-      {
+    if (hasNewFile) {
+      // For multipart form data with file upload
+      const formData = new FormData();
+      formData.append("name", data.get("name"));
+      formData.append("position", data.get("position"));
+      formData.append("qualifications", data.get("qualifications"));
+      formData.append("description", data.get("description"));
+      formData.append("file", data.get("file"));
+
+      const response = await fetch(getApiUrlWithId("employee", params.id), {
+        method: "PATCH",
+        headers: {
+          "Access-Control-Allow-Credentials": true,
+          "Access-Control-Allow-Origin": null,
+        },
+        credentials: "include",
+        body: formData,
+      });
+
+      console.log("Response status:", response.status);
+
+      if (response.status === 404 || response.status === 400) {
+        const errorData = await response.json();
+        console.error("API Error:", errorData);
+        return { ok: false, error: errorData };
+      }
+
+      if (!response.ok) {
+        console.error("Unexpected API error:", response.statusText);
+        throw json({ message: "Failed to update employee" }, { status: 500 });
+      }
+
+      const responseData = await response.json();
+      console.log("API response data:", responseData);
+    } else {
+      // For regular json data without file upload
+      const employeeData = {
+        name: data.get("name"),
+        position: data.get("position"),
+        qualifications: data.get("qualifications"),
+        description: data.get("description"),
+      };
+
+      const response = await fetch(getApiUrlWithId("employee", params.id), {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -237,26 +529,28 @@ export async function action({ request, params }) {
         },
         credentials: "include",
         body: JSON.stringify(employeeData),
+      });
+
+      console.log("Response status:", response.status);
+
+      if (response.status === 404 || response.status === 400) {
+        const errorData = await response.json();
+        console.error("API Error:", errorData);
+        return { ok: false, error: errorData };
       }
-    );
 
-    console.log("Response status:", response.status);
+      if (!response.ok) {
+        console.error("Unexpected API error:", response.statusText);
+        throw json({ message: "Failed to update employee" }, { status: 500 });
+      }
 
-    if (response.status === 404 || response.status === 400) {
-      const errorData = await response.json();
-      console.error("API Error:", errorData);
-      return { ok: false, error: errorData };
+      const responseData = await response.json();
+      console.log("API response data:", responseData);
     }
 
-    if (!response.ok) {
-      console.error("Unexpected API error:", response.statusText);
-      throw json({ message: "Failed to update employee" }, { status: 500 });
-    }
-
-    const responseData = await response.json();
-    console.log("API response data:", responseData);
-
-    const redirect_path = data.get("redirect") || "/Admin/Team";
+    const redirect_path =
+      data.get("redirect") ||
+      "/l4m3r-secure-dashboard-panel/personnel-management";
     console.log("Redirecting to:", redirect_path);
     return redirect(redirect_path);
   } catch (error) {
@@ -266,7 +560,7 @@ export async function action({ request, params }) {
 }
 
 export async function employeeLoader({ request, params }) {
-  const response = await fetch("http://localhost:3000/employee/" + params.id, {
+  const response = await fetch(getApiUrlWithId("employee", params.id), {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

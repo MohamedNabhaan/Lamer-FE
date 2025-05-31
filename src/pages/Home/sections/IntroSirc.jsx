@@ -137,11 +137,13 @@ export default function IntroSirc() {
               order={{ base: 1, lg: 2 }}
             >
               <Image
+                src={SIRC}
+                alt="SIRC"
                 w="100%"
                 h="100%"
                 objectFit="cover"
-                src={SIRC}
-                alt="Small Island Research Center"
+                borderRadius="lg"
+                fallbackSrc="https://via.placeholder.com/600x400?text=SIRC"
               />
               <Box
                 position="absolute"

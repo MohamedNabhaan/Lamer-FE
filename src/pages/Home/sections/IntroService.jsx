@@ -115,11 +115,16 @@ export default function IntroServices() {
                   }}
                 >
                   <Image
-                    h={{ base: "60px", md: "80px" }}
-                    w={{ base: "60px", md: "80px" }}
-                    objectFit="cover"
                     src={service.img}
-                    borderRadius="full"
+                    alt="Service"
+                    objectFit="cover"
+                    w="100%"
+                    h="100%"
+                    transition="transform 0.3s ease"
+                    fallbackSrc="https://via.placeholder.com/400x300?text=Service"
+                    _groupHover={{
+                      transform: "scale(1.05)",
+                    }}
                   />
                 </Box>
 

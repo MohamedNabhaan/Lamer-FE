@@ -1,3 +1,6 @@
+import { useState } from "react";
+import { Form, redirect, useActionData, useNavigation } from "react-router-dom";
+import { API_ENDPOINTS } from "../../config/api.js";
 import {
   Box,
   Heading,
@@ -7,7 +10,7 @@ import {
   Input,
 } from "@chakra-ui/react";
 import AuthForm from "../../components/AuthForm";
-import { json, redirect } from "react-router-dom";
+import { json } from "react-router-dom";
 
 export default function LoginPage() {
   return (
@@ -30,7 +33,7 @@ export async function action({ request }) {
     password: data.get("password"),
   };
 
-  const response = await fetch("http://localhost:3000/auth/signin", {
+  const response = await fetch(API_ENDPOINTS.SIGN_IN, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -49,5 +52,5 @@ export async function action({ request }) {
     throw json({ message: "Authentication issue" }, { status: 500 });
   }
 
-  return redirect("/Admin/Projects");
+  return redirect("/l4m3r-secure-dashboard-panel/content-management");
 }

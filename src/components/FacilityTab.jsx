@@ -183,8 +183,8 @@ export default function FacilityTab(props) {
                     </Text>
                   </HStack>
                   <Text fontSize={{ base: "xs", md: "sm" }} color={textColor}>
-                    Fair pricing with flexible rental periods to suit
-                    your research timeline.
+                    Fair pricing with flexible rental periods to suit your
+                    research timeline.
                   </Text>
                 </VStack>
               </VStack>
@@ -458,8 +458,6 @@ export default function FacilityTab(props) {
           </Card>
         </GridItem>
       </Grid>
-
-      
     </VStack>
   );
 }

@@ -81,18 +81,32 @@ export default function ServicePage() {
         mb={0}
         mt={{ base: "70px", md: "90px" }}
       >
-        <Box
-          position="absolute"
-          top={0}
-          left={0}
-          right={0}
-          bottom={0}
-          backgroundImage={`url(${service.bannerPic[0]})`}
-          backgroundSize="cover"
-          backgroundPosition="center"
-          backgroundAttachment="fixed"
-          filter="brightness(0.7)"
-        />
+        {service.bannerPic &&
+        service.bannerPic.length > 0 &&
+        service.bannerPic[0] ? (
+          <Box
+            position="absolute"
+            top={0}
+            left={0}
+            right={0}
+            bottom={0}
+            backgroundImage={`url(${service.bannerPic[0]})`}
+            backgroundSize="cover"
+            backgroundPosition="center"
+            backgroundAttachment="fixed"
+            filter="brightness(0.7)"
+          />
+        ) : (
+          <Box
+            position="absolute"
+            top={0}
+            left={0}
+            right={0}
+            bottom={0}
+            bg="brand.400"
+            bgGradient="linear(to-br, brand.400, brand.700)"
+          />
+        )}
         <Container
           maxW="container.xl"
           h="100%"
@@ -108,15 +122,7 @@ export default function ServicePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <Badge
-              colorScheme="brand"
-              p={2}
-              fontSize={{ base: "sm", md: "md" }}
-              borderRadius="full"
-              mb={3}
-            >
-              {service.serviceCategory}
-            </Badge>
+           
             <Heading
               color="white"
               fontSize={{ base: "3xl", md: "5xl" }}
@@ -276,22 +282,24 @@ export default function ServicePage() {
           </Grid>
 
           {/* Gallery Section */}
-          {service.pagePics && service.pagePics.length > 0 && (
-            <MotionBox
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.6 }}
-              mt={16}
+          <MotionBox
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+            mt={16}
+          >
+            <Heading
+              as="h3"
+              size="lg"
+              color={headingColor}
+              mb={8}
+              textAlign="center"
             >
-              <Heading
-                as="h3"
-                size="lg"
-                color={headingColor}
-                mb={8}
-                textAlign="center"
-              >
-                Project Gallery
-              </Heading>
+              Project Gallery
+            </Heading>
+            {service.pagePics &&
+            service.pagePics.length > 0 &&
+            service.pagePics[0] !== "" ? (
               <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} spacing={8}>
                 {service.pagePics.map((img, index) => (
                   <MotionBox
@@ -313,6 +321,7 @@ export default function ServicePage() {
                         w="100%"
                         h={{ base: "250px", md: "300px" }}
                         objectFit="cover"
+                        fallbackSrc="https://via.placeholder.com/300x250?text=Gallery+Image"
                       />
                       <Flex
                         position="absolute"
@@ -333,8 +342,23 @@ export default function ServicePage() {
                   </MotionBox>
                 ))}
               </SimpleGrid>
-            </MotionBox>
-          )}
+            ) : (
+              <Box
+                bg={cardBg}
+                borderRadius="xl"
+                p={8}
+                textAlign="center"
+                border="2px dashed"
+                borderColor={borderColor}
+                maxW="600px"
+                mx="auto"
+              >
+                <Text color={textColor} fontSize="lg" fontWeight="500">
+                  No images available for this service
+                </Text>
+              </Box>
+            )}
+          </MotionBox>
         </Container>
       </Box>
 
@@ -351,6 +375,7 @@ export default function ServicePage() {
               h="auto"
               maxH="90vh"
               objectFit="contain"
+              fallbackSrc="https://via.placeholder.com/300x250?text=Gallery+Image"
             />
           </ModalBody>
         </ModalContent>

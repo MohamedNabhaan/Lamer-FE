@@ -10,27 +10,53 @@ import {
   Container,
   Image,
   Textarea,
+  VStack,
+  HStack,
+  IconButton,
 } from "@chakra-ui/react";
 import { Form, redirect, useSubmit, json } from "react-router-dom";
 import { useState } from "react";
-import { ArchiveRestore, X } from "lucide-react";
+import { ArchiveRestore, X, Plus } from "lucide-react";
+import { API_ENDPOINTS } from "../config/api.js";
 
 export default function EmployeeAddForm() {
   const submit = useSubmit();
   const [photoFile, setPhotoFile] = useState(null);
   const [photoPreview, setPhotoPreview] = useState("");
+  const [qualifications, setQualifications] = useState([""]); // Start with one empty qualification field
+
+  // Qualification management functions
+  const addQualification = () => {
+    setQualifications([...qualifications, ""]);
+  };
+
+  const removeQualification = (index) => {
+    if (qualifications.length > 1) {
+      const newQualifications = qualifications.filter((_, i) => i !== index);
+      setQualifications(newQualifications);
+    }
+  };
+
+  const updateQualification = (index, value) => {
+    const newQualifications = [...qualifications];
+    newQualifications[index] = value;
+    setQualifications(newQualifications);
+  };
 
   function handleSubmit(e) {
     e.preventDefault();
+
+    // Combine all non-empty qualifications into a comma-separated string
+    const qualificationsString = qualifications
+      .filter((qualification) => qualification.trim() !== "")
+      .join(", ");
+
     const formData = new FormData();
 
     // Add form field values
     formData.append(e.target.name.name, e.target.name.value);
     formData.append(e.target.position.name, e.target.position.value);
-    formData.append(
-      e.target.qualifications.name,
-      e.target.qualifications.value
-    );
+    formData.append("qualifications", qualificationsString);
     formData.append(e.target.description.name, e.target.description.value);
 
     // Add the photo file if selected
@@ -118,13 +144,46 @@ export default function EmployeeAddForm() {
             <FormLabel fontSize={{ base: "md", md: "lg" }}>
               Qualifications
             </FormLabel>
-            <Textarea
-              name="qualifications"
-              placeholder="Degrees, certifications, etc."
-              size="lg"
-              fontSize={{ base: "md", md: "md" }}
-              rows={3}
-            />
+            <VStack spacing={2} align="stretch">
+              {qualifications.map((qualification, index) => (
+                <HStack key={index} spacing={2}>
+                  <Input
+                    placeholder={`Qualification ${
+                      index + 1
+                    } (e.g. PhD in Engineering)`}
+                    size="lg"
+                    fontSize={{ base: "md", md: "md" }}
+                    value={qualification}
+                    onChange={(e) => updateQualification(index, e.target.value)}
+                    flex="1"
+                  />
+                  {qualifications.length > 1 && (
+                    <IconButton
+                      icon={<X />}
+                      aria-label={`Remove qualification ${index + 1}`}
+                      onClick={() => removeQualification(index)}
+                      size="lg"
+                      colorScheme="red"
+                      variant="outline"
+                    />
+                  )}
+                </HStack>
+              ))}
+              <Button
+                leftIcon={<Plus />}
+                onClick={addQualification}
+                variant="outline"
+                colorScheme="brand"
+                size="sm"
+                alignSelf="flex-start"
+              >
+                Add Qualification
+              </Button>
+            </VStack>
+            <Text fontSize="xs" color="gray.500" mt={1}>
+              Add multiple qualifications, degrees, certifications, etc. They
+              will be saved as comma-separated values.
+            </Text>
           </FormControl>
 
           <FormControl isRequired mb={{ base: 3, md: 4 }}>
@@ -255,7 +314,7 @@ export async function action({ request }) {
       [...data.entries()].map((entry) => `${entry[0]}: ${entry[1]}`)
     );
 
-    const response = await fetch("http://localhost:3000/employee/create", {
+    const response = await fetch(API_ENDPOINTS.EMPLOYEE_CREATE, {
       method: "POST",
       headers: {
         "Access-Control-Allow-Credentials": true,
@@ -279,7 +338,7 @@ export async function action({ request }) {
     const responseData = await response.json();
     console.log("Employee created successfully:", responseData);
 
-    return redirect("/Admin/Team");
+    return redirect("/l4m3r-secure-dashboard-panel/personnel-management");
   } catch (error) {
     console.error("Exception during form submission:", error);
     throw json({ message: "Error creating employee" }, { status: 500 });

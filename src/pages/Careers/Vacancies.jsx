@@ -37,6 +37,7 @@ import {
 import { useLoaderData, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Pagination from "../../components/Pagination";
+import { API_ENDPOINTS } from "../../config/api.js";
 
 const MotionBox = motion(Box);
 const MotionCard = motion(Card);
@@ -739,7 +740,7 @@ export default function Vacancies() {
 export async function loader({ request, params }) {
   const url = new URL(request.url);
 
-  const response = await fetch("http://localhost:3000/vacancies", {
+  const response = await fetch(API_ENDPOINTS.VACANCIES, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
