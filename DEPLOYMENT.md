@@ -38,6 +38,53 @@ npm run build
 
 The built files in the `dist/` folder can be deployed to any static hosting service.
 
+## Security Configuration - Obfuscated Routes
+
+For enhanced security, the application uses obfuscated routes for admin access:
+
+### Admin Access Routes
+
+**Admin Login:**
+
+- **Route:** `/l4m3r-management-portal-auth`
+- **Purpose:** Secure admin authentication endpoint
+- **Access:** Admin users only
+
+**Admin Dashboard:**
+
+- **Base Route:** `/l4m3r-secure-dashboard-panel`
+- **Purpose:** Main admin panel access
+- **Access:** Authenticated admin users only
+
+### Admin Sub-Routes
+
+All admin management routes are under the obfuscated base path:
+
+- **Content Management:** `/l4m3r-secure-dashboard-panel/content-management`
+- **Service Offerings:** `/l4m3r-secure-dashboard-panel/service-offerings`
+- **Position Listings:** `/l4m3r-secure-dashboard-panel/position-listings`
+- **Research Publications:** `/l4m3r-secure-dashboard-panel/research-publications`
+- **Academic Programs:** `/l4m3r-secure-dashboard-panel/academic-programs`
+- **Laboratory Assets:** `/l4m3r-secure-dashboard-panel/laboratory-assets`
+- **Personnel Management:** `/l4m3r-secure-dashboard-panel/personnel-management`
+- **Client Registry:** `/l4m3r-secure-dashboard-panel/client-registry`
+
+### Route Configuration Files
+
+The obfuscated routes are configured in:
+
+- **`src/App.jsx`** - Main router configuration
+- **`src/config/routes.js`** - Environment-based route definitions
+- **`src/index.js`** - Navigation menu structure
+- **`src/utils/auth.jsx`** - Authentication redirects
+
+### Security Benefits
+
+- **Obscurity Layer:** Non-obvious URLs make automated attacks harder
+- **Reduced Discovery:** Admin panels are not easily discoverable
+- **Targeted Access:** Only authorized users know the correct paths
+- **Consistent Obfuscation:** All admin routes follow the same pattern
+
 ## API Configuration
 
 The application now uses a centralized API configuration system located in `src/config/api.js`. This provides:
