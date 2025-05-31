@@ -15,11 +15,7 @@ import { json } from "react-router-dom";
 export default function LoginPage() {
   return (
     <Box height={"100vh"} bgColor={"white"}>
-      <Container maxW={"container.xl"} paddingBlock={20}>
-        <Heading textAlign={"center"} color={"brand.400"}>
-          LoginPage
-        </Heading>
-      </Container>
+      <Container maxW={"container.xl"} paddingBlock={20}></Container>
 
       <AuthForm />
     </Box>

@@ -43,6 +43,11 @@ import AdminEquipment, {
 } from "./pages/AdminPages/AdminEquipment/AdminEquipment";
 import AdminDash, { action as logOutAction } from "./AdminDash";
 import LoginPage, { action as authAction } from "./pages/LoginPage/Login";
+import SignUpPage, { action as signUpAction } from "./pages/SignUpPage/SignUp";
+import AdminUnapprovedUsers, {
+  loader as unapprovedUsersLoader,
+} from "./pages/AdminPages/AdminUnapprovedUsers/AdminUnapprovedUsers";
+import NoAccess from "./pages/AdminPages/NoAccess/NoAccess";
 import ContactUs from "./pages/ContactUs/ContactUs";
 import EditForm, { action as editAction } from "./components/EditForm";
 import { projectLoader } from "./utils/project";
@@ -105,6 +110,11 @@ const router = createBrowserRouter([
     path: "l4m3r-management-portal-auth",
     element: <LoginPage />,
     action: authAction,
+  },
+  {
+    path: "l4m3r-management-portal-signup",
+    element: <SignUpPage />,
+    action: signUpAction,
   },
   {
     path: "/",
@@ -272,6 +282,15 @@ const router = createBrowserRouter([
             element: <EquipmentEditForm />,
             loader: equipmentItemLoader,
             action: editEquipmentAction,
+          },
+          {
+            path: "user-approvals",
+            element: <AdminUnapprovedUsers />,
+            loader: unapprovedUsersLoader,
+          },
+          {
+            path: "no-access",
+            element: <NoAccess />,
           },
         ],
       },

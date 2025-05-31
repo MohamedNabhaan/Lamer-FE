@@ -1,32 +1,28 @@
 import {
   FormControl,
-  FormLabel,
   Input,
-  Stack,
   Button,
-  Center,
+  VStack,
   Text,
   Box,
-  Alert,
-  AlertIcon,
-  AlertDescription,
-  Link,
-  Flex,
-  VStack,
   Image,
   Heading,
   useColorModeValue,
   InputGroup,
   InputLeftElement,
   Icon,
+  Alert,
+  AlertIcon,
+  AlertDescription,
+  Flex,
+  Link,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
-import { Mail, Lock } from "lucide-react";
+import { Mail, Lock, User, UserCheck, ArrowLeft } from "lucide-react";
 import {
   Form,
   useActionData,
   useNavigation,
-  useSearchParams,
   Link as RouterLink,
 } from "react-router-dom";
 import logo from "../assets/logo.png";
@@ -34,14 +30,10 @@ import logo from "../assets/logo.png";
 const MotionBox = motion(Box);
 const MotionVStack = motion(VStack);
 
-export default function AuthForm() {
+export default function SignUpForm() {
   const data = useActionData();
   const navigation = useNavigation();
-  const [searchParams] = useSearchParams();
-  const justRegistered = searchParams.get("registered") === "true";
-  const justCreated = searchParams.get("created") === "true";
-
-  const isLoginIn = navigation.state === "submitting";
+  const isSubmitting = navigation.state === "submitting";
 
   // Color scheme
   const cardBg = useColorModeValue("white", "gray.800");
@@ -89,6 +81,22 @@ export default function AuthForm() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
+            {/* Back to Login Link */}
+            <Link
+              as={RouterLink}
+              to="/l4m3r-management-portal-auth"
+              display="inline-flex"
+              alignItems="center"
+              fontSize="sm"
+              color="brand.400"
+              fontWeight="500"
+              _hover={{ color: "brand.600" }}
+              mb={-4}
+            >
+              <Icon as={ArrowLeft} w={4} h={4} mr={2} />
+              Back to Login
+            </Link>
+
             {/* Logo and Header */}
             <VStack spacing={4} textAlign="center">
               <MotionBox
@@ -112,44 +120,20 @@ export default function AuthForm() {
                   color={useColorModeValue("gray.800", "white")}
                   fontWeight="700"
                 >
-                  Welcome Back
+                  Create Account
                 </Heading>
                 <Text
                   color={textColor}
                   fontSize={{ base: "sm", md: "md" }}
                   fontWeight="500"
                 >
-                  Sign in to your admin dashboard
+                  Join our admin dashboard
                 </Text>
               </VStack>
             </VStack>
 
-            {/* Success Messages */}
-            {(justRegistered || justCreated) && (
-              <MotionBox
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                <Alert
-                  status="success"
-                  borderRadius="xl"
-                  bg={useColorModeValue("green.50", "green.900")}
-                  border="1px solid"
-                  borderColor={useColorModeValue("green.200", "green.700")}
-                >
-                  <AlertIcon />
-                  <AlertDescription fontSize="sm">
-                    {justCreated
-                      ? "User has been created. You will have access to the system after you have been approved."
-                      : "Account created successfully! Please sign in with your new credentials."}
-                  </AlertDescription>
-                </Alert>
-              </MotionBox>
-            )}
-
             {/* Error Messages */}
-            {data && (data.errors || data.message) && (
+            {data && data.message && (
               <MotionBox
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -164,11 +148,7 @@ export default function AuthForm() {
                 >
                   <AlertIcon />
                   <AlertDescription fontSize="sm">
-                    {data.message ||
-                      (data.errors &&
-                        Object.values(data.errors).map((err, index) => (
-                          <Text key={index}>{err}</Text>
-                        )))}
+                    {data.message}
                   </AlertDescription>
                 </Alert>
               </MotionBox>
@@ -176,6 +156,35 @@ export default function AuthForm() {
 
             {/* Form Fields */}
             <VStack spacing={5}>
+              <FormControl>
+                <InputGroup size="lg">
+                  <InputLeftElement>
+                    <Icon as={User} color={textColor} w={5} h={5} />
+                  </InputLeftElement>
+                  <Input
+                    type="text"
+                    placeholder="Enter username"
+                    name="username"
+                    required
+                    bg={inputBg}
+                    border="2px solid transparent"
+                    borderRadius="xl"
+                    fontSize={{ base: "md", md: "lg" }}
+                    h="56px"
+                    _hover={{
+                      bg: inputFocusBg,
+                      borderColor: useColorModeValue("brand.200", "brand.600"),
+                    }}
+                    _focus={{
+                      bg: inputFocusBg,
+                      borderColor: "brand.400",
+                      boxShadow: "0 0 0 3px rgba(66, 153, 225, 0.1)",
+                    }}
+                    transition="all 0.2s"
+                  />
+                </InputGroup>
+              </FormControl>
+
               <FormControl>
                 <InputGroup size="lg">
                   <InputLeftElement>
@@ -233,13 +242,42 @@ export default function AuthForm() {
                   />
                 </InputGroup>
               </FormControl>
+
+              <FormControl>
+                <InputGroup size="lg">
+                  <InputLeftElement>
+                    <Icon as={UserCheck} color={textColor} w={5} h={5} />
+                  </InputLeftElement>
+                  <Input
+                    type="password"
+                    placeholder="Confirm password"
+                    name="confirmPassword"
+                    required
+                    bg={inputBg}
+                    border="2px solid transparent"
+                    borderRadius="xl"
+                    fontSize={{ base: "md", md: "lg" }}
+                    h="56px"
+                    _hover={{
+                      bg: inputFocusBg,
+                      borderColor: useColorModeValue("brand.200", "brand.600"),
+                    }}
+                    _focus={{
+                      bg: inputFocusBg,
+                      borderColor: "brand.400",
+                      boxShadow: "0 0 0 3px rgba(66, 153, 225, 0.1)",
+                    }}
+                    transition="all 0.2s"
+                  />
+                </InputGroup>
+              </FormControl>
             </VStack>
 
             {/* Submit Button */}
             <Button
               type="submit"
-              isLoading={isLoginIn}
-              loadingText="Signing in..."
+              isLoading={isSubmitting}
+              loadingText="Creating account..."
               size="lg"
               h="56px"
               bgGradient="linear(to-r, brand.400, brand.600)"
@@ -256,9 +294,9 @@ export default function AuthForm() {
                 transform: "translateY(0)",
               }}
               transition="all 0.2s"
-              isDisabled={isLoginIn}
+              isDisabled={isSubmitting}
             >
-              {isLoginIn ? "Signing in..." : "Sign In"}
+              {isSubmitting ? "Creating account..." : "Create Account"}
             </Button>
 
             {/* Footer */}
@@ -266,19 +304,19 @@ export default function AuthForm() {
               <Flex align="center" justify="center">
                 <Box h="1px" bg={cardBorder} flex="1" />
                 <Text px={4} fontSize="sm" color={textColor} fontWeight="500">
-                  Don't have an account?
+                  Already have an account?
                 </Text>
                 <Box h="1px" bg={cardBorder} flex="1" />
               </Flex>
               <Text textAlign="center" mt={3}>
                 <Link
                   as={RouterLink}
-                  to="/l4m3r-management-portal-signup"
+                  to="/l4m3r-management-portal-auth"
                   color="brand.400"
                   fontWeight="600"
                   _hover={{ color: "brand.600" }}
                 >
-                  Sign up here
+                  Sign in here
                 </Link>
               </Text>
             </Box>
