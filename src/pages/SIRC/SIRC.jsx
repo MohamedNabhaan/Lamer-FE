@@ -55,44 +55,38 @@ const MotionGrid = motion(Grid);
 
 // Move fetch functions outside component
 const fetchPrograms = async () => {
-  const response = await fetch(API_ENDPOINTS.PROGRAMS, {
+  const programsResponse = await fetch(API_ENDPOINTS.PROGRAMS, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      "Access-Control-Allow-Credentials": true,
-      "Access-Control-Allow-Origin": null,
     },
     credentials: "include",
   });
-  const programs = await response.json();
+  const programs = await programsResponse.json();
   return programs;
 };
 
 const fetchResearch = async () => {
-  const response2 = await fetch(API_ENDPOINTS.RESEARCH, {
+  const researchResponse = await fetch(API_ENDPOINTS.RESEARCH, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      "Access-Control-Allow-Credentials": true,
-      "Access-Control-Allow-Origin": null,
     },
     credentials: "include",
   });
-  const research = await response2.json();
+  const research = await researchResponse.json();
   return research;
 };
 
 const fetchEquipment = async () => {
-  const response3 = await fetch(API_ENDPOINTS.EQUIPMENT, {
+  const equipmentResponse = await fetch(API_ENDPOINTS.EQUIPMENT, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      "Access-Control-Allow-Credentials": true,
-      "Access-Control-Allow-Origin": null,
     },
     credentials: "include",
   });
-  const equipment = await response3.json();
+  const equipment = await equipmentResponse.json();
   return equipment;
 };
 

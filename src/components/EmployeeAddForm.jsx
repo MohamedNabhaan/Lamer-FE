@@ -317,8 +317,7 @@ export async function action({ request }) {
     const response = await fetch(API_ENDPOINTS.EMPLOYEE_CREATE, {
       method: "POST",
       headers: {
-        "Access-Control-Allow-Credentials": true,
-        "Access-Control-Allow-Origin": null,
+        "Content-Type": "application/json",
       },
       credentials: "include",
       body: data,

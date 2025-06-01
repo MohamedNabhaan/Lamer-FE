@@ -234,8 +234,6 @@ export async function equipmentItemLoader({ params }) {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      "Access-Control-Allow-Credentials": true,
-      "Access-Control-Allow-Origin": null,
     },
     credentials: "include",
   });
@@ -266,8 +264,6 @@ export async function action({ request, params }) {
       }),
       headers: {
         "Content-Type": "application/json",
-        "Access-Control-Allow-Credentials": true,
-        "Access-Control-Allow-Origin": null,
       },
       credentials: "include",
     });

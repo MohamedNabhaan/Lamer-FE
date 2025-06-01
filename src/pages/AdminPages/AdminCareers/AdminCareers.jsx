@@ -110,8 +110,6 @@ export default function AdminCareers() {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "Access-Control-Allow-Credentials": true,
-          "Access-Control-Allow-Origin": null,
         },
         credentials: "include",
       });
@@ -549,8 +547,6 @@ export async function vacanciesLoader({ request }) {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      "Access-Control-Allow-Credentials": true,
-      "Access-Control-Allow-Origin": null,
     },
     credentials: "include",
   });
@@ -567,8 +563,7 @@ export async function action({ request, params }) {
   const response = await fetch(getApiUrlWithId("vacancies", params.id), {
     method: "DELETE",
     headers: {
-      "Access-Control-Allow-Credentials": true,
-      "Access-Control-Allow-Origin": null,
+      "Content-Type": "application/json",
     },
     credentials: "include",
   });

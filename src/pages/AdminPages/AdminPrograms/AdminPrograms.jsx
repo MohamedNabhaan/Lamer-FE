@@ -88,8 +88,6 @@ export default function AdminPrograms() {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "Access-Control-Allow-Credentials": true,
-          "Access-Control-Allow-Origin": null,
         },
         credentials: "include",
       });
@@ -449,8 +447,6 @@ export async function loader({ request }) {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      "Access-Control-Allow-Credentials": true,
-      "Access-Control-Allow-Origin": null,
     },
     credentials: "include",
   });
@@ -466,8 +462,7 @@ export async function action({ request, params }) {
   const response = await fetch(getApiUrlWithId("programs", params.id), {
     method: "DELETE",
     headers: {
-      "Access-Control-Allow-Credentials": true,
-      "Access-Control-Allow-Origin": null,
+      "Content-Type": "application/json",
     },
     credentials: "include",
   });

@@ -227,8 +227,6 @@ export async function action({ request, params }) {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        "Access-Control-Allow-Credentials": true,
-        "Access-Control-Allow-Origin": null,
       },
       credentials: "include",
       body: JSON.stringify(clientData),
@@ -265,8 +263,6 @@ export async function clientLoader({ request, params }) {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      "Access-Control-Allow-Credentials": true,
-      "Access-Control-Allow-Origin": null,
     },
     credentials: "include",
   });

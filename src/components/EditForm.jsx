@@ -901,11 +901,10 @@ export async function action({ request, params }) {
       const response = await fetch(getApiUrlWithId("projects", params.id), {
         method: "PATCH",
         headers: {
-          "Access-Control-Allow-Credentials": true,
-          "Access-Control-Allow-Origin": null,
+          "Content-Type": "application/json",
         },
         credentials: "include",
-        body: formData,
+        body: JSON.stringify(formData),
       });
 
       console.log("Response status:", response.status);
@@ -940,8 +939,6 @@ export async function action({ request, params }) {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
-          "Access-Control-Allow-Credentials": true,
-          "Access-Control-Allow-Origin": null,
         },
         credentials: "include",
         body: JSON.stringify(jsonData),

@@ -30,8 +30,6 @@ export async function checkAuthLoader() {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "Access-Control-Allow-Credentials": true,
-        "Access-Control-Allow-Origin": null,
       },
       credentials: "include",
     });
@@ -159,8 +157,6 @@ export async function logout() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Access-Control-Allow-Credentials": true,
-        "Access-Control-Allow-Origin": null,
       },
       credentials: "include",
     });

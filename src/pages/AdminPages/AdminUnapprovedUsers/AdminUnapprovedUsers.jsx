@@ -68,7 +68,6 @@ export default function AdminUnapprovedUsers() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "Access-Control-Allow-Credentials": true,
           },
           credentials: "include",
           body: JSON.stringify({ role }),
@@ -112,7 +111,6 @@ export default function AdminUnapprovedUsers() {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
-            "Access-Control-Allow-Credentials": true,
           },
           credentials: "include",
         }
@@ -564,7 +562,6 @@ export async function loader() {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "Access-Control-Allow-Credentials": true,
         },
         credentials: "include",
       }

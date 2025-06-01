@@ -489,8 +489,7 @@ export async function action({ request, params }) {
       const response = await fetch(getApiUrlWithId("employee", params.id), {
         method: "PATCH",
         headers: {
-          "Access-Control-Allow-Credentials": true,
-          "Access-Control-Allow-Origin": null,
+          "Content-Type": "application/json",
         },
         credentials: "include",
         body: formData,
@@ -524,8 +523,6 @@ export async function action({ request, params }) {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
-          "Access-Control-Allow-Credentials": true,
-          "Access-Control-Allow-Origin": null,
         },
         credentials: "include",
         body: JSON.stringify(employeeData),
@@ -564,8 +561,6 @@ export async function employeeLoader({ request, params }) {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      "Access-Control-Allow-Credentials": true,
-      "Access-Control-Allow-Origin": null,
     },
     credentials: "include",
   });

@@ -395,15 +395,9 @@ export async function action({ request }) {
 
     const response = await fetch(API_ENDPOINTS.PROGRAMS_CREATE, {
       method: "POST",
-      body: JSON.stringify({
-        title: formObject.title,
-        desc: formObject.desc,
-        duration: formObject.duration || undefined,
-      }),
+      body: JSON.stringify(formObject),
       headers: {
         "Content-Type": "application/json",
-        "Access-Control-Allow-Credentials": true,
-        "Access-Control-Allow-Origin": null,
       },
       credentials: "include",
     });

@@ -106,8 +106,6 @@ export async function action({ request }) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Access-Control-Allow-Credentials": true,
-          "Access-Control-Allow-Origin": null,
         },
         credentials: "include",
         body: JSON.stringify({

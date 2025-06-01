@@ -929,8 +929,6 @@ export async function serviceLoader({ params }) {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      "Access-Control-Allow-Credentials": true,
-      "Access-Control-Allow-Origin": null,
     },
     credentials: "include",
   });
@@ -977,9 +975,12 @@ export async function action({ request, params }) {
     );
 
     const response = await fetch(getApiUrlWithId("services", params.id), {
-      method: "PATCH",
-      body: formData,
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
       credentials: "include",
+      body: JSON.stringify(formDataWithBannerPic),
     });
 
     console.log("Response status:", response.status);

@@ -87,8 +87,6 @@ export default function AdminClients() {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "Access-Control-Allow-Credentials": true,
-          "Access-Control-Allow-Origin": null,
         },
         credentials: "include",
       });
@@ -394,8 +392,6 @@ export async function clientsLoader({ request }) {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      "Access-Control-Allow-Credentials": true,
-      "Access-Control-Allow-Origin": null,
     },
     credentials: "include",
   });
@@ -427,8 +423,7 @@ export async function action({ request, params }) {
   const response = await fetch(getApiUrlWithId("clients", params.id), {
     method: "DELETE",
     headers: {
-      "Access-Control-Allow-Credentials": true,
-      "Access-Control-Allow-Origin": null,
+      "Content-Type": "application/json",
     },
     credentials: "include",
   });
