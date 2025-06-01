@@ -107,12 +107,12 @@ import NotFound from "./pages/NotFound/NotFound";
 
 const router = createBrowserRouter([
   {
-    path: "l4m3r-management-portal-auth",
+    path: "/l4m3r-management-portal-auth",
     element: <LoginPage />,
     action: authAction,
   },
   {
-    path: "l4m3r-management-portal-signup",
+    path: "/l4m3r-management-portal-signup",
     element: <SignUpPage />,
     action: signUpAction,
   },
