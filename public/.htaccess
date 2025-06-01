@@ -40,11 +40,11 @@ Header always set X-XSS-Protection "1; mode=block"
 # Rate limiting for login attempts (basic)
 
 <Location "/management-portal-auth"> # Limit to 5 requests per minute per IP
-SetEnvIf Remote*Addr "^(.*)$" RATE*LIMIT=$1
+SetEnvIf Remote_Addr "^(._)$" RATE_LIMIT=$1
 RewriteEngine On
 RewriteMap limits "txt:/path/to/limits.txt"
 RewriteCond ${limits:%{REMOTE_ADDR}|0} >5
-RewriteRule .* - [F,L]
+RewriteRule ._ - [F,L]
 </Location>
 
 # SPA Routing - Handle React Router client-side routing
