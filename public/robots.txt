@@ -13,4 +13,4 @@ Disallow: /api/
 Disallow: /*.json$
 Disallow: /*.xml$
 
-Sitemap: https://yourdomain.com/sitemap.xml 
+Sitemap: https://lamer-fe.onrender.com.com/sitemap.xml 
