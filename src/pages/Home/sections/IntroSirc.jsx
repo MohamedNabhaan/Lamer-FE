@@ -20,7 +20,7 @@ const MotionBox = motion(Box);
 const MotionHeading = motion(Heading);
 const MotionFlex = motion(Flex);
 
-export default function IntroSirc() {
+export default function IntroSirc({ programs = [] }) {
   const bgColor = useColorModeValue("white", "gray.800");
   const textColor = useColorModeValue("gray.600", "gray.300");
   const headingColor = useColorModeValue("brand.400", "brand.300");
@@ -89,24 +89,41 @@ export default function IntroSirc() {
                       Research Programs
                     </Text>
                     <VStack align="stretch" spacing={3}>
-                      <HStack spacing={4}>
-                        <Box
-                          w={2}
-                          h={2}
-                          borderRadius="full"
-                          bg={headingColor}
-                        />
-                        <Text>Summer Coral Reef Ecology Course</Text>
-                      </HStack>
-                      <HStack spacing={4}>
-                        <Box
-                          w={2}
-                          h={2}
-                          borderRadius="full"
-                          bg={headingColor}
-                        />
-                        <Text>Coral Reef System Course</Text>
-                      </HStack>
+                      {programs && programs.length > 0 ? (
+                        programs.map((program, index) => (
+                          <HStack key={index} spacing={4}>
+                            <Box
+                              w={2}
+                              h={2}
+                              borderRadius="full"
+                              bg={headingColor}
+                            />
+                            <Text>{program.title}</Text>
+                          </HStack>
+                        ))
+                      ) : (
+                        // Fallback to static programs if no dynamic data
+                        <>
+                          <HStack spacing={4}>
+                            <Box
+                              w={2}
+                              h={2}
+                              borderRadius="full"
+                              bg={headingColor}
+                            />
+                            <Text>Summer Coral Reef Ecology Course</Text>
+                          </HStack>
+                          <HStack spacing={4}>
+                            <Box
+                              w={2}
+                              h={2}
+                              borderRadius="full"
+                              bg={headingColor}
+                            />
+                            <Text>Coral Reef System Course</Text>
+                          </HStack>
+                        </>
+                      )}
                     </VStack>
                   </Box>
 

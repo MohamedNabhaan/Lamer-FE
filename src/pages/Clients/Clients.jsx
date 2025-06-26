@@ -8,6 +8,7 @@ import {
   useColorModeValue,
   VStack,
   AspectRatio,
+  Flex,
 } from "@chakra-ui/react";
 import { useLoaderData } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -67,71 +68,90 @@ export default function Clients() {
       {/* Main Content */}
       <Box bg={sectionBg} py={16}>
         <Container maxW="container.xl" px={{ base: 4, md: 8 }}>
-          <SimpleGrid
-            columns={{ base: 2, sm: 3, md: 4 }}
-            spacing={{ base: 6, md: 8 }}
-          >
-            {clients.map((client) => (
-              <MotionBox
-                key={client.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                <Box
-                  bg={cardBg}
-                  borderRadius="xl"
-                  overflow="hidden"
-                  boxShadow="md"
-                  border="1px solid"
-                  borderColor={cardBorderColor}
+          {/* Clients List */}
+          {clients.length === 0 ? (
+            <Flex
+              direction="column"
+              align="center"
+              justify="center"
+              py={12}
+              color={textColor}
+            >
+              <Text fontSize="xl" mb={2}>
+                No Clients Available
+              </Text>
+              <Text>Check back later for updates</Text>
+            </Flex>
+          ) : (
+            <SimpleGrid
+              columns={{ base: 2, sm: 3, md: 4 }}
+              spacing={{ base: 6, md: 8 }}
+            >
+              {clients.map((client) => (
+                <MotionBox
+                  key={client.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
                 >
-                  {/* Logo Container */}
-                  <Box>
-                    <AspectRatio ratio={4 / 3}>
-                      <Box
-                        p={8}
-                        display="flex"
-                        alignItems="center"
-                        justifyContent="center"
-                        bg={cardBg}
-                      >
-                        <Image
-                          src={client.logo[0]}
-                          alt={client.clientName}
-                          maxW="85%"
-                          maxH="85%"
-                          objectFit="contain"
-                          filter={useColorModeValue("none", "brightness(0.9)")}
-                          fallbackSrc="https://via.placeholder.com/200x150?text=Logo"
-                        />
-                      </Box>
-                    </AspectRatio>
-                  </Box>
-
-                  {/* Client Name */}
                   <Box
-                    py={4}
-                    px={4}
-                    bg={nameBoxBg}
-                    borderTop="2px solid"
+                    bg={cardBg}
+                    borderRadius="xl"
+                    overflow="hidden"
+                    boxShadow="md"
+                    border="1px solid"
                     borderColor={cardBorderColor}
                   >
-                    <Text
-                      fontSize={{ base: "md", md: "lg" }}
-                      fontWeight="600"
-                      color={headingColor}
-                      textAlign="center"
-                      letterSpacing="tight"
-                      noOfLines={2}
+                    {/* Logo Container */}
+                    <Box>
+                      <AspectRatio ratio={4 / 3}>
+                        <Box
+                          p={8}
+                          display="flex"
+                          alignItems="center"
+                          justifyContent="center"
+                          bg={cardBg}
+                        >
+                          <Image
+                            src={client.logo[0]}
+                            alt={client.clientName}
+                            maxW="85%"
+                            maxH="85%"
+                            objectFit="contain"
+                            filter={useColorModeValue(
+                              "none",
+                              "brightness(0.9)"
+                            )}
+                            fallbackSrc="https://via.placeholder.com/200x150?text=Logo"
+                          />
+                        </Box>
+                      </AspectRatio>
+                    </Box>
+
+                    {/* Client Name */}
+                    <Box
+                      py={4}
+                      px={4}
+                      bg={nameBoxBg}
+                      borderTop="2px solid"
+                      borderColor={cardBorderColor}
                     >
-                      {client.clientName}
-                    </Text>
+                      <Text
+                        fontSize={{ base: "md", md: "lg" }}
+                        fontWeight="600"
+                        color={headingColor}
+                        textAlign="center"
+                        letterSpacing="tight"
+                        noOfLines={2}
+                      >
+                        {client.clientName}
+                      </Text>
+                    </Box>
                   </Box>
-                </Box>
-              </MotionBox>
-            ))}
-          </SimpleGrid>
+                </MotionBox>
+              ))}
+            </SimpleGrid>
+          )}
         </Container>
       </Box>
     </Box>

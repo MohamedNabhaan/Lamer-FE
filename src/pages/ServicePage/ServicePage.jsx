@@ -1,4 +1,4 @@
-import { useLoaderData, useLocation } from "react-router-dom";
+import { useLoaderData, useLocation, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import {
   Box,
@@ -26,6 +26,9 @@ import {
   List,
   ListItem,
   ListIcon,
+  Card,
+  CardBody,
+  Center,
 } from "@chakra-ui/react";
 import {
   Monitor,
@@ -35,8 +38,12 @@ import {
   ArrowRight,
   Maximize2,
   ChevronRight,
+  Calendar,
+  Building2,
+  ImageOff,
 } from "lucide-react";
 import { motion } from "framer-motion";
+import { getApiUrl } from "../../config/api.js";
 
 const MotionBox = motion(Box);
 const MotionFlex = motion(Flex);
@@ -46,6 +53,8 @@ export default function ServicePage() {
   const location = useLocation();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedImage, setSelectedImage] = useState(null);
+  const [relatedProjects, setRelatedProjects] = useState([]);
+  const [isLoadingProjects, setIsLoadingProjects] = useState(true);
 
   // Color scheme
   const bgColor = useColorModeValue("white", "gray.800");
@@ -55,11 +64,80 @@ export default function ServicePage() {
   const cardBg = useColorModeValue("white", "gray.800");
   const borderColor = useColorModeValue("gray.200", "gray.600");
   const highlightColor = useColorModeValue("brand.50", "brand.900");
+  const iconBg = useColorModeValue("gray.100", "gray.600");
+  const iconColor = useColorModeValue("gray.400", "gray.500");
 
   const openImageModal = (img) => {
     setSelectedImage(img);
     onOpen();
   };
+
+  // Component for when no image is available
+  const NoImageFallback = () => (
+    <Center
+      width="100%"
+      height="100%"
+      bg={iconBg}
+      flexDirection="column"
+      gap={2}
+    >
+      <Icon as={ImageOff} w={8} h={8} color={iconColor} />
+      <Text fontSize="xs" color={iconColor} textAlign="center">
+        No Image
+      </Text>
+    </Center>
+  );
+
+  // Fetch related projects
+  useEffect(() => {
+    const fetchRelatedProjects = async () => {
+      try {
+        setIsLoadingProjects(true);
+        const url = getApiUrl("projects", { projectService: service.id });
+        const response = await fetch(url);
+        const projects = await response.json();
+
+        // Process project data
+        const processedProjects = projects.map((project) => {
+          try {
+            const vals = project.images
+              .replace("[", "")
+              .replace("]", "")
+              .replace(/["]/g, "")
+              .split(",");
+            const date = new Date(project.projectDate);
+            project.projectDate = `${date
+              .getDate()
+              .toString()
+              .padStart(2, "0")}-${(date.getMonth() + 1)
+              .toString()
+              .padStart(2, "0")}-${date.getFullYear()}`;
+            project.images = vals;
+            return project;
+          } catch (error) {
+            project.images = [];
+            return project;
+          }
+        });
+
+        // Sort by date (most recent first) and take only 3
+        const sortedProjects = processedProjects
+          .sort((a, b) => new Date(b.projectDate) - new Date(a.projectDate))
+          .slice(0, 3);
+
+        setRelatedProjects(sortedProjects);
+      } catch (error) {
+        console.error("Error fetching related projects:", error);
+        setRelatedProjects([]);
+      } finally {
+        setIsLoadingProjects(false);
+      }
+    };
+
+    if (service.id) {
+      fetchRelatedProjects();
+    }
+  }, [service.id]);
 
   // Scroll to the expanded service section if specified in navigation state
   useEffect(() => {
@@ -122,7 +200,6 @@ export default function ServicePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-           
             <Heading
               color="white"
               fontSize={{ base: "3xl", md: "5xl" }}
@@ -209,79 +286,97 @@ export default function ServicePage() {
                 transition={{ duration: 0.5, delay: 0.4 }}
               >
                 <VStack spacing={6}>
-                  {/* Software Tools Card */}
-                  <Box
-                    bg={cardBg}
-                    p={6}
-                    borderRadius="xl"
-                    shadow="md"
-                    w="100%"
-                    border="1px solid"
-                    borderColor={borderColor}
-                    _hover={{ transform: "translateY(-2px)", shadow: "lg" }}
-                    transition="all 0.3s"
-                  >
-                    <HStack spacing={3} mb={4}>
-                      <Icon as={Monitor} w={6} h={6} color={headingColor} />
-                      <Heading as="h3" size="md" color={headingColor}>
-                        Software Tools
-                      </Heading>
-                    </HStack>
-                    <List spacing={3}>
-                      {(service.softwares || "Not specified")
-                        .split(",")
-                        .map((software, index) => (
-                          <ListItem
-                            key={index}
-                            display="flex"
-                            alignItems="center"
-                          >
-                            <ListIcon as={CheckCircle2} color={headingColor} />
-                            <Text color={textColor}>{software.trim()}</Text>
-                          </ListItem>
-                        ))}
-                    </List>
-                  </Box>
+                  {/* Software Tools Card - Only show if there's actual content */}
+                  {service.softwares &&
+                    service.softwares.trim() !== "" &&
+                    service.softwares.toLowerCase() !== "not specified" && (
+                      <Box
+                        bg={cardBg}
+                        p={6}
+                        borderRadius="xl"
+                        shadow="md"
+                        w="100%"
+                        border="1px solid"
+                        borderColor={borderColor}
+                        _hover={{ transform: "translateY(-2px)", shadow: "lg" }}
+                        transition="all 0.3s"
+                      >
+                        <HStack spacing={3} mb={4}>
+                          <Icon as={Monitor} w={6} h={6} color={headingColor} />
+                          <Heading as="h3" size="md" color={headingColor}>
+                            Software Tools
+                          </Heading>
+                        </HStack>
+                        <List spacing={3}>
+                          {service.softwares
+                            .split(",")
+                            .filter((software) => software.trim() !== "")
+                            .map((software, index) => (
+                              <ListItem
+                                key={index}
+                                display="flex"
+                                alignItems="center"
+                              >
+                                <ListIcon
+                                  as={CheckCircle2}
+                                  color={headingColor}
+                                />
+                                <Text color={textColor}>{software.trim()}</Text>
+                              </ListItem>
+                            ))}
+                        </List>
+                      </Box>
+                    )}
 
-                  {/* Equipment Card */}
-                  <Box
-                    bg={cardBg}
-                    p={6}
-                    borderRadius="xl"
-                    shadow="md"
-                    w="100%"
-                    border="1px solid"
-                    borderColor={borderColor}
-                    _hover={{ transform: "translateY(-2px)", shadow: "lg" }}
-                    transition="all 0.3s"
-                  >
-                    <HStack spacing={3} mb={4}>
-                      <Icon as={Wrench} w={6} h={6} color={headingColor} />
-                      <Heading as="h3" size="md" color={headingColor}>
-                        Equipment Used
-                      </Heading>
-                    </HStack>
-                    <List spacing={3}>
-                      {(service.equipment || "Not specified")
-                        .split(",")
-                        .map((equipment, index) => (
-                          <ListItem
-                            key={index}
-                            display="flex"
-                            alignItems="center"
-                          >
-                            <ListIcon as={CheckCircle2} color={headingColor} />
-                            <Text color={textColor}>{equipment.trim()}</Text>
-                          </ListItem>
-                        ))}
-                    </List>
-                  </Box>
+                  {/* Equipment Card - Only show if there's actual content */}
+                  {service.equipment &&
+                    service.equipment.trim() !== "" &&
+                    service.equipment.toLowerCase() !== "not specified" && (
+                      <Box
+                        bg={cardBg}
+                        p={6}
+                        borderRadius="xl"
+                        shadow="md"
+                        w="100%"
+                        border="1px solid"
+                        borderColor={borderColor}
+                        _hover={{ transform: "translateY(-2px)", shadow: "lg" }}
+                        transition="all 0.3s"
+                      >
+                        <HStack spacing={3} mb={4}>
+                          <Icon as={Wrench} w={6} h={6} color={headingColor} />
+                          <Heading as="h3" size="md" color={headingColor}>
+                            Equipment Used
+                          </Heading>
+                        </HStack>
+                        <List spacing={3}>
+                          {service.equipment
+                            .split(",")
+                            .filter((equipment) => equipment.trim() !== "")
+                            .map((equipment, index) => (
+                              <ListItem
+                                key={index}
+                                display="flex"
+                                alignItems="center"
+                              >
+                                <ListIcon
+                                  as={CheckCircle2}
+                                  color={headingColor}
+                                />
+                                <Text color={textColor}>
+                                  {equipment.trim()}
+                                </Text>
+                              </ListItem>
+                            ))}
+                        </List>
+                      </Box>
+                    )}
                 </VStack>
               </MotionBox>
             </GridItem>
           </Grid>
 
-          {/* Gallery Section */}
+          {/* Related Projects Section */}
           <MotionBox
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -295,50 +390,139 @@ export default function ServicePage() {
               mb={8}
               textAlign="center"
             >
-              Project Gallery
+              Recent Projects Using This Service
             </Heading>
-            {service.pagePics &&
-            service.pagePics.length > 0 &&
-            service.pagePics[0] !== "" ? (
-              <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} spacing={8}>
-                {service.pagePics.map((img, index) => (
+
+            {isLoadingProjects ? (
+              <Flex
+                direction="column"
+                align="center"
+                justify="center"
+                py={12}
+                color={headingColor}
+              >
+                <Text fontSize="lg">Loading related projects...</Text>
+              </Flex>
+            ) : relatedProjects.length > 0 ? (
+              <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8}>
+                {relatedProjects.map((project) => (
                   <MotionBox
-                    key={index}
+                    key={project.id}
                     whileHover={{ scale: 1.02 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <Box
-                      position="relative"
-                      borderRadius="xl"
-                      overflow="hidden"
-                      shadow="lg"
-                      cursor="pointer"
-                      onClick={() => openImageModal(img)}
-                    >
-                      <Image
-                        src={img}
-                        alt={`${service.serviceName} image ${index + 1}`}
-                        w="100%"
-                        h={{ base: "250px", md: "300px" }}
-                        objectFit="cover"
-                        fallbackSrc="https://via.placeholder.com/300x250?text=Gallery+Image"
-                      />
-                      <Flex
-                        position="absolute"
-                        top={0}
-                        left={0}
-                        right={0}
-                        bottom={0}
-                        bg="rgba(0, 0, 0, 0.3)"
-                        opacity={0}
-                        transition="opacity 0.3s"
-                        _hover={{ opacity: 1 }}
-                        alignItems="center"
-                        justifyContent="center"
+                    <Link to={`/Projects/${project.id}`}>
+                      <Card
+                        bg={cardBg}
+                        borderRadius="xl"
+                        overflow="hidden"
+                        shadow="md"
+                        border="1px solid"
+                        borderColor={borderColor}
+                        _hover={{
+                          transform: "translateY(-4px)",
+                          shadow: "xl",
+                          borderColor: headingColor,
+                        }}
+                        transition="all 0.3s"
+                        cursor="pointer"
+                        h="100%"
                       >
-                        <Icon as={Maximize2} color="white" w={8} h={8} />
-                      </Flex>
-                    </Box>
+                        {/* Project Image */}
+                        <Box
+                          h={{ base: "200px", md: "250px" }}
+                          position="relative"
+                          overflow="hidden"
+                        >
+                          {project.images &&
+                          project.images[0] &&
+                          project.images[0] !== "" ? (
+                            <Image
+                              src={project.images[0]}
+                              alt={project.title}
+                              w="100%"
+                              h="100%"
+                              objectFit="cover"
+                              fallbackSrc="https://via.placeholder.com/300x250?text=Project+Image"
+                            />
+                          ) : (
+                            <NoImageFallback />
+                          )}
+                          <Box
+                            position="absolute"
+                            top={0}
+                            left={0}
+                            right={0}
+                            bottom={0}
+                            bg="rgba(0, 0, 0, 0.2)"
+                            opacity={0}
+                            transition="opacity 0.3s"
+                            _hover={{ opacity: 1 }}
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="center"
+                          >
+                            <Icon as={ArrowRight} color="white" w={8} h={8} />
+                          </Box>
+                        </Box>
+
+                        {/* Project Details */}
+                        <CardBody p={6}>
+                          <VStack align="start" spacing={3}>
+                            <Heading
+                              as="h4"
+                              size="md"
+                              color={headingColor}
+                              lineHeight="1.3"
+                              noOfLines={2}
+                            >
+                              {project.title}
+                            </Heading>
+
+                            <VStack align="start" spacing={2} w="100%">
+                              <HStack spacing={2}>
+                                <Icon
+                                  as={Building2}
+                                  w={4}
+                                  h={4}
+                                  color={textColor}
+                                />
+                                <Text
+                                  fontSize="sm"
+                                  color={textColor}
+                                  noOfLines={1}
+                                >
+                                  {project.clientName}
+                                </Text>
+                              </HStack>
+
+                              <HStack spacing={2}>
+                                <Icon
+                                  as={Calendar}
+                                  w={4}
+                                  h={4}
+                                  color={textColor}
+                                />
+                                <Text fontSize="sm" color={textColor}>
+                                  {project.projectDate}
+                                </Text>
+                              </HStack>
+                            </VStack>
+
+                            <Badge
+                              colorScheme="brand"
+                              variant="subtle"
+                              px={3}
+                              py={1}
+                              borderRadius="full"
+                              fontSize="xs"
+                            >
+                              {project.projectCategory}
+                            </Badge>
+                          </VStack>
+                        </CardBody>
+                      </Card>
+                    </Link>
                   </MotionBox>
                 ))}
               </SimpleGrid>
@@ -354,7 +538,10 @@ export default function ServicePage() {
                 mx="auto"
               >
                 <Text color={textColor} fontSize="lg" fontWeight="500">
-                  No images available for this service
+                  No projects available for this service yet
+                </Text>
+                <Text color={textColor} fontSize="sm" mt={2}>
+                  Check back later for updates
                 </Text>
               </Box>
             )}

@@ -211,6 +211,7 @@ export default function VacancyAddForm() {
       maxW="container.xl"
       px={{ base: 4, md: 6, lg: 8 }}
       py={{ base: 6, md: 8 }}
+      pt={{ base: "80px", md: "100px" }}
     >
       <Box
         w="full"

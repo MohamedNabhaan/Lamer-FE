@@ -197,6 +197,7 @@ export const ADMIN_NAV_ITEMS = [
       "/l4m3r-secure-dashboard-panel/academic-programs",
       "/l4m3r-secure-dashboard-panel/research-publications",
       "/l4m3r-secure-dashboard-panel/laboratory-assets",
+      "/l4m3r-secure-dashboard-panel/sirc-sites",
     ],
     children: [
       {
@@ -211,6 +212,43 @@ export const ADMIN_NAV_ITEMS = [
         label: "Equipment",
         path: "laboratory-assets",
       },
+      {
+        label: "Sites",
+        path: "sirc-sites",
+      },
+    ],
+  },
+];
+
+// Static SIRC Sites Reference Data (original static data preserved)
+export const STATIC_SIRC_SITES = [
+  {
+    name: "GDh. Mahutigala",
+    image: "/src/assets/SIRC/Maahutigalaa.png",
+    description:
+      "Primary research station with comprehensive facilities for marine biology studies and coral reef research.",
+    features: ["Coral Reef Systems", "Marine Biology Lab", "Accommodation"],
+  },
+  {
+    name: "GDh. Hoothodaa",
+    image: "/src/assets/SIRC/Hoothodaa.png",
+    description:
+      "Specialized site for island morphology studies and coastal erosion research with pristine natural conditions.",
+    features: [
+      "Coastal Studies",
+      "Morphology Research",
+      "Natural Preservation",
+    ],
+  },
+  {
+    name: "GDh. Faathiyehutta",
+    image: "/src/assets/SIRC/Faathiyehuttaa.png",
+    description:
+      "Climate change research hub focusing on sea level rise impact and environmental monitoring.",
+    features: [
+      "Climate Research",
+      "Environmental Monitoring",
+      "Data Collection",
     ],
   },
 ];
@@ -322,7 +360,7 @@ export const COUNTRIES = [
   },
   { name: "Argentina", flag: "🇦🇷", code: "AR", dial_code: "+54" },
   { name: "Armenia", flag: "🇦🇲", code: "AM", dial_code: "+374" },
-  { name: "Aruba", flag: "🇦🇼", code: "AW", dial_code: "+297" },
+  { name: "Aruba", flag: "🇦��", code: "AW", dial_code: "+297" },
   { name: "Australia", flag: "🇦🇺", code: "AU", dial_code: "+61" },
   { name: "Austria", flag: "🇦🇹", code: "AT", dial_code: "+43" },
   { name: "Azerbaijan", flag: "🇦🇿", code: "AZ", dial_code: "+994" },

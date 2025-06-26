@@ -361,6 +361,7 @@ export default function ServiceEditForm() {
       maxW="container.xl"
       px={{ base: 4, md: 6, lg: 8 }}
       py={{ base: 6, md: 8 }}
+      pt={{ base: "80px", md: "100px" }}
     >
       <Box
         w="full"
@@ -975,7 +976,7 @@ export async function action({ request, params }) {
     );
 
     const response = await fetch(getApiUrlWithId("services", params.id), {
-      method: "PUT",
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },

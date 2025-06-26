@@ -191,14 +191,13 @@ export default function AdminResearch() {
 
   return (
     <>
-      <Box minH="72vh" bg={bgColor} pt={0}>
+      <Box minH="72vh" bg={bgColor} pt={{ base: "80px", md: "100px" }}>
         {/* Header Section */}
         <Box
           bg={headerBg}
           py={{ base: 8, md: 12 }}
           borderBottom="1px"
           borderColor={borderColor}
-          mt={{ base: "70px", md: "90px" }}
         >
           <Container maxW="container.xl" px={{ base: 4, md: 8 }}>
             <VStack spacing={4} align="stretch">
@@ -227,9 +226,10 @@ export default function AdminResearch() {
         <Container maxW="container.xl" px={{ base: 4, md: 8 }} py={6}>
           <Box mb={8}>
             {/* Search Bar and Filter Toggle */}
-            <Flex justify="space-between" align="center" mb={4}>
-              <Box flex="1" maxW="400px">
-                <InputGroup size="lg">
+            <VStack spacing={4} align="stretch">
+              {/* Search Bar */}
+              <Box w="100%">
+                <InputGroup size={{ base: "md", md: "lg" }}>
                   <InputLeftElement>
                     <Icon as={Search} color={accentColor} />
                   </InputLeftElement>
@@ -248,50 +248,69 @@ export default function AdminResearch() {
                 </InputGroup>
               </Box>
 
-              <HStack spacing={4}>
-                {/* Filter Toggle Button */}
-                <Button
-                  leftIcon={<Filter />}
-                  rightIcon={showFilters ? <ChevronUp /> : <ChevronDown />}
-                  variant="outline"
-                  size="md"
-                  onClick={() => setShowFilters(!showFilters)}
-                  borderColor={borderColor}
-                  _hover={{ borderColor: accentColor }}
-                  bg={bgColor}
-                >
-                  Filters{" "}
-                  {getActiveFilterCount() > 0 && `(${getActiveFilterCount()})`}
-                </Button>
+              {/* Controls Row */}
+              <Flex
+                direction={{ base: "column", sm: "row" }}
+                justify={{ base: "stretch", sm: "space-between" }}
+                align={{ base: "stretch", sm: "center" }}
+                gap={{ base: 3, sm: 0 }}
+              >
+                <Box />
 
-                {/* Create Button */}
-                <NavLink to={`new`}>
+                <HStack
+                  spacing={4}
+                  w={{ base: "100%", sm: "auto" }}
+                  justify={{ base: "stretch", sm: "flex-end" }}
+                >
+                  {/* Filter Toggle Button */}
                   <Button
-                    color={"white"}
-                    bg={"brand.400"}
-                    size={"md"}
-                    _hover={{ bg: "brand.300" }}
+                    leftIcon={<Filter />}
+                    rightIcon={showFilters ? <ChevronUp /> : <ChevronDown />}
+                    variant="outline"
+                    size={{ base: "md", sm: "md" }}
+                    onClick={() => setShowFilters(!showFilters)}
+                    borderColor={borderColor}
+                    _hover={{ borderColor: accentColor }}
+                    bg={bgColor}
+                    flex={{ base: 1, sm: "none" }}
                   >
-                    Create
+                    Filters{" "}
+                    {getActiveFilterCount() > 0 &&
+                      `(${getActiveFilterCount()})`}
                   </Button>
-                </NavLink>
-              </HStack>
-            </Flex>
+
+                  {/* Create Button */}
+                  <NavLink to={`new`}>
+                    <Button
+                      color={"white"}
+                      bg={"brand.400"}
+                      size={{ base: "md", sm: "md" }}
+                      _hover={{ bg: "brand.300" }}
+                      flex={{ base: 1, sm: "none" }}
+                      w={{ base: "100%", sm: "auto" }}
+                    >
+                      Create
+                    </Button>
+                  </NavLink>
+                </HStack>
+              </Flex>
+            </VStack>
 
             {/* Filter Controls - Collapsible */}
             <Collapse in={showFilters} animateOpacity>
               <Box
-                p={4}
+                p={{ base: 4, md: 4 }}
                 border="1px solid"
                 borderColor={borderColor}
                 borderRadius="md"
                 bg={bgColor}
                 mb={4}
+                mt={4}
               >
                 <VStack spacing={4} align="stretch">
-                  <HStack spacing={4} align="end">
+                  <VStack spacing={4} align="stretch">
                     {/* Year Filter */}
-                    <Box>
+                    <Box w="100%">
                       <Text
                         fontSize="sm"
                         fontWeight="600"
@@ -304,7 +323,7 @@ export default function AdminResearch() {
                         placeholder="All Years"
                         value={selectedYear}
                         onChange={handleYearChange}
-                        size="lg"
+                        size={{ base: "md", md: "lg" }}
                         borderColor={borderColor}
                         _hover={{ borderColor: accentColor }}
                         _focus={{
@@ -312,7 +331,6 @@ export default function AdminResearch() {
                           boxShadow: `0 0 0 1px ${accentColor}`,
                         }}
                         bg={bgColor}
-                        minW="150px"
                       >
                         {getAvailableYears().map((year) => (
                           <option key={year} value={year}>
@@ -324,27 +342,20 @@ export default function AdminResearch() {
 
                     {/* Clear Filters Button */}
                     {(selectedYear || searchTitle) && (
-                      <Box>
-                        <Text
-                          fontSize="sm"
-                          fontWeight="600"
-                          color="transparent"
-                          mb={2}
-                        >
-                          Clear
-                        </Text>
+                      <Box w={{ base: "100%", sm: "auto" }}>
                         <Button
-                          size="lg"
+                          size={{ base: "md", md: "lg" }}
                           variant="outline"
                           colorScheme="red"
                           leftIcon={<X />}
                           onClick={clearFilters}
+                          w={{ base: "100%", sm: "auto" }}
                         >
                           Clear Filters
                         </Button>
                       </Box>
                     )}
-                  </HStack>
+                  </VStack>
 
                   {/* Active Filters Display */}
                   {(selectedYear || searchTitle) && (
@@ -357,7 +368,7 @@ export default function AdminResearch() {
                       >
                         Active Filters:
                       </Text>
-                      <HStack spacing={2} flexWrap="wrap">
+                      <Flex spacing={2} flexWrap="wrap" gap={2}>
                         {searchTitle && (
                           <Box
                             bg={accentColor}
@@ -384,7 +395,7 @@ export default function AdminResearch() {
                             Year: {selectedYear}
                           </Box>
                         )}
-                      </HStack>
+                      </Flex>
                     </Box>
                   )}
                 </VStack>
@@ -561,7 +572,7 @@ export default function AdminResearch() {
               )}
 
               {/* Pagination */}
-              {researchData.length > researchPerPage && !isFetching && (
+              {!isFetching && (
                 <Box mt={8}>
                   <Pagination
                     currentPage={currentPage}

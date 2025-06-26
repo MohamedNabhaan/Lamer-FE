@@ -165,14 +165,13 @@ export default function AdminCareers() {
 
   return (
     <>
-      <Box minH="72vh" bg={bgColor} pt={0}>
+      <Box minH="72vh" bg={bgColor} pt={{ base: "80px", md: "100px" }}>
         {/* Header Section */}
         <Box
           bg={headerBg}
           py={{ base: 8, md: 12 }}
           borderBottom="1px"
           borderColor={borderColor}
-          mt={{ base: "70px", md: "90px" }}
         >
           <Container maxW="container.xl" px={{ base: 4, md: 8 }}>
             <VStack spacing={4} align="stretch">
@@ -201,9 +200,10 @@ export default function AdminCareers() {
         <Container maxW="container.xl" px={{ base: 4, md: 8 }} py={6}>
           <Box mb={8}>
             {/* Search Bar and Controls */}
-            <Flex justify="space-between" align="center" mb={4}>
-              <Box flex="1" maxW="400px">
-                <InputGroup size="lg">
+            <VStack spacing={4} align="stretch">
+              {/* Search Bar */}
+              <Box w="100%">
+                <InputGroup size={{ base: "md", md: "lg" }}>
                   <InputLeftElement>
                     <Icon as={Search} color={accentColor} />
                   </InputLeftElement>
@@ -221,63 +221,84 @@ export default function AdminCareers() {
                   />
                 </InputGroup>
               </Box>
-              <HStack spacing={3}>
-                <Button
-                  variant="outline"
-                  colorScheme="blue"
-                  leftIcon={<Filter />}
-                  rightIcon={showFilters ? <ChevronUp /> : <ChevronDown />}
-                  onClick={() => setShowFilters(!showFilters)}
-                  size="md"
+
+              {/* Controls Row */}
+              <Flex
+                direction={{ base: "column", sm: "row" }}
+                justify={{ base: "stretch", sm: "space-between" }}
+                align={{ base: "stretch", sm: "center" }}
+                gap={{ base: 3, sm: 0 }}
+              >
+                <Box />
+
+                <HStack
+                  spacing={3}
+                  w={{ base: "100%", sm: "auto" }}
+                  justify={{ base: "stretch", sm: "flex-end" }}
+                  flexWrap="wrap"
                 >
-                  Filters
-                  {getActiveFilterCount() > 0 && (
-                    <Badge ml={2} colorScheme="red" borderRadius="full">
-                      {getActiveFilterCount()}
-                    </Badge>
-                  )}
-                </Button>
-                {getActiveFilterCount() > 0 && (
                   <Button
                     variant="outline"
-                    colorScheme="red"
-                    leftIcon={<X />}
-                    onClick={clearFilters}
-                    size="md"
+                    colorScheme="blue"
+                    leftIcon={<Filter />}
+                    rightIcon={showFilters ? <ChevronUp /> : <ChevronDown />}
+                    onClick={() => setShowFilters(!showFilters)}
+                    size={{ base: "md", sm: "md" }}
+                    flex={{ base: 1, sm: "none" }}
                   >
-                    Clear
+                    Filters
+                    {getActiveFilterCount() > 0 && (
+                      <Badge ml={2} colorScheme="red" borderRadius="full">
+                        {getActiveFilterCount()}
+                      </Badge>
+                    )}
                   </Button>
-                )}
-                <NavLink to={`new`}>
-                  <Button
-                    color={"white"}
-                    bg={"brand.400"}
-                    size={"md"}
-                    _hover={{ bg: "brand.300" }}
-                  >
-                    Create
-                  </Button>
-                </NavLink>
-              </HStack>
-            </Flex>
+                  {getActiveFilterCount() > 0 && (
+                    <Button
+                      variant="outline"
+                      colorScheme="red"
+                      leftIcon={<X />}
+                      onClick={clearFilters}
+                      size={{ base: "md", sm: "md" }}
+                      flex={{ base: 1, sm: "none" }}
+                    >
+                      Clear
+                    </Button>
+                  )}
+                  <NavLink to={`new`}>
+                    <Button
+                      color={"white"}
+                      bg={"brand.400"}
+                      size={{ base: "md", sm: "md" }}
+                      _hover={{ bg: "brand.300" }}
+                      flex={{ base: 1, sm: "none" }}
+                      w={{ base: "100%", sm: "auto" }}
+                    >
+                      Create
+                    </Button>
+                  </NavLink>
+                </HStack>
+              </Flex>
+            </VStack>
 
             {/* Collapsible Filters */}
             <Collapse in={showFilters} animateOpacity>
               <Box
                 bg={cardBg}
-                p={6}
+                p={{ base: 4, md: 6 }}
                 borderRadius="xl"
                 border="1px solid"
                 borderColor={borderColor}
                 shadow="sm"
                 mb={4}
+                mt={4}
               >
                 <VStack spacing={4} align="stretch">
                   <Text fontWeight="600" color={textColor}>
                     Filter Options
                   </Text>
-                  <HStack spacing={4} flexWrap="wrap">
-                    <Box flex="1" minW="250px">
+                  <VStack spacing={4} align="stretch">
+                    <Box w="100%">
                       <Text
                         fontSize="sm"
                         fontWeight="600"
@@ -287,7 +308,7 @@ export default function AdminCareers() {
                         Employment Type
                       </Text>
                       <Select
-                        size="lg"
+                        size={{ base: "md", md: "lg" }}
                         value={positionStatus}
                         onChange={handleStatusChange}
                         borderColor={borderColor}
@@ -301,18 +322,18 @@ export default function AdminCareers() {
                         ))}
                       </Select>
                     </Box>
-                  </HStack>
+                  </VStack>
                 </VStack>
               </Box>
             </Collapse>
 
             {/* Active Filters Display */}
             {getActiveFilterCount() > 0 && (
-              <Box>
+              <Box mt={4}>
                 <Text fontSize="sm" fontWeight="600" color={textColor} mb={2}>
                   Active Filters:
                 </Text>
-                <HStack spacing={2} flexWrap="wrap">
+                <Flex spacing={2} flexWrap="wrap" gap={2}>
                   {searchName && (
                     <Badge
                       bg={accentColor}
@@ -339,7 +360,7 @@ export default function AdminCareers() {
                       Type: {positionStatus}
                     </Badge>
                   )}
-                </HStack>
+                </Flex>
               </Box>
             )}
           </Box>
@@ -522,7 +543,7 @@ export default function AdminCareers() {
           )}
 
           {/* Pagination */}
-          {vacancies.length > 0 && !isFetching && (
+          {!isFetching && (
             <Box py={8}>
               <Pagination
                 projPerPage={projPerPage}

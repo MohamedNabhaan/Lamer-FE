@@ -245,14 +245,13 @@ export default function AdminProjects() {
 
   return (
     <>
-      <Box minH="72vh" bg={bgColor} pt={0}>
+      <Box minH="72vh" bg={bgColor} pt={{ base: "80px", md: "100px" }}>
         {/* Header Section */}
         <Box
           bg={headerBg}
           py={{ base: 8, md: 12 }}
           borderBottom="1px"
           borderColor={borderColor}
-          mt={{ base: "70px", md: "90px" }}
         >
           <Container maxW="container.xl" px={{ base: 4, md: 8 }}>
             <VStack spacing={4} align="stretch">
@@ -281,9 +280,10 @@ export default function AdminProjects() {
         <Container maxW="container.xl" px={{ base: 4, md: 8 }} py={6}>
           <Box mb={8}>
             {/* Filter Toggle Button and Create Button */}
-            <Flex justify="space-between" align="center" mb={4}>
-              <Box flex="1" maxW="400px">
-                <InputGroup size="lg">
+            <VStack spacing={4} align="stretch">
+              {/* Search Bar */}
+              <Box w="100%">
+                <InputGroup size={{ base: "md", md: "lg" }}>
                   <InputLeftElement>
                     <Icon as={Search} color={accentColor} />
                   </InputLeftElement>
@@ -301,54 +301,78 @@ export default function AdminProjects() {
                   />
                 </InputGroup>
               </Box>
-              <HStack spacing={3}>
-                {(selectedCategory || selectedService || searchTitle) && (
-                  <Badge colorScheme="blue" fontSize="sm">
-                    {
-                      [selectedCategory, selectedService, searchTitle].filter(
-                        Boolean
-                      ).length
-                    }{" "}
-                    active
-                  </Badge>
-                )}
-                <Button
-                  leftIcon={<Filter />}
-                  onClick={() => setShowFilters(!showFilters)}
-                  variant={showFilters ? "solid" : "outline"}
-                  colorScheme="brand"
-                  size="md"
+
+              {/* Controls Row */}
+              <Flex
+                direction={{ base: "column", sm: "row" }}
+                justify={{ base: "stretch", sm: "space-between" }}
+                align={{ base: "stretch", sm: "center" }}
+                gap={{ base: 3, sm: 0 }}
+              >
+                <HStack
+                  spacing={2}
+                  justify={{ base: "center", sm: "flex-start" }}
+                  flexWrap="wrap"
                 >
-                  {showFilters ? "Hide Filters" : "Show Filters"}
-                </Button>
-                <NavLink to={`new`}>
+                  {(selectedCategory || selectedService || searchTitle) && (
+                    <Badge colorScheme="blue" fontSize="sm">
+                      {
+                        [selectedCategory, selectedService, searchTitle].filter(
+                          Boolean
+                        ).length
+                      }{" "}
+                      active
+                    </Badge>
+                  )}
+                </HStack>
+
+                <HStack
+                  spacing={3}
+                  w={{ base: "100%", sm: "auto" }}
+                  justify={{ base: "stretch", sm: "flex-end" }}
+                >
                   <Button
-                    color={"white"}
-                    bg={"brand.400"}
-                    size={"md"}
-                    _hover={{ bg: "brand.300" }}
+                    leftIcon={<Filter />}
+                    onClick={() => setShowFilters(!showFilters)}
+                    variant={showFilters ? "solid" : "outline"}
+                    colorScheme="brand"
+                    size={{ base: "md", sm: "md" }}
+                    flex={{ base: 1, sm: "none" }}
                   >
-                    Create
+                    {showFilters ? "Hide Filters" : "Show Filters"}
                   </Button>
-                </NavLink>
-              </HStack>
-            </Flex>
+                  <NavLink to={`new`}>
+                    <Button
+                      color={"white"}
+                      bg={"brand.400"}
+                      size={{ base: "md", sm: "md" }}
+                      _hover={{ bg: "brand.300" }}
+                      flex={{ base: 1, sm: "none" }}
+                      w={{ base: "100%", sm: "auto" }}
+                    >
+                      Create
+                    </Button>
+                  </NavLink>
+                </HStack>
+              </Flex>
+            </VStack>
 
             {/* Filter Controls - Collapsible */}
             {showFilters && (
               <Box
                 bg={cardBg}
-                p={6}
+                p={{ base: 4, md: 6 }}
                 borderRadius="xl"
                 border="1px solid"
                 borderColor={borderColor}
                 shadow="sm"
                 transition="all 0.3s ease"
+                mt={4}
               >
                 <VStack spacing={4} align="stretch">
-                  <HStack spacing={4} flexWrap="wrap">
+                  <VStack spacing={4} align="stretch">
                     {/* Category Filter */}
-                    <Box flex="1" minW="250px">
+                    <Box w="100%">
                       <Text
                         fontSize="sm"
                         fontWeight="600"
@@ -358,7 +382,7 @@ export default function AdminProjects() {
                         Filter by Category
                       </Text>
                       <Select
-                        size="lg"
+                        size={{ base: "md", md: "lg" }}
                         placeholder="All Categories"
                         value={selectedCategory}
                         onChange={handleCategoryChange}
@@ -376,7 +400,7 @@ export default function AdminProjects() {
 
                     {/* Service Filter - Only show when category is selected */}
                     {selectedCategory && (
-                      <Box flex="1" minW="250px">
+                      <Box w="100%">
                         <Text
                           fontSize="sm"
                           fontWeight="600"
@@ -386,7 +410,7 @@ export default function AdminProjects() {
                           Filter by Service
                         </Text>
                         <Select
-                          size="lg"
+                          size={{ base: "md", md: "lg" }}
                           placeholder="All Services"
                           value={selectedService}
                           onChange={handleServiceChange}
@@ -406,27 +430,20 @@ export default function AdminProjects() {
 
                     {/* Clear Filters Button */}
                     {(selectedCategory || selectedService || searchTitle) && (
-                      <Box>
-                        <Text
-                          fontSize="sm"
-                          fontWeight="600"
-                          color="transparent"
-                          mb={2}
-                        >
-                          Clear
-                        </Text>
+                      <Box w={{ base: "100%", sm: "auto" }}>
                         <Button
-                          size="lg"
+                          size={{ base: "md", md: "lg" }}
                           variant="outline"
                           colorScheme="red"
                           leftIcon={<X />}
                           onClick={clearFilters}
+                          w={{ base: "100%", sm: "auto" }}
                         >
                           Clear Filters
                         </Button>
                       </Box>
                     )}
-                  </HStack>
+                  </VStack>
 
                   {/* Active Filters Display */}
                   {(selectedCategory || selectedService || searchTitle) && (
@@ -439,7 +456,7 @@ export default function AdminProjects() {
                       >
                         Active Filters:
                       </Text>
-                      <HStack spacing={2} flexWrap="wrap">
+                      <Flex spacing={2} flexWrap="wrap" gap={2}>
                         {searchTitle && (
                           <Box
                             bg={accentColor}
@@ -488,7 +505,7 @@ export default function AdminProjects() {
                             )?.serviceName || selectedService}
                           </Box>
                         )}
-                      </HStack>
+                      </Flex>
                     </Box>
                   )}
                 </VStack>
@@ -633,7 +650,7 @@ export default function AdminProjects() {
           )}
 
           {/* Pagination */}
-          {projects.length > 0 && !isFetching && (
+          {!isFetching && (
             <Box py={8}>
               <Pagination
                 projPerPage={projPerPage}

@@ -1,6 +1,6 @@
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Home from "./pages/Home/Home";
+import Home, { loader as homeLoader } from "./pages/Home/Home";
 import AboutUs, { loader as teamLoader } from "./pages/AboutUs/AboutUs";
 import RootPage from "./Root";
 import Services, { loader as servicesLoader } from "./pages/Services/Services";
@@ -41,6 +41,10 @@ import AdminEquipment, {
   equipmentAdminLoader,
   action as deleteEquipment,
 } from "./pages/AdminPages/AdminEquipment/AdminEquipment";
+import AdminSites, {
+  loader as sitesAdminLoader,
+  action as deleteSite,
+} from "./pages/AdminPages/AdminSites/AdminSites";
 import AdminDash, { action as logOutAction } from "./AdminDash";
 import LoginPage, { action as authAction } from "./pages/LoginPage/Login";
 import SignUpPage, { action as signUpAction } from "./pages/SignUpPage/SignUp";
@@ -97,6 +101,14 @@ import EquipmentEditForm, {
   action as editEquipmentAction,
   equipmentItemLoader,
 } from "./components/EquipmentEditForm";
+import SiteAddForm, {
+  action as addSiteAction,
+  loader as siteAddLoader,
+} from "./components/SiteAddForm";
+import SiteEditForm, {
+  action as editSiteAction,
+  siteLoader,
+} from "./components/SiteEditForm";
 import SIRC, { loader as SIRCLoader } from "./pages/SIRC/SIRC";
 import ServicePage from "./pages/ServicePage/ServicePage";
 import { serviceLoader } from "./utils/service";
@@ -120,7 +132,7 @@ const router = createBrowserRouter([
     path: "/",
     element: <RootPage />,
     children: [
-      { path: "", element: <Home /> },
+      { path: "", element: <Home />, loader: homeLoader },
       { path: "Services", element: <Services />, loader: servicesLoader },
       { path: "Services/:id", element: <ServicePage />, loader: serviceLoader },
       { path: "Clients", element: <Clients />, loader: publicClientsLoader },
@@ -282,6 +294,24 @@ const router = createBrowserRouter([
             element: <EquipmentEditForm />,
             loader: equipmentItemLoader,
             action: editEquipmentAction,
+          },
+          {
+            path: "sirc-sites",
+            element: <AdminSites />,
+            loader: sitesAdminLoader,
+            children: [{ path: ":id/destroy", action: deleteSite }],
+          },
+          {
+            path: "sirc-sites/new",
+            element: <SiteAddForm />,
+            loader: siteAddLoader,
+            action: addSiteAction,
+          },
+          {
+            path: "sirc-sites/modify/:id",
+            element: <SiteEditForm />,
+            loader: siteLoader,
+            action: editSiteAction,
           },
           {
             path: "user-approvals",

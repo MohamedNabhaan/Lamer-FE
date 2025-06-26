@@ -217,45 +217,62 @@ export default function Vacancies() {
       <Container maxW="container.xl" px={{ base: 4, md: 8 }} py={6}>
         <Box mb={8}>
           {/* Filter Toggle Button */}
-          <Flex justify="space-between" align="center" mb={4}>
-            <HStack spacing={3}>
-              <Icon as={Filter} color={headingColor} />
-              <Text fontSize="lg" fontWeight="600" color={headingColor}>
-                Filter Vacancies
-              </Text>
-              {(selectedExperience || selectedStatus) && (
-                <Badge colorScheme="blue" fontSize="sm">
-                  {[selectedExperience, selectedStatus].filter(Boolean).length}{" "}
-                  active
-                </Badge>
-              )}
-            </HStack>
-            <Button
-              leftIcon={<Filter />}
-              onClick={() => setShowFilters(!showFilters)}
-              variant={showFilters ? "solid" : "outline"}
-              colorScheme="brand"
-              size="md"
+          <VStack spacing={4} align="stretch">
+            {/* Filter Header */}
+            <Flex
+              direction={{ base: "column", sm: "row" }}
+              justify={{ base: "stretch", sm: "space-between" }}
+              align={{ base: "stretch", sm: "center" }}
+              gap={{ base: 3, sm: 0 }}
             >
-              {showFilters ? "Hide Filters" : "Show Filters"}
-            </Button>
-          </Flex>
+              <HStack
+                spacing={3}
+                justify={{ base: "center", sm: "flex-start" }}
+              >
+                <Icon as={Filter} color={headingColor} />
+                <Text fontSize="lg" fontWeight="600" color={headingColor}>
+                  Filter Vacancies
+                </Text>
+                {(selectedExperience || selectedStatus) && (
+                  <Badge colorScheme="blue" fontSize="sm">
+                    {
+                      [selectedExperience, selectedStatus].filter(Boolean)
+                        .length
+                    }{" "}
+                    active
+                  </Badge>
+                )}
+              </HStack>
+
+              <Button
+                leftIcon={<Filter />}
+                onClick={() => setShowFilters(!showFilters)}
+                variant={showFilters ? "solid" : "outline"}
+                colorScheme="brand"
+                size={{ base: "md", sm: "md" }}
+                w={{ base: "100%", sm: "auto" }}
+              >
+                {showFilters ? "Hide Filters" : "Show Filters"}
+              </Button>
+            </Flex>
+          </VStack>
 
           {/* Filter Controls - Collapsible */}
           {showFilters && (
             <Box
               bg={cardBg}
-              p={6}
+              p={{ base: 4, md: 6 }}
               borderRadius="xl"
               border="1px solid"
               borderColor={borderColor}
               shadow="sm"
               transition="all 0.3s ease"
+              mt={4}
             >
               <VStack spacing={4} align="stretch">
-                <HStack spacing={4} flexWrap="wrap">
+                <VStack spacing={4} align="stretch">
                   {/* Experience Filter */}
-                  <Box flex="1" minW="250px">
+                  <Box w="100%">
                     <Text
                       fontSize="sm"
                       fontWeight="600"
@@ -265,7 +282,7 @@ export default function Vacancies() {
                       Filter by Experience
                     </Text>
                     <Select
-                      size="lg"
+                      size={{ base: "md", md: "lg" }}
                       value={selectedExperience}
                       onChange={handleExperienceChange}
                       borderColor={borderColor}
@@ -281,7 +298,7 @@ export default function Vacancies() {
                   </Box>
 
                   {/* Status Filter */}
-                  <Box flex="1" minW="250px">
+                  <Box w="100%">
                     <Text
                       fontSize="sm"
                       fontWeight="600"
@@ -291,7 +308,7 @@ export default function Vacancies() {
                       Filter by Position Type
                     </Text>
                     <Select
-                      size="lg"
+                      size={{ base: "md", md: "lg" }}
                       value={selectedStatus}
                       onChange={handleStatusChange}
                       borderColor={borderColor}
@@ -308,27 +325,20 @@ export default function Vacancies() {
 
                   {/* Clear Filters Button */}
                   {(selectedExperience || selectedStatus) && (
-                    <Box>
-                      <Text
-                        fontSize="sm"
-                        fontWeight="600"
-                        color="transparent"
-                        mb={2}
-                      >
-                        Clear
-                      </Text>
+                    <Box w={{ base: "100%", sm: "auto" }}>
                       <Button
-                        size="lg"
+                        size={{ base: "md", md: "lg" }}
                         variant="outline"
                         colorScheme="red"
                         leftIcon={<X />}
                         onClick={clearFilters}
+                        w={{ base: "100%", sm: "auto" }}
                       >
                         Clear Filters
                       </Button>
                     </Box>
                   )}
-                </HStack>
+                </VStack>
 
                 {/* Active Filters Display */}
                 {(selectedExperience || selectedStatus) && (
@@ -341,7 +351,7 @@ export default function Vacancies() {
                     >
                       Active Filters:
                     </Text>
-                    <HStack spacing={2} flexWrap="wrap">
+                    <Flex spacing={2} flexWrap="wrap" gap={2}>
                       {selectedExperience && (
                         <Box
                           bg={headingColor}
@@ -378,7 +388,7 @@ export default function Vacancies() {
                           }
                         </Box>
                       )}
-                    </HStack>
+                    </Flex>
                   </Box>
                 )}
               </VStack>
@@ -653,16 +663,14 @@ export default function Vacancies() {
             </Grid>
 
             {/* Pagination */}
-            {filteredVacancies.length > vacanciesPerPage && (
-              <Box w="100%">
-                <Pagination
-                  projPerPage={vacanciesPerPage}
-                  totalProj={filteredVacancies.length}
-                  paginate={paginate}
-                  currentPage={currentPage}
-                />
-              </Box>
-            )}
+            <Box>
+              <Pagination
+                projPerPage={vacanciesPerPage}
+                totalProj={filteredVacancies.length}
+                paginate={paginate}
+                currentPage={currentPage}
+              />
+            </Box>
 
             {/* Bottom CTA */}
             <MotionBox

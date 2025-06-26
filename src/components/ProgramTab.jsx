@@ -240,16 +240,14 @@ export default function ProgramTab(props) {
           </SimpleGrid>
 
           {/* Pagination */}
-          {props.program.length > programsPerPage && (
-            <Box mt={4}>
-              <Pagination
-                projPerPage={programsPerPage}
-                totalProj={props.program.length}
-                paginate={paginate}
-                currentPage={currentPage}
-              />
-            </Box>
-          )}
+          <Box mt={4}>
+            <Pagination
+              projPerPage={programsPerPage}
+              totalProj={props.program.length}
+              paginate={paginate}
+              currentPage={currentPage}
+            />
+          </Box>
         </>
       ) : (
         <Box

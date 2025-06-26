@@ -90,6 +90,82 @@ const fetchEquipment = async () => {
   return equipment;
 };
 
+const fetchSites = async () => {
+  const sitesResponse = await fetch(API_ENDPOINTS.SITES, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+  });
+  const sites = await sitesResponse.json();
+
+  // Process sites data consistently with AdminSites loader
+  sites.forEach((site) => {
+    // Process picture fields to extract arrays
+    ["sitePicture1", "sitePicture2", "sitePicture3"].forEach((pictureField) => {
+      if (site[pictureField]) {
+        if (typeof site[pictureField] === "string") {
+          if (
+            site[pictureField].startsWith("[") &&
+            site[pictureField].endsWith("]")
+          ) {
+            try {
+              const vals = site[pictureField]
+                .replace("[", "")
+                .replace("]", "")
+                .replace(/["]/g, "")
+                .split(",")
+                .filter((val) => val.trim() !== "");
+              site[pictureField] = vals
+                .map((val) => val.trim())
+                .filter((val) => val !== "");
+            } catch (error) {
+              site[pictureField] = [];
+            }
+          } else {
+            site[pictureField] = [site[pictureField].trim()];
+          }
+        } else if (Array.isArray(site[pictureField])) {
+          site[pictureField] = site[pictureField].filter(
+            (val) => val && val.trim() !== ""
+          );
+        } else {
+          site[pictureField] = [];
+        }
+      } else {
+        site[pictureField] = [];
+      }
+    });
+
+    // Parse keyFeatures if it's a string
+    if (site.keyFeatures && typeof site.keyFeatures === "string") {
+      try {
+        const parsed = JSON.parse(site.keyFeatures);
+        if (Array.isArray(parsed)) {
+          site.keyFeatures = parsed;
+        } else {
+          // If it's not an array after parsing, split by comma
+          site.keyFeatures = site.keyFeatures
+            .split(",")
+            .map((f) => f.trim())
+            .filter((f) => f);
+        }
+      } catch (error) {
+        // If JSON parsing fails, split by comma
+        site.keyFeatures = site.keyFeatures
+          .split(",")
+          .map((f) => f.trim())
+          .filter((f) => f);
+      }
+    } else if (!Array.isArray(site.keyFeatures)) {
+      site.keyFeatures = [];
+    }
+  });
+
+  return sites;
+};
+
 export default function SIRC() {
   const data = useLoaderData();
 
@@ -562,14 +638,19 @@ export default function SIRC() {
       </Box>
 
       {/* Enhanced Tabs Section */}
-      <Box bg={sectionBg} py={{ base: 16, md: 20 }}>
-        <Container maxW="container.xl" px={{ base: 4, md: 8 }}>
+      <Box bg={sectionBg} py={{ base: 16, md: 20 }} overflow="visible">
+        <Container
+          maxW="container.xl"
+          px={{ base: 4, md: 8 }}
+          overflow="visible"
+        >
           <MotionBox
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.6 }}
+            overflow="visible"
           >
-            <VStack spacing={{ base: 6, md: 8 }}>
+            <VStack spacing={{ base: 6, md: 8 }} overflow="visible">
               <VStack spacing={4} textAlign="center">
                 <Heading
                   size={{ base: "lg", md: "xl", lg: "2xl" }}
@@ -675,9 +756,9 @@ export default function SIRC() {
                   borderRadius="2xl"
                   border="1px solid"
                   borderColor={borderColor}
-                  overflow="hidden"
+                  overflow="visible"
                 >
-                  <TabPanels>
+                  <TabPanels overflow="visible">
                     <TabPanel p={{ base: 6, md: 8, lg: 12 }}>
                       <VStack spacing={{ base: 6, md: 8 }} align="stretch">
                         <Box textAlign="center">
@@ -716,8 +797,12 @@ export default function SIRC() {
                       </VStack>
                     </TabPanel>
 
-                    <TabPanel p={{ base: 6, md: 8, lg: 12 }}>
-                      <VStack spacing={{ base: 6, md: 8 }} align="stretch">
+                    <TabPanel p={{ base: 6, md: 8, lg: 12 }} overflow="visible">
+                      <VStack
+                        spacing={{ base: 6, md: 8 }}
+                        align="stretch"
+                        overflow="visible"
+                      >
                         <Box textAlign="center">
                           <Box
                             bg={accentColor}
@@ -750,7 +835,7 @@ export default function SIRC() {
                             Location Overview and Available Research Sites
                           </Text>
                         </Box>
-                        <SiteTab />
+                        <SiteTab sites={data.sites} />
                       </VStack>
                     </TabPanel>
 
@@ -849,5 +934,7 @@ export async function loader({ request, params }) {
 
   const equipment = await fetchEquipment();
 
-  return { programs, research, equipment };
+  const sites = await fetchSites();
+
+  return { programs, research, equipment, sites };
 }

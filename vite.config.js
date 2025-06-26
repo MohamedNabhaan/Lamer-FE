@@ -14,13 +14,12 @@ export default defineConfig({
   },
   publicDir: "public",
   preview: {
-    port: 3000,
-    strictPort: true,
+    port: 3001,
+    strictPort: false,
   },
   server: {
-    port: 3000,
-    strictPort: true,
-    host: true,
-    origin: "http://0.0.0.0:3000",
+    port: 3001,
+    strictPort: false,
+    host: "localhost",
   },
 });

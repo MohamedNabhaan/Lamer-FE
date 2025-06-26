@@ -90,10 +90,15 @@ export default function WhoAreWe() {
                 borderColor={borderColor}
                 height="full"
                 display="flex"
-                flexDirection="column"
+                flexDirection={{ base: "row", md: "column" }}
               >
                 {/* Image Container with Overlay */}
-                <Box position="relative" h="300px" flexShrink={0}>
+                <Box
+                  position="relative"
+                  h={{ base: "120px", md: "300px" }}
+                  w={{ base: "120px", md: "100%" }}
+                  flexShrink={0}
+                >
                   <Image
                     w="100%"
                     h="100%"
@@ -102,6 +107,7 @@ export default function WhoAreWe() {
                     alt={founder.name}
                     fallbackSrc="https://via.placeholder.com/600x400?text=About+Us"
                   />
+                  {/* Overlay only visible on desktop */}
                   <Box
                     position="absolute"
                     bottom={0}
@@ -111,6 +117,7 @@ export default function WhoAreWe() {
                     pt={20}
                     pb={6}
                     px={6}
+                    display={{ base: "none", md: "block" }}
                   >
                     <Heading
                       as="h3"
@@ -133,13 +140,33 @@ export default function WhoAreWe() {
                 </Box>
 
                 {/* Content Section */}
-                <Box p={6} flex="1" display="flex" flexDirection="column">
+                <Box
+                  p={{ base: 4, md: 6 }}
+                  flex="1"
+                  display="flex"
+                  flexDirection="column"
+                >
+                  {/* Name and Title for mobile */}
+                  <Box display={{ base: "block", md: "none" }} mb={3}>
+                    <Heading
+                      as="h3"
+                      size={{ base: "sm", md: "lg" }}
+                      color={headingColor}
+                      mb={1}
+                    >
+                      {founder.name}
+                    </Heading>
+                    <Text fontSize="xs" color={textColor} fontWeight="500">
+                      {founder.title}
+                    </Text>
+                  </Box>
+
                   {/* Experience */}
                   <HStack spacing={3} mb={4} align="center">
                     <Box color={headingColor} flexShrink={0}>
-                      <Award size={16} />
+                      <Award w={{ base: 3, md: 4 }} h={{ base: 3, md: 4 }} />
                     </Box>
-                    <Text fontSize="sm" color={textColor}>
+                    <Text fontSize={{ base: "xs", md: "sm" }} color={textColor}>
                       {founder.experience} Years Experience
                     </Text>
                   </HStack>
@@ -149,9 +176,16 @@ export default function WhoAreWe() {
                     {founder.credentials.map((credential, idx) => (
                       <HStack key={idx} spacing={3} align="flex-start" w="full">
                         <Box color={headingColor} mt={1} flexShrink={0}>
-                          <GraduationCap size={16} />
+                          <GraduationCap
+                            w={{ base: 3, md: 4 }}
+                            h={{ base: 3, md: 4 }}
+                          />
                         </Box>
-                        <Text fontSize="sm" color={textColor} lineHeight="1.5">
+                        <Text
+                          fontSize={{ base: "xs", md: "sm" }}
+                          color={textColor}
+                          lineHeight="1.5"
+                        >
                           {credential}
                         </Text>
                       </HStack>

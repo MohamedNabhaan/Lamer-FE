@@ -110,12 +110,14 @@ export default function WithSubnavigation() {
         py={{ base: isScrolled ? 2 : 3 }}
         px={{ base: 4 }}
         align={"center"}
+        position="relative"
       >
-        <Flex
-          flex={{ base: 1, md: "auto" }}
-          ml={{ base: 2 }}
-          maxW={8}
+        {/* Hamburger Menu - Mobile Only */}
+        <Box
+          position={{ base: "absolute", md: "static" }}
+          left={{ base: 4, md: "auto" }}
           display={{ base: "flex", md: "none" }}
+          zIndex={2}
         >
           <IconButton
             onClick={onToggle}
@@ -125,8 +127,9 @@ export default function WithSubnavigation() {
             variant={"ghost"}
             aria-label={"Toggle Navigation"}
           />
-        </Flex>
+        </Box>
 
+        {/* Logo Container - Centered on Mobile */}
         <Flex
           flex={{ base: 1 }}
           justify={{ base: "center", md: "center" }}
@@ -152,7 +155,7 @@ export default function WithSubnavigation() {
       </Flex>
 
       <Collapse in={isOpen} animateOpacity>
-        <MobileNav />
+        <MobileNav onClose={onToggle} />
       </Collapse>
     </Box>
   );
@@ -301,7 +304,7 @@ const DesktopSubNav = ({ label, path }) => {
   );
 };
 
-const MobileNav = () => {
+const MobileNav = ({ onClose }) => {
   return (
     <Stack
       bg={useColorModeValue("white", "gray.800")}
@@ -309,14 +312,23 @@ const MobileNav = () => {
       display={{ lg: "none" }}
     >
       {NAV_ITEMS.map((navItem) => (
-        <MobileNavItem key={navItem.label} {...navItem} />
+        <MobileNavItem key={navItem.label} {...navItem} onClose={onClose} />
       ))}
     </Stack>
   );
 };
 
-const MobileNavItem = ({ label, children, path }) => {
+const MobileNavItem = ({ label, children, path, onClose }) => {
   const { isOpen, onToggle } = useDisclosure();
+
+  const handleItemClick = () => {
+    if (path && onClose) {
+      onClose(); // Close the mobile menu when navigating
+    }
+    if (children) {
+      onToggle(); // Toggle submenu if it has children
+    }
+  };
 
   return (
     <Stack spacing={4}>
@@ -327,7 +339,7 @@ const MobileNavItem = ({ label, children, path }) => {
         display="flex"
         justifyContent="space-between"
         alignItems="center"
-        onClick={children ? onToggle : undefined}
+        onClick={handleItemClick}
         _hover={{
           textDecoration: "none",
         }}
@@ -363,6 +375,7 @@ const MobileNavItem = ({ label, children, path }) => {
               <NavLink
                 key={child.label}
                 to={child.path}
+                onClick={onClose} // Close menu when child item is clicked
                 style={({ isActive }) => ({
                   fontWeight: isActive ? "600" : "400",
                   color: isActive

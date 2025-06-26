@@ -39,6 +39,8 @@ export const API_ENDPOINTS = {
   RESEARCH_CREATE: buildApiUrl("research/create"),
   EQUIPMENT: buildApiUrl("equipment"),
   EQUIPMENT_CREATE: buildApiUrl("equipment/create"),
+  SITES: buildApiUrl("sites"),
+  SITES_CREATE: buildApiUrl("sites/create"),
 };
 
 // Helper function for dynamic endpoints

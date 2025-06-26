@@ -17,18 +17,22 @@ import {
   Grid,
   GridItem,
   Divider,
+  Center,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
-import { MapPin, ExternalLink, Globe, Waves, Ship } from "lucide-react";
-import fm from "../assets/SIRC/fm.png";
-import mhg from "../assets/SIRC/Maahutigalaa.png";
-import htd from "../assets/SIRC/Hoothodaa.png";
-import fth from "../assets/SIRC/Faathiyehuttaa.png";
+import {
+  MapPin,
+  ExternalLink,
+  Globe,
+  Waves,
+  Ship,
+  ImageOff,
+} from "lucide-react";
 
 const MotionCard = motion(Card);
 const MotionBox = motion(Box);
 
-export default function SiteTab() {
+export default function SiteTab({ sites = [] }) {
   // Color scheme - standardized to match SIRC page
   const cardBg = useColorModeValue("white", "gray.800");
   const textColor = useColorModeValue("gray.700", "gray.300");
@@ -38,40 +42,39 @@ export default function SiteTab() {
   const badgeBg = useColorModeValue("brand.50", "brand.900");
   const sectionBg = useColorModeValue("gray.50", "gray.700");
 
-  const researchSites = [
-    {
-      name: "GDh. Mahutigala",
-      image: mhg,
-      description:
-        "Primary research station with comprehensive facilities for marine biology studies and coral reef research.",
-      features: ["Coral Reef Systems", "Marine Biology Lab", "Accommodation"],
-    },
-    {
-      name: "GDh. Hoothodaa",
-      image: htd,
-      description:
-        "Specialized site for island morphology studies and coastal erosion research with pristine natural conditions.",
-      features: [
-        "Coastal Studies",
-        "Morphology Research",
-        "Natural Preservation",
-      ],
-    },
-    {
-      name: "GDh. Faathiyehutta",
-      image: fth,
-      description:
-        "Climate change research hub focusing on sea level rise impact and environmental monitoring.",
-      features: [
-        "Climate Research",
-        "Environmental Monitoring",
-        "Data Collection",
-      ],
-    },
-  ];
+  // Helper function to get all images for a site
+  const getSiteImages = (site) => {
+    const images = [];
+    if (site.sitePicture1 && Array.isArray(site.sitePicture1)) {
+      images.push(...site.sitePicture1);
+    }
+    if (site.sitePicture2 && Array.isArray(site.sitePicture2)) {
+      images.push(...site.sitePicture2);
+    }
+    if (site.sitePicture3 && Array.isArray(site.sitePicture3)) {
+      images.push(...site.sitePicture3);
+    }
+    return images.filter((img) => img && img.trim() !== "");
+  };
+
+  // Component for when no image is available
+  const NoImageFallback = () => (
+    <Center
+      width="100%"
+      height="100%"
+      bg={sectionBg}
+      flexDirection="column"
+      gap={2}
+    >
+      <Icon as={ImageOff} w={8} h={8} color={textColor} />
+      <Text fontSize="xs" color={textColor} textAlign="center">
+        No Image Available
+      </Text>
+    </Center>
+  );
 
   return (
-    <VStack spacing={{ base: 8, md: 10 }} align="stretch">
+    <VStack spacing={{ base: 8, md: 10 }} align="stretch" overflow="visible">
       {/* Research Region Overview with Map */}
       <Card
         bg={cardBg}
@@ -260,7 +263,7 @@ export default function SiteTab() {
       </Card>
 
       {/* Research Islands */}
-      <Box>
+      <Box overflow="visible">
         <VStack spacing={6} mb={8}>
           <HStack spacing={3}>
             <Icon as={Globe} w={8} h={8} color={accentColor} />
@@ -275,68 +278,249 @@ export default function SiteTab() {
           </Text>
         </VStack>
 
-        <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={6}>
-          {researchSites.map((site, index) => (
-            <MotionCard
-              key={index}
-              bg={cardBg}
-              shadow="lg"
-              borderRadius="xl"
-              border="1px solid"
-              borderColor={borderColor}
-              overflow="hidden"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.2 }}
-            >
-              <Box position="relative">
-                <AspectRatio ratio={16 / 10}>
-                  <Image
-                    src={site.image}
-                    alt={site.name}
-                    objectFit="cover"
-                    w="100%"
-                    h="100%"
-                  />
-                </AspectRatio>
-              </Box>
+        <SimpleGrid
+          columns={{ base: 1, md: 2, lg: 3 }}
+          spacing={6}
+          overflow="visible"
+        >
+          {sites && sites.length > 0 ? (
+            sites.map((site, index) => (
+              <MotionCard
+                key={site.id || index}
+                bg={cardBg}
+                shadow="lg"
+                borderRadius="xl"
+                border="1px solid"
+                borderColor={borderColor}
+                overflow="visible"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.2 }}
+              >
+                {/* Images Grid */}
+                <Box overflow="visible" position="relative">
+                  {(() => {
+                    const images = getSiteImages(site);
 
-              <CardBody p={6}>
-                <VStack align="stretch" spacing={4}>
-                  <HStack justify="space-between" align="center">
-                    <Heading size="md" color={headingColor}>
-                      {site.name}
-                    </Heading>
-                    <Icon as={MapPin} w={5} h={5} color={accentColor} />
-                  </HStack>
+                    if (images.length === 0) {
+                      return (
+                        <AspectRatio ratio={16 / 10}>
+                          <NoImageFallback />
+                        </AspectRatio>
+                      );
+                    }
 
-                  <Text fontSize="sm" color={textColor} lineHeight="tall">
-                    {site.description}
-                  </Text>
+                    // Single image - full width
+                    if (images.length === 1) {
+                      return (
+                        <Box
+                          position="relative"
+                          width="100%"
+                          height="250px"
+                          overflow="visible"
+                          style={{
+                            perspective: "1200px",
+                            perspectiveOrigin: "center center",
+                          }}
+                        >
+                          <Image
+                            src={images[0]}
+                            alt={site.siteName || site.name}
+                            objectFit="contain"
+                            w="100%"
+                            h="100%"
+                            position="absolute"
+                            top="0"
+                            left="0"
+                            transition="all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
+                            _hover={{
+                              transform: "scale(1.1)",
+                              zIndex: 10,
+                              cursor: "pointer",
+                              boxShadow:
+                                "0 20px 40px -12px rgba(0, 0, 0, 0.4), 0 10px 20px -8px rgba(0, 0, 0, 0.2)",
+                              borderRadius: "xl",
+                            }}
+                            borderRadius="md"
+                            transformStyle="preserve-3d"
+                          />
+                        </Box>
+                      );
+                    }
 
-                  <Divider />
+                    // Multiple images - grid layout
+                    const gridCols =
+                      images.length === 2
+                        ? 2
+                        : images.length === 3
+                        ? 3
+                        : images.length === 4
+                        ? 2
+                        : Math.min(3, Math.ceil(images.length / 2));
 
-                  <VStack align="stretch" spacing={2}>
-                    <Text fontSize="sm" fontWeight="600" color={headingColor}>
-                      Key Features:
+                    return (
+                      <SimpleGrid
+                        columns={gridCols}
+                        spacing={1}
+                        bg={sectionBg}
+                        p={1}
+                        borderRadius="md"
+                        style={{
+                          perspective: "1200px",
+                          perspectiveOrigin: "center center",
+                        }}
+                      >
+                        {images.map((image, idx) => (
+                          <Box
+                            key={idx}
+                            position="relative"
+                            width="100%"
+                            height="120px"
+                            overflow="visible"
+                            borderRadius="sm"
+                          >
+                            <Image
+                              src={image}
+                              alt={`${site.siteName || site.name} - Image ${
+                                idx + 1
+                              }`}
+                              objectFit="contain"
+                              w="100%"
+                              h="100%"
+                              position="absolute"
+                              top="0"
+                              left="0"
+                              transition="all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)"
+                              transformStyle="preserve-3d"
+                              _hover={{
+                                transform: "scale(1.15)",
+                                zIndex: 20,
+                                cursor: "pointer",
+                                boxShadow:
+                                  "0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 15px 30px -8px rgba(0, 0, 0, 0.3)",
+                                borderRadius: "lg",
+                              }}
+                              borderRadius="sm"
+                            />
+                          </Box>
+                        ))}
+                      </SimpleGrid>
+                    );
+                  })()}
+                </Box>
+
+                <CardBody p={6}>
+                  <VStack align="stretch" spacing={4}>
+                    <HStack justify="space-between" align="center">
+                      <Heading size="md" color={headingColor}>
+                        {site.siteName || site.name}
+                      </Heading>
+                      <Icon as={MapPin} w={5} h={5} color={accentColor} />
+                    </HStack>
+
+                    <Text fontSize="sm" color={textColor} lineHeight="tall">
+                      {site.siteDescription || site.description}
                     </Text>
-                    {site.features.map((feature, idx) => (
-                      <HStack key={idx} spacing={2}>
-                        <Box w={2} h={2} bg={accentColor} borderRadius="full" />
-                        <Text fontSize="sm" color={textColor}>
-                          {feature}
-                        </Text>
-                      </HStack>
-                    ))}
+
+                    <Divider />
+
+                    <VStack align="stretch" spacing={2}>
+                      <Text fontSize="sm" fontWeight="600" color={headingColor}>
+                        Key Features:
+                      </Text>
+                      {(() => {
+                        // Safely process keyFeatures data
+                        let features = [];
+
+                        if (site.keyFeatures) {
+                          if (Array.isArray(site.keyFeatures)) {
+                            features = site.keyFeatures;
+                          } else if (typeof site.keyFeatures === "string") {
+                            try {
+                              // Try to parse as JSON first
+                              features = JSON.parse(site.keyFeatures);
+                              if (!Array.isArray(features)) {
+                                // If it's not an array after parsing, split by comma
+                                features = site.keyFeatures
+                                  .split(",")
+                                  .map((f) => f.trim())
+                                  .filter((f) => f);
+                              }
+                            } catch (error) {
+                              // If JSON parsing fails, split by comma
+                              features = site.keyFeatures
+                                .split(",")
+                                .map((f) => f.trim())
+                                .filter((f) => f);
+                            }
+                          }
+                        } else if (site.features) {
+                          if (Array.isArray(site.features)) {
+                            features = site.features;
+                          } else if (typeof site.features === "string") {
+                            features = site.features
+                              .split(",")
+                              .map((f) => f.trim())
+                              .filter((f) => f);
+                          }
+                        }
+
+                        // Ensure we have an array and filter out empty values
+                        if (!Array.isArray(features)) {
+                          features = [];
+                        }
+                        features = features.filter(
+                          (feature) =>
+                            feature && feature.trim && feature.trim() !== ""
+                        );
+
+                        return features.map((feature, idx) => (
+                          <HStack key={idx} spacing={2}>
+                            <Box
+                              w={2}
+                              h={2}
+                              bg={accentColor}
+                              borderRadius="full"
+                            />
+                            <Text fontSize="sm" color={textColor}>
+                              {feature}
+                            </Text>
+                          </HStack>
+                        ));
+                      })()}
+                    </VStack>
                   </VStack>
+                </CardBody>
+              </MotionCard>
+            ))
+          ) : (
+            <GridItem colSpan={{ base: 1, md: 2, lg: 3 }}>
+              <Center py={12}>
+                <VStack spacing={4}>
+                  <Icon
+                    as={MapPin}
+                    w={12}
+                    h={12}
+                    color={textColor}
+                    opacity={0.5}
+                  />
+                  <Text fontSize="lg" color={textColor} textAlign="center">
+                    No research sites available at the moment
+                  </Text>
+                  <Text
+                    fontSize="sm"
+                    color={textColor}
+                    opacity={0.7}
+                    textAlign="center"
+                  >
+                    Please check back later for updates
+                  </Text>
                 </VStack>
-              </CardBody>
-            </MotionCard>
-          ))}
+              </Center>
+            </GridItem>
+          )}
         </SimpleGrid>
       </Box>
-
-      
     </VStack>
   );
 }

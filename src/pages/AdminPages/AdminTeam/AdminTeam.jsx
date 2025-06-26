@@ -145,14 +145,13 @@ export default function AdminTeam() {
 
   return (
     <>
-      <Box minH="72vh" bg={bgColor} pt={0}>
+      <Box minH="72vh" bg={bgColor} pt={{ base: "80px", md: "100px" }}>
         {/* Header Section */}
         <Box
           bg={headerBg}
           py={{ base: 8, md: 12 }}
           borderBottom="1px"
           borderColor={borderColor}
-          mt={{ base: "70px", md: "90px" }}
         >
           <Container maxW="container.xl" px={{ base: 4, md: 8 }}>
             <VStack spacing={4} align="stretch">
@@ -181,9 +180,10 @@ export default function AdminTeam() {
         <Container maxW="container.xl" px={{ base: 4, md: 8 }} py={6}>
           <Box mb={8}>
             {/* Search Bar and Create Button */}
-            <Flex justify="space-between" align="center" mb={4}>
-              <Box flex="1" maxW="400px">
-                <InputGroup size="lg">
+            <VStack spacing={4} align="stretch">
+              {/* Search Bar */}
+              <Box w="100%">
+                <InputGroup size={{ base: "md", md: "lg" }}>
                   <InputLeftElement>
                     <Icon as={Search} color={accentColor} />
                   </InputLeftElement>
@@ -201,39 +201,62 @@ export default function AdminTeam() {
                   />
                 </InputGroup>
               </Box>
-              <HStack spacing={3}>
-                {searchName && (
-                  <Badge colorScheme="blue" fontSize="sm">
-                    1 active filter
-                  </Badge>
-                )}
-                {searchName && (
-                  <Button
-                    variant="outline"
-                    colorScheme="red"
-                    leftIcon={<X />}
-                    onClick={clearSearch}
-                    size="md"
-                  >
-                    Clear
-                  </Button>
-                )}
-                <NavLink to={`new`}>
-                  <Button
-                    color={"white"}
-                    bg={"brand.400"}
-                    size={"md"}
-                    _hover={{ bg: "brand.300" }}
-                  >
-                    Create
-                  </Button>
-                </NavLink>
-              </HStack>
-            </Flex>
+
+              {/* Controls Row */}
+              <Flex
+                direction={{ base: "column", sm: "row" }}
+                justify={{ base: "stretch", sm: "space-between" }}
+                align={{ base: "stretch", sm: "center" }}
+                gap={{ base: 3, sm: 0 }}
+              >
+                <HStack
+                  spacing={2}
+                  justify={{ base: "center", sm: "flex-start" }}
+                  flexWrap="wrap"
+                >
+                  {searchName && (
+                    <Badge colorScheme="blue" fontSize="sm">
+                      1 active filter
+                    </Badge>
+                  )}
+                </HStack>
+
+                <HStack
+                  spacing={3}
+                  w={{ base: "100%", sm: "auto" }}
+                  justify={{ base: "stretch", sm: "flex-end" }}
+                >
+                  {searchName && (
+                    <Button
+                      variant="outline"
+                      colorScheme="red"
+                      leftIcon={<X />}
+                      onClick={clearSearch}
+                      size={{ base: "md", sm: "md" }}
+                      flex={{ base: 1, sm: "none" }}
+                    >
+                      Clear
+                    </Button>
+                  )}
+                  <NavLink to={`new`}>
+                    <Button
+                      color={"white"}
+                      bg={"brand.400"}
+                      size={{ base: "md", sm: "md" }}
+                      _hover={{ bg: "brand.300" }}
+                      flex={{ base: 1, sm: "none" }}
+                      w={{ base: "100%", sm: "auto" }}
+                    >
+                      Create
+                    </Button>
+                  </NavLink>
+                </HStack>
+              </Flex>
+            </VStack>
 
             {/* Active Search Display */}
             {searchName && (
-              <Box>
+              <Box mt={4}>
                 <Text fontSize="sm" fontWeight="600" color={textColor} mb={2}>
                   Active Search:
                 </Text>
@@ -440,7 +463,7 @@ export default function AdminTeam() {
           )}
 
           {/* Pagination */}
-          {employees.length > 0 && !isFetching && (
+          {!isFetching && (
             <Box py={8}>
               <Pagination
                 projPerPage={projPerPage}

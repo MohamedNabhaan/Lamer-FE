@@ -6,6 +6,11 @@ export default function Pagination({
   paginate,
   currentPage,
 }) {
+  // Only render pagination if there are more items than what fits on one page
+  if (totalProj <= projPerPage) {
+    return null;
+  }
+
   let pageNumbers = [];
 
   for (let i = 1; i <= Math.ceil(totalProj / projPerPage); i++) {

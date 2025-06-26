@@ -2,37 +2,22 @@ import {
   Box,
   Heading,
   Container,
-  Stack,
   Text,
   Image,
-  ListItem,
-  UnorderedList,
-  Flex,
   VStack,
   HStack,
   SimpleGrid,
   Card,
   CardBody,
-  CardHeader,
   useColorModeValue,
   Icon,
-  Badge,
   AspectRatio,
   Divider,
   Grid,
   GridItem,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
-import {
-  Users,
-  Target,
-  Globe,
-  Award,
-  Heart,
-  Lightbulb,
-  Shield,
-  TrendingUp,
-} from "lucide-react";
+import { Users, Globe } from "lucide-react";
 import aboutus from "../../assets/aboutus/aboutus.png";
 import { ABOUT_US } from "../../index.js";
 import { useLoaderData } from "react-router-dom";
@@ -55,17 +40,6 @@ export default function AboutUs() {
   const borderColor = useColorModeValue("gray.200", "gray.600");
   const accentColor = useColorModeValue("brand.500", "brand.400");
   const badgeBg = useColorModeValue("brand.50", "brand.900");
-
-  const missionIcons = [
-    Heart,
-    Shield,
-    Globe,
-    TrendingUp,
-    Award,
-    Lightbulb,
-    Users,
-    Target,
-  ];
 
   return (
     <Box minH="100vh" bg={bgColor} pt={0}>
@@ -171,129 +145,6 @@ export default function AboutUs() {
                 </Grid>
               </CardBody>
             </Card>
-          </MotionBox>
-        </Container>
-      </Box>
-
-      {/* Mission, Vision & Values Section */}
-      <Box bg={sectionBg} py={{ base: 16, md: 20 }}>
-        <Container maxW="container.xl" px={{ base: 4, md: 8 }}>
-          <MotionBox
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
-          >
-            <VStack spacing={{ base: 8, md: 12 }}>
-              <VStack spacing={4} textAlign="center">
-                <Heading
-                  size={{ base: "xl", md: "2xl" }}
-                  color={headingColor}
-                  textAlign="center"
-                >
-                  Our Mission, Vision & Values
-                </Heading>
-                <Text
-                  fontSize={{ base: "lg", md: "xl" }}
-                  color={textColor}
-                  maxW="700px"
-                >
-                  The core principles, vision, and values that drive our
-                  commitment to excellence in marine environmental solutions
-                </Text>
-              </VStack>
-
-              {/* Vision Section */}
-              <MotionCard
-                bg={cardBg}
-                shadow="xl"
-                borderRadius="2xl"
-                border="1px solid"
-                borderColor={borderColor}
-                overflow="hidden"
-                w="100%"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.8 }}
-              >
-                <CardHeader bg={accentColor} color="white" py={6}>
-                  <HStack spacing={3} justify="center">
-                    <Icon as={Target} w={6} h={6} />
-                    <Heading size="xl">Our Vision</Heading>
-                  </HStack>
-                </CardHeader>
-                <CardBody p={{ base: 6, md: 8 }}>
-                  <Text
-                    fontSize={{ base: "lg", md: "xl" }}
-                    color={textColor}
-                    lineHeight="tall"
-                    textAlign="center"
-                    maxW="800px"
-                    mx="auto"
-                  >
-                    {ABOUT_US.vision}
-                  </Text>
-                </CardBody>
-              </MotionCard>
-
-              {/* Mission & Values Grid */}
-              <VStack spacing={6} w="100%">
-                <Heading
-                  size={{ base: "lg", md: "xl" }}
-                  color={headingColor}
-                  textAlign="center"
-                >
-                  Our Core Values
-                </Heading>
-
-                <Flex
-                  wrap="wrap"
-                  justify="center"
-                  gap={{ base: 6, md: 8 }}
-                  w="100%"
-                >
-                  {ABOUT_US.missionValues.map((value, index) => (
-                    <MotionCard
-                      key={index}
-                      bg={cardBg}
-                      shadow="lg"
-                      borderRadius="xl"
-                      border="1px solid"
-                      borderColor={borderColor}
-                      overflow="hidden"
-                      w={{
-                        base: "100%",
-                        md: "calc(50% - 16px)",
-                        lg: "calc(33.333% - 21.33px)",
-                      }}
-                      maxW={{ base: "none", md: "400px" }}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5, delay: 1.0 + index * 0.1 }}
-                    >
-                      <CardHeader bg={accentColor} color="white" py={4}>
-                        <HStack justify="center">
-                          <Icon
-                            as={missionIcons[index % missionIcons.length]}
-                            w={6}
-                            h={6}
-                          />
-                        </HStack>
-                      </CardHeader>
-                      <CardBody p={6}>
-                        <Text
-                          fontSize="md"
-                          color={textColor}
-                          lineHeight="tall"
-                          textAlign="center"
-                        >
-                          {value}
-                        </Text>
-                      </CardBody>
-                    </MotionCard>
-                  ))}
-                </Flex>
-              </VStack>
-            </VStack>
           </MotionBox>
         </Container>
       </Box>

@@ -1,6 +1,6 @@
 "use client";
 import { redirect, Form, NavLink, useLocation, Link } from "react-router-dom";
-import logo from "../assets/logo3.png";
+import logo from "../assets/logo.png";
 import { ADMIN_NAV_ITEMS as NAV_ITEMS } from "../index.js";
 import { getCachedUser } from "../utils/auth.jsx";
 import {
@@ -348,7 +348,7 @@ export default function WithSubnavigation() {
         </Flex>
 
         <Collapse in={isOpen} animateOpacity>
-          <MobileNav />
+          <MobileNav onClose={onToggle} />
         </Collapse>
       </Box>
     </Form>
@@ -478,7 +478,7 @@ const DesktopSubNav = ({ label, path }) => {
   );
 };
 
-const MobileNav = () => {
+const MobileNav = ({ onClose }) => {
   return (
     <Stack
       bg={useColorModeValue("white", "gray.800")}
@@ -486,14 +486,23 @@ const MobileNav = () => {
       display={{ lg: "none" }}
     >
       {NAV_ITEMS.map((navItem) => (
-        <MobileNavItem key={navItem.label} {...navItem} />
+        <MobileNavItem key={navItem.label} {...navItem} onClose={onClose} />
       ))}
     </Stack>
   );
 };
 
-const MobileNavItem = ({ label, children, path }) => {
+const MobileNavItem = ({ label, children, path, onClose }) => {
   const { isOpen, onToggle } = useDisclosure();
+
+  const handleClick = () => {
+    if (children) {
+      onToggle();
+    } else if (path && onClose) {
+      // Close mobile menu when navigating to a direct link
+      onClose();
+    }
+  };
 
   return (
     <Stack spacing={4}>
@@ -504,7 +513,7 @@ const MobileNavItem = ({ label, children, path }) => {
         display="flex"
         justifyContent="space-between"
         alignItems="center"
-        onClick={children ? onToggle : undefined}
+        onClick={handleClick}
         _hover={{
           textDecoration: "none",
         }}
@@ -540,6 +549,7 @@ const MobileNavItem = ({ label, children, path }) => {
               <NavLink
                 key={child.label}
                 to={child.path}
+                onClick={onClose} // Close mobile menu when clicking sub-items
                 style={({ isActive }) => ({
                   fontWeight: isActive ? "600" : "400",
                   color: isActive

@@ -31,6 +31,7 @@ const theme = extendTheme({
       300: "#D8CFC6",
       400: "#00000020",
       500: "#F2F2F2",
+      600: "#F2F4F4"
     },
 
     nav: {
